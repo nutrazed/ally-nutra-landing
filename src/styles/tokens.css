@@ -1,0 +1,25 @@
+:root{
+  --ally-navy: 214 52% 24%;        /* #1E3A5F */
+  --primary: 214 52% 24%;
+  --ally-light-navy: 215 55% 40%;  /* #2E5D9E */
+  --ally-orange: 38 87% 55%;       /* #F0A829 */
+  --foreground: 240 6% 10%;        /* #18181B */
+  --muted-foreground: 240 4% 46%;  /* #71717A */
+  --muted: 240 5% 96%;             /* #F4F4F5 */
+  --secondary: 240 5% 96%;
+  --border: 240 6% 90%;            /* #E4E4E7 */
+  --input: 240 6% 90%;
+  --destructive: 358 68% 57%;      /* #DC474C */
+  --card: 0 0% 100%;               /* #FFFFFF */
+  --background: 40 20% 99%;        /* #FCFCFC */
+  --paper: 36 12% 92%;             /* #ECEAE6 warm chrome */
+  --ring: 38 87% 55%;              /* amber — the one functional accent for focus */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-6: 24px; --space-8: 32px; --space-12: 48px; --space-16: 64px;
+  --font-slab: 'Roboto Slab', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', ui-monospace, monospace;
+}
