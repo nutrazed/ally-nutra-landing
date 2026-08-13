@@ -4,6 +4,14 @@ A React + Vite port of the Ally Nutra marketing site, deployed to GitHub Pages.
 
 **Live:** https://nutrazed.github.io/ally-nutra-landing/
 
+## Prototype status
+
+This is a design prototype, not a production site. Nothing on the Contact page's quote form
+is wired to a backend — `handleSubmit` in `src/views/Contact.jsx` never transmits data. It
+renders an inline success state so the design can be reviewed, and that success state carries
+its own visible "Prototype — this form does not send" notice for exactly that reason. See
+`docs/PLAN.md` for the audit this behavior answers.
+
 ## Prerequisites
 
 - Node 22 (see `.nvmrc`; `nvm use` if you have nvm installed)

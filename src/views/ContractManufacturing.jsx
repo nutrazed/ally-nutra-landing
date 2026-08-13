@@ -62,7 +62,7 @@ export default function ContractManufacturing() {
           </div>
           <div className="grid grid-4">
             <div className="svc-num-card"><span className="num">01 · Formulation</span><h3>Formulation</h3><p>Custom formulas built to your brief, or use one of our 200+ proven base formulas. R&amp;D team on-site.</p></div>
-            <div className="svc-num-card"><span className="num">02 · Manufacturing</span><h3>Manufacturing</h3><p>cGMP-certified blending, encapsulation, tableting, and powder filling — all under one roof.</p></div>
+            <div className="svc-num-card"><span className="num">02 · Manufacturing</span><h3>Manufacturing</h3><p>cGMP-certified blending, encapsulation, and powder/liquid filling for sachets, stick packs, and pouches — all under one roof.</p></div>
             <div className="svc-num-card"><span className="num">03 · Packaging</span><h3>Packaging</h3><p>Bottles, sachets, stick packs, and pouches. Custom labels and shrink wrap included.</p></div>
             <div className="svc-num-card"><span className="num">04 · FBA prep</span><h3>FBA prep</h3><p>Amazon-ready cartons, FNSKU labeling, polybag, bundling — shipped directly to FBA centers.</p></div>
           </div>
@@ -138,14 +138,13 @@ export default function ContractManufacturing() {
           <div className="svc-table on-navy" style={sx('max-width:900px;margin:0 auto;')}>
             <div className="svc-table-row head" style={sx('grid-template-columns:2fr 1fr 1fr 1fr;')}><div>Product type</div><div>Starter</div><div>Growth</div><div>Scale</div></div>
             <div className="svc-table-row" style={sx('grid-template-columns:2fr 1fr 1fr 1fr;')}><div className="product">Capsules</div><div>2,500 units</div><div>10,000 units</div><div>50,000+</div></div>
-            <div className="svc-table-row" style={sx('grid-template-columns:2fr 1fr 1fr 1fr;')}><div className="product">Tablets</div><div>5,000 units</div><div>25,000 units</div><div>100,000+</div></div>
-            <div className="svc-table-row" style={sx('grid-template-columns:2fr 1fr 1fr 1fr;')}><div className="product">Gummies</div><div>5,000 bottles</div><div>20,000 bottles</div><div>50,000+</div></div>
-            <div className="svc-table-row" style={sx('grid-template-columns:2fr 1fr 1fr 1fr;')}><div className="product">Powders / sachets</div><div>2,500 units</div><div>10,000 units</div><div>50,000+</div></div>
-            <div className="svc-table-row" style={sx('grid-template-columns:2fr 1fr 1fr 1fr;')}><div className="product">Liquids</div><div>2,500 units</div><div>10,000 units</div><div>50,000+</div></div>
+            <div className="svc-table-row" style={sx('grid-template-columns:2fr 1fr 1fr 1fr;')}><div className="product">Sachets</div><div>5,000 units</div><div>20,000 units</div><div>50,000+</div></div>
+            <div className="svc-table-row" style={sx('grid-template-columns:2fr 1fr 1fr 1fr;')}><div className="product">Stick packs</div><div>10,000 units</div><div>25,000 units</div><div>50,000+</div></div>
+            <div className="svc-table-row" style={sx('grid-template-columns:2fr 1fr 1fr 1fr;')}><div className="product">Pouches</div><div>2,000 units</div><div>10,000 units</div><div>50,000+</div></div>
           </div>
           <p style={sx("text-align:center;color:hsl(0 0% 100% / .6);font-size:13.5px;margin-top:24px;")}>
             Looking for the full format lineup?{' '}
-            <Link to="/home" style={sx('color:hsl(var(--ally-orange));text-decoration:underline;')}>See all eight formats we manufacture →</Link>
+            <Link to="/home" style={sx('color:hsl(var(--ally-orange));text-decoration:underline;')}>See all four formats we manufacture →</Link>
           </p>
         </div>
       </section>

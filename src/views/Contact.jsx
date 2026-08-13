@@ -1,11 +1,20 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { sx } from '../lib/styleString.js';
 import { scrollToId } from '../lib/scrollToId.js';
 
 export default function Contact() {
+  const [submitted, setSubmitted] = useState(false);
+
+  // PROTOTYPE — this form is not wired to a backend. Submitting renders the success
+  // state below (so the design can be demonstrated) instead of an alert(), but no
+  // data is transmitted anywhere. See README.md ("Prototype status") before wiring
+  // this up for real — the visible notice in the success state must come out only
+  // once there is an actual endpoint behind it.
   function handleSubmit(e) {
     e.preventDefault();
-    alert('Thanks — this is a design mockup, so nothing was actually sent.');
+    console.warn('[prototype] Contact form submitted — no data was transmitted. Production wiring pending.');
+    setSubmitted(true);
   }
 
   return (
@@ -34,6 +43,27 @@ export default function Contact() {
 
       <section className="section-alt" id="contact-form">
         <div className="container hero-grid" style={sx('align-items:start;')}>
+          {submitted ? (
+            <div className="card" style={sx('padding:40px;')} role="status">
+              <div className="quote-success-icon" aria-hidden="true">✓</div>
+              <h2 style={sx('margin:16px 0 10px;font-size:26px;')}>Quote request received.</h2>
+              <p style={sx('margin-bottom:20px;')}>
+                Thanks — we'll confirm receipt within 1 business day and follow up with a
+                discovery call to scope your project.
+              </p>
+              <p className="quote-success-notice">
+                Prototype — this form does not send. Production wiring pending.
+              </p>
+              <button
+                type="button"
+                className="btn btn-outline"
+                style={sx('margin-top:20px;')}
+                onClick={() => setSubmitted(false)}
+              >
+                ← Back to form
+              </button>
+            </div>
+          ) : (
           <form className="card" style={sx('padding:40px;')} onSubmit={handleSubmit}>
             <span className="eyebrow">Quote request</span>
             <h2 style={sx('margin:12px 0 10px;font-size:28px;')}>Tell us about your project.</h2>
@@ -81,7 +111,7 @@ export default function Contact() {
                   <option>Contract manufacturing</option>
                   <option>Private label supplements</option>
                   <option>Capsule manufacturing</option>
-                  <option>Tablet / powder / gummy</option>
+                  <option>Sachets, stick packs, or pouches</option>
                   <option>Packaging &amp; FBA prep</option>
                   <option>Not sure yet</option>
                 </select>
@@ -117,6 +147,7 @@ export default function Contact() {
             <button type="submit" className="btn btn-primary btn-block btn-lg">Submit quote request →</button>
             <p style={sx('text-align:center;font-size:12.5px;margin-top:14px;')}>By submitting, you agree to our privacy policy. We never share your information.</p>
           </form>
+          )}
 
           <aside className="info-panel">
             <div className="eyebrow on-dark" style={sx('margin-bottom:14px;')}>What happens next</div>

@@ -10,7 +10,7 @@ const FAQ_GROUPS = [
       { qMark: 'Q.01', question: 'What does a contract supplement manufacturer actually do?', answer: 'As a contract manufacturer, Ally Nutra handles the full production side of your supplement brand — sourcing raw ingredients, formulating, blending, encapsulating or filling, and packaging — so you can focus on building and selling your brand.' },
       { qMark: 'Q.02', question: 'How do I get started with a project?', answer: "Start by requesting a quote through our online form. You'll tell us your product type, target format, and quantity. Once a quote is signed off, we proceed to invoicing, payment, and procurement." },
       { qMark: 'Q.03', question: 'Do I need to have my formula ready before contacting you?', answer: 'Not at all. We work with brands at every stage — whether you have a finished, lab-verified formula or just a concept and a target benefit.' },
-      { qMark: 'Q.04', question: 'What product formats can you manufacture?', answer: 'Our core capabilities include capsules, tablets, powders, and private-label finished goods. Available formats and options are listed in the quote form.' },
+      { qMark: 'Q.04', question: 'What product formats can you manufacture?', answer: 'Our core capabilities are capsules, sachets, stick packs, and resealable pouches — plus private-label finished goods on any of those formats. Available options are listed in the quote form.' },
     ],
   },
   {
