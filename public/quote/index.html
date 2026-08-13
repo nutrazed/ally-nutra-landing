@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AllyNutra · Quote → BQA → Submit (Redesign)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Roboto+Slab:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap">
+<!-- AN-DEMO role switch (feature/role-and-links) — presentation-only, no auth.
+     Relative path: this file is served one level under the site root
+     (/ally-nutra-landing/quote/), so ../shared/ resolves correctly under
+     Vite's configured base path in dev, preview, and the deployed GitHub
+     Pages build alike, without hardcoding the base path here. -->
+<script defer src="../shared/demo-role.js"></script>
+<style>
+  /* ── AllyNutra tokens — Direction 1A (from Ally_Nutra_Design_System__standalone_.html) ──
+     Navy carries the brand; amber is a single functional mark per view. */
+  :root{
+    --ally-navy:#1E3A5F; --ally-navy-2:#2E5D9E; --ally-navy-line:#33507A;
+    --ally-amber:#F0A829; --ally-amber-deep:#9A6B12;
+    --ally-amber-tint:rgba(240,168,41,0.10); --ally-amber-tint-line:rgba(240,168,41,0.35);
+    --ally-ink:#1B1D20; --ally-ink-2:#3A3E43;
+    --text-primary:#1B1D20; --text-body:#3A3E43; --text-secondary:#5B6168;
+    --text-muted:#5B6168; --text-meta:#71717A;
+    --color-accent-text:var(--ally-amber-deep);
+    --surface-page:#ECEAE6; --surface-paper:#F4F2ED; --surface-card:#FFFFFF;
+    --surface-muted:#F4F4F5;
+    --border-default:#E4E5E2; --border-hairline:#ECEEEA;
+    --radius:6px; --radius-lg:8px;
+    --destructive:#DC474C;
+    --ok-bg:#E6F4EA; --ok-fg:#2E7D46;
+    --review-bg:#EEF2F7; --review-fg:#1E3A5F; --review-line:rgba(30,58,95,.22);
+    --font-display:'Roboto Slab',Georgia,'Times New Roman',serif;
+    --font-text:'Roboto',Helvetica,Arial,sans-serif;
+    --font-num:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:var(--font-text);background:#33608F;color:var(--text-body);-webkit-font-smoothing:antialiased}
+  .app{min-height:100vh;display:flex;flex-direction:column}
+  input::placeholder,textarea::placeholder{color:var(--text-muted)}
+  button{font-family:inherit;cursor:pointer}
+  a:focus-visible,button:focus-visible{outline:2px solid var(--ally-amber);outline-offset:1px}
+  @keyframes fade-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .fu{animation:fade-in .22s cubic-bezier(.4,0,.2,1) both}
+  @media (prefers-reduced-motion:reduce){.fu{animation:none}}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* review-tool masthead (visually set apart from the mocked product) */
+  header.rev{position:relative;z-index:50;background:var(--ally-navy);border-bottom:1px solid var(--ally-navy-line);padding:12px 24px;flex:none}
+  header.rev .row{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+  .logo{font-family:var(--font-display);font-size:17px;font-weight:600;letter-spacing:-0.02em;color:#fff}
+  .logo u{border-bottom:2px solid var(--ally-amber);padding-bottom:2px;text-decoration:none}
+  .revtag{font-family:var(--font-num);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#C6D4EC;background:rgba(255,255,255,.06);border:1px dashed rgba(255,255,255,.28);border-radius:99px;padding:4px 11px}
+  .swbtn{margin-left:auto;font-size:12.5px;font-weight:600;color:#fff;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.35);border-radius:var(--radius);padding:8px 13px;display:flex;align-items:center;gap:7px}
+  .swbtn:hover{background:rgba(255,255,255,.16)}
+  .swbtn svg{transition:transform .14s ease}
+  .swpanel.open + .swbtn svg,.sw.open .swbtn svg{transform:rotate(180deg)}
+
+  .sw{position:relative}
+  .swpanel{position:absolute;right:0;top:calc(100% + 8px);width:420px;max-height:74vh;overflow-y:auto;background:#fff;border:1px solid var(--border-default);border-radius:var(--radius-lg);box-shadow:0 10px 30px -6px rgba(0,0,0,.22);z-index:80;opacity:0;transform:translateY(-6px);pointer-events:none;transition:opacity .14s ease,transform .14s ease;padding:14px}
+  .sw.open .swpanel{opacity:1;transform:none;pointer-events:auto}
+  .sw-grp{margin-bottom:12px}
+  .sw-grp:last-child{margin-bottom:0}
+  .sw-grp h6{font-family:var(--font-num);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-meta);margin-bottom:7px}
+  .sw-row{display:flex;flex-wrap:wrap;gap:6px}
+  .sw-chip{font-size:12px;font-weight:600;color:var(--ally-navy);background:var(--review-bg);border:1px solid var(--review-line);border-radius:99px;padding:5px 11px}
+  .sw-chip:hover{background:#E1E9F2}
+  .sw-chip.current{background:var(--ally-navy);border-color:var(--ally-navy);color:#fff}
+  .sw-reset{width:100%;margin-top:4px;font-size:12px;font-weight:600;color:var(--destructive);background:none;border:1px dashed var(--destructive);border-radius:var(--radius);padding:7px}
+
+  /* portal shell */
+  .region{flex:1;overflow-y:auto;background:var(--surface-page);display:flex;justify-content:center}
+  .wrap{width:100%;max-width:840px;padding:36px 20px 64px}
+  .content .screen{display:none}
+  .content .screen.on{display:block}
+
+  h2.pg{font-family:var(--font-display);font-size:24px;font-weight:500;letter-spacing:-0.01em;color:var(--text-primary)}
+  .lede{font-size:15px;color:var(--text-secondary)}
+  .pghead{position:relative;overflow:hidden;background:linear-gradient(135deg,#264A73 0%,#1E3A5F 52%,#172E4B 100%);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius-lg);padding:24px 26px;margin-bottom:20px;box-shadow:0 2px 10px -3px rgba(23,46,75,.35)}
+  .pghead::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:var(--ally-amber)}
+  .pghead .eyebrow{display:flex;align-items:center;gap:9px;font-family:var(--font-num);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ally-amber);margin-bottom:10px}
+  .pghead .eyebrow::before{content:"";width:20px;height:1px;background:var(--ally-amber);opacity:.75}
+  .pghead h2.pg{color:#fff;font-weight:600;letter-spacing:-0.015em}
+  .pghead .lede{color:#B9C9DE;margin-top:7px;max-width:64ch;line-height:1.55}
+
+  .btn-navy{font-size:13px;font-weight:600;color:#fff;background:var(--ally-navy);border:none;border-radius:var(--radius);padding:10px 16px;white-space:nowrap;display:inline-flex;align-items:center;gap:7px}
+  .btn-navy:hover{background:#17314f}
+  .btn-navy:disabled{opacity:.42;cursor:not-allowed;background:var(--ally-navy)}
+  .btn-out{font-size:13px;font-weight:600;color:var(--ally-navy);background:var(--surface-card);border:1px solid var(--ally-navy);border-radius:var(--radius);padding:9px 15px;white-space:nowrap}
+  .btn-out:hover{background:var(--surface-muted)}
+  .btn-ghost{font-size:12.5px;font-weight:600;color:var(--text-secondary);background:none;border:none;padding:9px 6px}
+  .btn-ghost:hover{color:var(--text-primary)}
+
+  .card{background:var(--surface-card);border:1px solid var(--border-default);border-radius:var(--radius-lg);overflow:hidden}
+  .cardpad{padding:22px 24px}
+  .num{font-family:var(--font-num)}
+  .meta{font-family:var(--font-num);font-size:10.5px;letter-spacing:.05em;color:var(--text-meta);text-transform:uppercase}
+
+  .pill{display:inline-flex;align-items:center;gap:6px;border-radius:99px;padding:4px 12px;font-size:12px;font-weight:600}
+  .pill .d{width:6px;height:6px;border-radius:50%}
+  .pill.gold{background:var(--ally-amber-tint);color:var(--color-accent-text)} .pill.gold .d{background:var(--ally-amber)}
+  .pill.navy{background:rgba(30,58,95,.08);color:var(--ally-navy)} .pill.navy .d{background:var(--ally-navy)}
+  .pill.slate{background:var(--surface-muted);color:var(--text-secondary)} .pill.slate .d{background:var(--text-muted)}
+
+  .note{display:flex;align-items:flex-start;gap:10px;padding:13px 15px;background:var(--ally-amber-tint);border:1px solid var(--ally-amber-tint-line);border-radius:var(--radius);font-size:12.5px;color:var(--text-primary);line-height:1.5}
+
+  /* field basics */
+  label.fl{display:block;font-size:12.5px;font-weight:600;color:var(--text-primary);margin-bottom:6px}
+  input.fi,select.fi,textarea.fi{width:100%;font-family:inherit;font-size:13.5px;color:var(--text-primary);background:var(--surface-card);border:1px solid var(--border-default);border-radius:var(--radius);padding:10px 12px}
+  input.fi:focus,select.fi:focus,textarea.fi:focus{outline:none;border-color:var(--ally-navy)}
+  input.fi:disabled{background:var(--surface-muted);color:var(--text-muted)}
+  textarea.fi{resize:vertical;min-height:80px;line-height:1.5}
+  .fgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .fgroup{margin-bottom:16px}
+  .fhelp{font-size:11.5px;color:var(--text-muted);margin-top:5px}
+
+  /* tappable option cards (lead type / delivery format) */
+  .optgrid{display:grid;gap:10px}
+  .optgrid.two{grid-template-columns:1fr 1fr}
+  .opt{display:flex;align-items:flex-start;gap:12px;text-align:left;padding:14px 15px;border:1px solid var(--border-default);border-radius:var(--radius-lg);background:var(--surface-card)}
+  .opt:hover{border-color:var(--ally-navy)}
+  .opt.sel{border-color:var(--ally-navy);border-width:2px;background:rgba(30,58,95,.03)}
+  .opt .oi{flex:none;width:34px;height:34px;border-radius:var(--radius);background:var(--surface-muted);color:var(--ally-navy);display:flex;align-items:center;justify-content:center}
+  .opt.sel .oi{background:var(--ally-navy);color:#fff}
+  .opt .on{font-size:14px;font-weight:600;color:var(--text-primary)}
+  .opt .od{font-size:12px;color:var(--text-secondary);margin-top:3px;line-height:1.4}
+  .opt.muted{opacity:.55}
+  .opt.muted .oi{background:var(--surface-muted);color:var(--text-muted)}
+
+  .tabs{display:flex;gap:2px;margin:16px 0;border-bottom:1px solid var(--border-hairline)}
+  .tab{font-size:13px;font-weight:500;color:var(--text-secondary);background:none;border:none;padding:9px 4px;margin-right:18px;border-bottom:2px solid transparent}
+  .tab.on{color:var(--text-primary);border-bottom-color:var(--ally-amber)}
+
+  /* stepper — reused for both the quote wizard progress and BQA question progress */
+  .stepper{display:flex;align-items:flex-start}
+  .step{flex:1;display:flex;flex-direction:column;align-items:center}
+  .step .line{display:flex;align-items:center;width:100%}
+  .step .conn{flex:1;height:2px;background:var(--border-default)}
+  .step .conn.done{background:var(--ally-amber)}
+  .step .conn.hide{background:transparent}
+  .step .dot{width:26px;height:26px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;font-family:var(--font-num);border:2px solid var(--border-default);background:var(--surface-card);color:var(--text-muted)}
+  .step .dot.done{background:var(--ally-amber);border-color:var(--ally-amber);color:#fff}
+  .step .dot.now{background:var(--surface-card);border-color:var(--ally-navy);color:var(--ally-navy)}
+  .step .lbl{font-size:10.5px;color:var(--text-secondary);margin-top:7px;text-align:center;line-height:1.3}
+  .step .lbl.now{color:var(--text-primary);font-weight:600}
+
+  /* ingredient table */
+  .ingtable{border:1px solid var(--border-default);border-radius:var(--radius);overflow:hidden;margin-bottom:8px}
+  .ingrow{display:grid;grid-template-columns:2fr 1fr 1fr 32px;gap:10px;padding:10px 12px;border-bottom:1px solid var(--border-hairline);align-items:center}
+  .ingrow:last-child{border-bottom:none}
+  .ingrow.head{background:var(--surface-muted);font-family:var(--font-num);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--text-meta)}
+  .ingrow input{width:100%;font-size:13px;border:1px solid var(--border-default);border-radius:4px;padding:6px 8px;font-family:inherit}
+  .ingrow .rm{width:26px;height:26px;border-radius:99px;border:1px solid var(--border-default);background:var(--surface-card);color:var(--text-muted);display:flex;align-items:center;justify-content:center}
+  .ingrow .rm:hover{border-color:var(--destructive);color:var(--destructive)}
+  .adder{font-size:12.5px;font-weight:600;color:var(--ally-navy);background:none;border:1px dashed var(--ally-navy-line);border-radius:var(--radius);padding:8px 12px;width:100%}
+  .adder:hover{background:rgba(30,58,95,.04)}
+
+  .dropzone{border:1px dashed var(--ally-amber-tint-line);background:rgba(240,168,41,.04);border-radius:var(--radius-lg);padding:16px 18px;display:flex;align-items:center;gap:14px;margin-bottom:16px}
+  .dropzone .dz-ic{flex:none;width:38px;height:38px;border-radius:var(--radius);background:var(--surface-card);border:1px solid var(--ally-amber-tint-line);display:flex;align-items:center;justify-content:center;color:var(--ally-amber-deep)}
+
+  .divider{display:flex;align-items:center;gap:12px;margin:18px 0;font-size:11.5px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em}
+  .divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--border-hairline)}
+
+  /* review recap */
+  .recap{background:var(--surface-muted);border:1px solid var(--border-default);border-radius:var(--radius-lg);padding:16px 18px;margin-bottom:20px}
+  .recap h4{font-family:var(--font-display);font-size:15px;font-weight:600;color:var(--text-primary);margin-bottom:12px}
+  .recrow{display:flex;justify-content:space-between;gap:16px;padding:7px 0;border-top:1px solid var(--border-hairline);font-size:13px}
+  .recrow:first-of-type{border-top:none}
+  .recrow .rk{color:var(--text-secondary)}
+  .recrow .rv{color:var(--text-primary);font-weight:500;text-align:right}
+
+  .consent{display:flex;gap:10px;align-items:flex-start;padding:12px 0;font-size:12px;line-height:1.55;color:var(--text-secondary)}
+  .consent input{margin-top:3px;flex:none}
+  .consent p{margin:0}
+
+  /* BQA */
+  .bqahead{text-align:center;max-width:520px;margin:0 auto 26px}
+  .bqahead .eyebrow2{font-family:var(--font-num);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--color-accent-text);margin-bottom:10px}
+  .bqahead h1{font-family:var(--font-display);font-size:26px;font-weight:600;color:var(--text-primary);letter-spacing:-0.01em;line-height:1.25}
+  .bqahead .sub{font-size:13.5px;color:var(--text-secondary);margin-top:9px;line-height:1.5}
+
+  .qcard{background:var(--surface-card);border:1px solid var(--border-default);border-radius:var(--radius-lg);padding:26px 28px}
+  .qeyebrow{font-family:var(--font-num);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-meta);margin-bottom:8px}
+  .qtitle{font-family:var(--font-display);font-size:19px;font-weight:600;color:var(--text-primary);margin-bottom:18px;line-height:1.35}
+
+  .optionrow{display:flex;align-items:center;gap:12px;padding:13px 15px;border:1px solid var(--border-default);border-radius:var(--radius);margin-bottom:8px;background:var(--surface-card);width:100%;text-align:left}
+  .optionrow:hover{border-color:var(--ally-navy)}
+  .optionrow.sel{border-color:var(--ally-navy);background:rgba(30,58,95,.03)}
+  .optionrow .rd{flex:none;width:18px;height:18px;border-radius:50%;border:2px solid var(--border-default);position:relative}
+  .optionrow.sel .rd{border-color:var(--ally-navy)}
+  .optionrow.sel .rd::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--ally-navy)}
+  .optionrow .ot{font-size:13.5px;color:var(--text-primary);flex:1}
+  .optionrow.branch{flex-direction:column;align-items:stretch}
+  .optionrow.branch .bh{display:flex;align-items:center;gap:12px;width:100%}
+  .optionrow.branch .chev{margin-left:auto;color:var(--text-muted);transition:transform .14s ease}
+  .optionrow.branch.open .chev{transform:rotate(180deg)}
+  .subopts{margin:12px 0 2px 30px;display:none;flex-direction:column;gap:8px}
+  .optionrow.branch.open .subopts{display:flex}
+  .subopt{display:flex;align-items:center;gap:10px;padding:10px 13px;border:1px solid var(--border-default);border-radius:var(--radius);background:var(--surface-muted);width:100%;text-align:left}
+  .subopt:hover{border-color:var(--ally-navy)}
+  .subopt.sel{border-color:var(--ally-navy);background:rgba(30,58,95,.05)}
+  .subopt .st{font-size:13px;color:var(--text-primary)}
+  .subopt .sd{font-size:11.5px;color:var(--text-secondary);margin-top:1px}
+
+  .qfoot{display:flex;align-items:center;justify-content:space-between;margin-top:20px;padding-top:16px;border-top:1px solid var(--border-hairline)}
+  .qcount{font-size:12px;color:var(--text-muted)}
+  .phonenudge{display:flex;align-items:center;gap:9px;margin-top:18px;padding-top:16px;border-top:1px solid var(--border-hairline);font-size:13px;color:var(--text-secondary)}
+  .phonenudge a{color:var(--ally-navy);font-weight:600}
+
+  /* ack modal */
+  .modalbg{position:fixed;inset:0;background:rgba(20,28,38,.5);display:none;align-items:center;justify-content:center;z-index:70;padding:20px}
+  .modalbg.open{display:flex}
+  .modal{background:#fff;border-radius:var(--radius-lg);max-width:420px;width:100%;padding:24px 26px;box-shadow:0 20px 50px -10px rgba(0,0,0,.35)}
+  .modal h3{font-family:var(--font-display);font-size:17px;font-weight:600;color:var(--text-primary);margin-bottom:10px}
+  .modal p{font-size:13.5px;color:var(--text-secondary);line-height:1.55;margin-bottom:18px}
+  .modal .mrow{display:flex;gap:10px;justify-content:flex-end}
+
+  /* result */
+  .resultcard{background:var(--surface-card);border:1px solid var(--border-default);border-radius:var(--radius-lg);padding:30px 32px;text-align:center;max-width:520px;margin:0 auto}
+  .resultcard.qualified{border-left:3px solid var(--ally-amber)}
+  .resultcard.review{border-left:3px solid var(--ally-navy-2)}
+  .resultcard.waitlisted{border-left:3px solid var(--border-default)}
+  .rbadge{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+  .rbadge.qualified{background:var(--ally-amber-tint);color:var(--ally-amber-deep)}
+  .rbadge.review{background:rgba(30,58,95,.08);color:var(--ally-navy)}
+  .rbadge.waitlisted{background:var(--surface-muted);color:var(--text-muted);border:2px solid var(--border-default)}
+  .rpill{margin-bottom:14px}
+  .resultcard h1{font-family:var(--font-display);font-size:24px;font-weight:600;color:var(--text-primary);margin-bottom:12px;letter-spacing:-0.01em}
+  .resultcard .rbody{font-size:14.5px;color:var(--text-secondary);line-height:1.6;max-width:40ch;margin:0 auto}
+  .resultcard .ractions{margin-top:22px;display:flex;justify-content:center;gap:12px}
+  .whatnext{text-align:left;background:var(--surface-muted);border:1px solid var(--border-default);border-radius:var(--radius);padding:16px 18px;margin-top:20px}
+  .whatnext h5{font-family:var(--font-num);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-meta);margin-bottom:10px}
+  .whatnext li{font-size:13px;color:var(--text-body);line-height:1.6;margin-left:16px;margin-bottom:4px}
+  .redirtext{margin-top:14px;font-size:12px;color:var(--text-muted)}
+
+  .spin{width:16px;height:16px;flex:none;border-radius:50%;border:2.5px solid rgba(255,255,255,.35);border-top-color:#fff;display:inline-block;animation:spin .7s linear infinite}
+  .spin.dark{border-color:var(--border-default);border-top-color:var(--ally-navy)}
+  .scoringcard{text-align:center;padding:60px 20px}
+  .scoringcard .spin.dark{width:26px;height:26px;border-width:3px;margin:0 auto 16px}
+  .scoringcard h2{font-family:var(--font-display);font-size:19px;font-weight:600;color:var(--text-primary)}
+  .scoringcard p{font-size:13px;color:var(--text-secondary);margin-top:6px}
+
+  footer.rev{background:var(--ally-navy);border-top:1px solid var(--ally-navy-line);padding:14px 24px;text-align:center;font-family:var(--font-num);font-size:10.5px;letter-spacing:.06em;color:#8FA6C4;text-transform:uppercase}
+
+  @media (max-width:640px){
+    .fgrid,.optgrid.two{grid-template-columns:1fr}
+    .swpanel{width:calc(100vw - 32px);right:-8px}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ══ design-review masthead — not part of the mocked client experience ══ -->
+  <header class="rev">
+    <div class="row">
+      <a class="logo" style="text-decoration:none" href="../?role=visitor" data-an-role-href="../?role={role}"><u>Ally</u>Nutra</a>
+      <span class="revtag">Design review · Quote → BQA → Submit redesign</span>
+      <div class="sw" id="sw">
+        <button class="swbtn" id="swBtn" aria-haspopup="true" aria-expanded="false">
+          Jump to state
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="swpanel" id="swPanel"></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="region">
+    <div class="wrap">
+      <div class="content" id="content"></div>
+    </div>
+  </div>
+
+  <footer class="rev">Static HTML mockup · mock data only · no network calls · not wired to real submission</footer>
+</div>
+
+<!-- ack modal (BQA pilot/sample minimum-commitment acknowledgement) -->
+<div class="modalbg" id="ackBg">
+  <div class="modal" id="ackModal"></div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════════════
+// This is a static design mockup. All data below is local, in-memory
+// state — there is no fetch/XHR, no Supabase, no submission of any kind.
+// ════════════════════════════════════════════════════════════════
+
+const svg = (paths, size=15) => `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${paths}</svg>`;
+const ICONS = {
+  formula:svg('<path d="M9 12h6M9 16h6M9 8h3M6 2h7l5 5v13a2 2 0 01-2 2H6a2 2 0 01-2-2V4a2 2 0 012-2z"/>'),
+  help:svg('<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>'),
+  capsule:svg('<rect x="4" y="9" width="16" height="6" rx="3"/><path d="M12 9v6"/>'),
+  tablet:svg('<circle cx="12" cy="12" r="8"/><path d="M8 12h8"/>'),
+  sachet:svg('<path d="M5 3h14l1 5-8 3-8-3z"/><path d="M6 8v13h12V8"/>'),
+  stick:svg('<rect x="9" y="2" width="6" height="20" rx="3"/>'),
+  pouch:svg('<path d="M6 3h12l1 4H5z"/><path d="M5 7c0 8 1 14 7 14s7-6 7-14"/>'),
+  upload:svg('<path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>'),
+  check:svg('<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>'),
+  clock:svg('<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>', 22),
+  search:svg('<circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>', 22),
+  phone:svg('<path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>'),
+  arrow:svg('<line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>'),
+  arrowLeft:svg('<line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>'),
+  chevronDown:svg('<polyline points="6 9 12 15 18 9"/>', 14),
+  plus:svg('<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>', 14),
+  trash:svg('<path d="M3 6h18M8 6V4a1 1 0 011-1h6a1 1 0 011 1v2M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/>', 13),
+};
+
+// ── real copy pulled from src/pages/Quote.tsx (DeliveryFormatStep + quoteOptions.ts) ──
+const FORMATS = [
+  {v:'capsules', icon:'capsule', l:'Capsules (two-piece shell)', d:'Best for botanicals, probiotics, fish oils', cat:'bottled'},
+  {v:'tablets', icon:'tablet', l:'Tablets (compressed solid dose)', d:'Ideal for vitamins, minerals, chewables, effervescents', cat:'bottled'},
+  {v:'sachets', icon:'sachet', l:'Sachets (single-serve packets)', d:'Perfect for drink mixes, electrolytes, collagen', cat:'flexible-single'},
+  {v:'stick-packs', icon:'stick', l:'Stick Packs (slim tubes)', d:'Great for energy powders, sleep aids, DTC brands', cat:'flexible-single'},
+  {v:'pouches', icon:'pouch', l:'Resealable Bags (multi-serve)', d:'Optimal for protein powders, bulk supplements, greens', cat:'flexible-bulk'},
+];
+const CAPSULE_TYPES = ['HPMC (Veggie)','Gelatin','Pullulan','Delayed Release','Other'];
+const TABLET_TYPES = ['Compressed','Chewable','Effervescent','Film Coated','Enteric Coated','Other'];
+const UNITS_PER_BOX = ['7 count','10 count','14 count','20 count','30 count','60 count','Other'];
+const POUCH_VOLUMES = ['100g','250g','500g','1kg','2kg','5kg','Other'];
+const BOTTLE_TYPES = ['Undecided','HDPE','PET','Glass','Other'];
+const BOTTLE_SIZES = ['Undecided','75cc','100cc','120cc','150cc','175cc','200cc','250cc','Other'];
+const BOTTLE_COLORS = ['Undecided','White','Amber','Clear','Black','Cobalt Blue','Other'];
+const LID_TYPES = ['Undecided','CRC (Child Resistant)','Flip Top','Screw Cap','Tamper Evident','Other'];
+const LID_COLORS = ['Undecided','White','Black','Gold','Silver','Natural','Other'];
+const MATERIAL_TYPES = ['Undecided','Foil Laminate','Kraft Paper','Matte Film','Glossy Film','Clear Film','Other'];
+const POUCH_SIZES = ['Undecided','4"×6"','6"×9"','8"×12"','10"×14"','Other'];
+const CLOSURE_TYPES = ['Undecided','Zip-Lock','Tear Notch','Spout Cap','Heat Seal Only','Other'];
+const PROVIDED_BY = ['Customer','Ally Nutra','Undecided','Other'];
+const BOOKING_DAYS = [
+  {v:'mon', l:'Mon', d:'Jul 27'},
+  {v:'tue', l:'Tue', d:'Jul 28'},
+  {v:'wed', l:'Wed', d:'Jul 29'},
+  {v:'thu', l:'Thu', d:'Jul 30'},
+  {v:'fri', l:'Fri', d:'Jul 31'},
+];
+const BOOKING_SLOTS = ['9:00 AM','11:00 AM','1:00 PM','3:00 PM'];
+
+// ── state ──────────────────────────────────────────────
+const S = {
+  screen: 'quote-1',
+  q: { // quote wizard answers
+    leadType: 'complete', email: 'jordan@coastlinewellness.co', phone: '(555) 219-4471',
+    deliveryFormat: 'capsules', capsuleType: '', tabletType: '', unitsPerBox: '', pouchVolume: '',
+    ingredients: [ {name:'Ashwagandha (KSM-66)', amount:'600', unit:'mg'}, {name:'Rhodiola Rosea', amount:'200', unit:'mg'} ],
+    servingSize: '2', servingsPerContainer: '30', formulationNotes: '',
+    bottleType:'', bottleSize:'', bottleColor:'', lidType:'', lidColor:'',
+    materialType:'', unitsPerBoxPkg:'', netWeight:'', pkgDims:'',
+    pouchSize:'', pouchVolumePkg:'', pkgMaterial:'', closureType:'',
+    labelsBy:'', designBy:'', pkgComments:'',
+    fullName:'Jordan Wells', contactPhone:'(555) 219-4471', company:'Coastline Wellness Co.',
+    projectNotes:'', smsConsent:false,
+  },
+  bqa: { qIndex: 0, a1:null, a2:null, a3:null, ackedQ2:{pilot:false,sample:false}, pendingAck:null, q2Open:false },
+  result: { outcome: null, committed: false, submitting:false },
+  booking: { origin:null, date:null, slot:null, name:'', email:'', phone:'' },
+};
+
+function go(id){ S.screen = id; render(); window.scrollTo({top:0,behavior:'auto'}); }
+function closeSwitcher(){ document.getElementById('sw').classList.remove('open'); }
+
+// ══════════════════════════════════════════════════════
+// QUOTE STEP 1 — LeadType (src/components/quote/steps/LeadTypeStep.tsx)
+// ══════════════════════════════════════════════════════
+function renderQuote1(){
+  return `<div class="fu">
+    <div class="pghead">
+      <div class="eyebrow">Contract manufacturing</div>
+      <h2 class="pg" style="font-size:28px">Get a quote</h2>
+      <p class="lede">Tell us where you are, and we'll route you to the fastest path — instant pricing or a formulation specialist.</p>
+    </div>
+    <div class="card cardpad">
+      <div class="optgrid two" style="margin-bottom:22px">
+        <button class="opt${S.q.leadType==='complete'?' sel':''}" data-set="leadType" data-val="complete">
+          <span class="oi">${ICONS.formula}</span>
+          <span><span class="on">I have my formula ready</span><br><span class="od">Ready with ingredient list, dosages, and specifications</span></span>
+        </button>
+        <button class="opt${S.q.leadType==='needs-refining'?' sel':''}" data-idea-start="1">
+          <span class="oi">${ICONS.help}</span>
+          <span><span class="on">I have an idea but need help refining it</span><br><span class="od">We'll show you a few ways to connect with our team</span></span>
+        </button>
+      </div>
+      <div class="fgrid">
+        <div class="fgroup"><label class="fl">Business email *</label><input class="fi" data-bind="q.email" value="${S.q.email}" placeholder="you@company.com"></div>
+        <div class="fgroup"><label class="fl">Phone number *</label><input class="fi" data-bind="q.phone" value="${S.q.phone}" placeholder="(555) 123-4567"></div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-top:6px">
+        <button class="btn-navy" data-nav="quote-2">Continue</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ══════════════════════════════════════════════════════
+// QUOTE STEP 2 — DeliveryFormat
+// ══════════════════════════════════════════════════════
+function selectList(name, options, current, otherField){
+  return `<select class="fi" data-bind="${name}">` +
+    options.map(o=>`<option value="${o}" ${o===current?'selected':''}>${o}</option>`).join('') +
+    `</select>` +
+    (current==='Other' && otherField ? `<input class="fi" style="margin-top:8px" data-bind="${otherField}" placeholder="Please specify" value="${S.q[otherField.split('.')[1]]||''}">` : '');
+}
+function renderQuote2(){
+  const f = S.q.deliveryFormat;
+  let sub = '';
+  if(f==='capsules') sub = `<div class="fgroup"><label class="fl">Capsule Type *</label>${selectList('q.capsuleType', CAPSULE_TYPES, S.q.capsuleType, 'q.capsuleTypeOther')}</div>`;
+  else if(f==='tablets') sub = `<div class="fgroup"><label class="fl">Tablet Type *</label>${selectList('q.tabletType', TABLET_TYPES, S.q.tabletType, 'q.tabletTypeOther')}</div>`;
+  else if(f==='sachets'||f==='stick-packs') sub = `<div class="fgroup"><label class="fl">Units Per Box *</label>${selectList('q.unitsPerBox', UNITS_PER_BOX, S.q.unitsPerBox, 'q.unitsPerBoxOther')}</div>`;
+  else if(f==='pouches') sub = `<div class="fgroup"><label class="fl">Pouch Volume / Net Weight *</label>${selectList('q.pouchVolume', POUCH_VOLUMES, S.q.pouchVolume, 'q.pouchVolumeOther')}</div>`;
+
+  return `<div class="fu">
+    ${wizHead(2,'Get an Instant Quote')}
+    <div class="card cardpad">
+      <div class="qeyebrow">Delivery Format</div>
+      <p class="lede" style="margin-bottom:16px">Choose your preferred product format</p>
+      <div class="optgrid" style="margin-bottom:20px">
+        ${FORMATS.map(fmt=>`<button class="opt${fmt.v===f?' sel':''}" data-set="q.deliveryFormat" data-val="${fmt.v}">
+          <span class="oi">${ICONS[fmt.icon]}</span>
+          <span><span class="on">${fmt.l}</span><br><span class="od">${fmt.d}</span></span>
+        </button>`).join('')}
+      </div>
+      ${sub}
+      ${wizFoot(2)}
+    </div>
+  </div>`;
+}
+
+// ══════════════════════════════════════════════════════
+// QUOTE STEP 3 — CompleteFormulation
+// ══════════════════════════════════════════════════════
+function renderQuote3(){
+  const rows = S.q.ingredients.map((ing,i)=>`
+    <div class="ingrow">
+      <input data-ing="${i}.name" value="${ing.name}" placeholder="Ingredient name">
+      <input data-ing="${i}.amount" value="${ing.amount}" placeholder="Amount">
+      <input data-ing="${i}.unit" value="${ing.unit}" placeholder="mg / g / IU">
+      <button class="rm" data-rmIng="${i}" title="Remove">${ICONS.trash}</button>
+    </div>`).join('');
+  return `<div class="fu">
+    ${wizHead(3,'Get an Instant Quote')}
+    <div class="card cardpad">
+      <div class="qeyebrow">Your Formulation</div>
+      <p class="lede" style="margin-bottom:16px">Enter your ingredient details and specifications</p>
+
+      <div class="dropzone">
+        <span class="dz-ic">${ICONS.upload}</span>
+        <div><div style="font-size:13.5px;font-weight:600;color:var(--text-primary)">Have a label or product page?</div>
+        <div style="font-size:12px;color:var(--text-secondary);margin-top:2px">Paste a product URL or upload a label image to auto-fill your formulation in seconds.</div></div>
+        <button class="btn-out" style="margin-left:auto" disabled title="Decorative in this mockup — no real upload">Upload label</button>
+      </div>
+      <div class="divider">or enter your formulation manually</div>
+
+      <label class="fl">Ingredients *</label>
+      <div class="ingtable">
+        <div class="ingrow head"><span>Name</span><span>Amount</span><span>Unit</span><span></span></div>
+        ${rows}
+      </div>
+      <button class="adder" data-addIng="1" style="margin-bottom:20px">${ICONS.plus} Add ingredient</button>
+
+      <div class="fgrid">
+        <div class="fgroup"><label class="fl">Serving Size *</label><input class="fi" data-bind="q.servingSize" value="${S.q.servingSize}" placeholder="e.g., 2"><div class="fhelp">Number of capsules per serving</div></div>
+        <div class="fgroup"><label class="fl">Servings Per Container *</label><input class="fi" data-bind="q.servingsPerContainer" value="${S.q.servingsPerContainer}" placeholder="e.g., 30"><div class="fhelp">Total servings in one bottle</div></div>
+      </div>
+      <div class="fgroup"><label class="fl">Additional Formulation Notes</label><textarea class="fi" data-bind="q.formulationNotes" placeholder="Any additional notes about your formulation, dosages, or special requirements">${S.q.formulationNotes}</textarea></div>
+
+      ${wizFoot(3)}
+    </div>
+  </div>`;
+}
+
+// ══════════════════════════════════════════════════════
+// QUOTE STEP 4 — Packaging
+// ══════════════════════════════════════════════════════
+function renderQuote4(){
+  const fmt = FORMATS.find(f=>f.v===S.q.deliveryFormat) || FORMATS[0];
+  let section = '';
+  if(fmt.cat==='bottled'){
+    section = `<div class="qeyebrow">Bottle &amp; Lid Details</div><div class="fgrid" style="margin-bottom:18px">
+      <div class="fgroup"><label class="fl">Bottle Type *</label>${selectList('q.bottleType', BOTTLE_TYPES, S.q.bottleType)}</div>
+      <div class="fgroup"><label class="fl">Bottle Size *</label>${selectList('q.bottleSize', BOTTLE_SIZES, S.q.bottleSize)}</div>
+      <div class="fgroup"><label class="fl">Bottle Color *</label>${selectList('q.bottleColor', BOTTLE_COLORS, S.q.bottleColor)}</div>
+      <div class="fgroup"><label class="fl">Lid Type *</label>${selectList('q.lidType', LID_TYPES, S.q.lidType)}</div>
+      <div class="fgroup"><label class="fl">Lid Color *</label>${selectList('q.lidColor', LID_COLORS, S.q.lidColor)}</div>
+    </div>`;
+  } else if(fmt.cat==='flexible-single'){
+    const label = S.q.deliveryFormat==='sachets' ? 'Sachet Details' : 'Stick Pack Details';
+    section = `<div class="qeyebrow">${label}</div><div class="fgrid" style="margin-bottom:18px">
+      <div class="fgroup"><label class="fl">Material Type</label>${selectList('q.materialType', MATERIAL_TYPES, S.q.materialType)}</div>
+      <div class="fgroup"><label class="fl">Units Per Box</label>${selectList('q.unitsPerBoxPkg', UNITS_PER_BOX, S.q.unitsPerBoxPkg)}</div>
+      <div class="fgroup"><label class="fl">Net Weight Per Unit</label><input class="fi" data-bind="q.netWeight" value="${S.q.netWeight}" placeholder="e.g., 5g, 10g"></div>
+      <div class="fgroup"><label class="fl">Package Dimensions</label><input class="fi" data-bind="q.pkgDims" value="${S.q.pkgDims}" placeholder="e.g., 3x5 inches"></div>
+    </div>`;
+  } else if(fmt.cat==='flexible-bulk'){
+    section = `<div class="qeyebrow">Pouch Details</div><div class="fgrid" style="margin-bottom:18px">
+      <div class="fgroup"><label class="fl">Pouch Size</label>${selectList('q.pouchSize', POUCH_SIZES, S.q.pouchSize)}</div>
+      <div class="fgroup"><label class="fl">Volume / Net Weight</label>${selectList('q.pouchVolumePkg', POUCH_VOLUMES, S.q.pouchVolumePkg)}</div>
+      <div class="fgroup"><label class="fl">Material Type</label>${selectList('q.pkgMaterial', MATERIAL_TYPES, S.q.pkgMaterial)}</div>
+      <div class="fgroup"><label class="fl">Closure Type</label>${selectList('q.closureType', CLOSURE_TYPES, S.q.closureType)}</div>
+    </div>`;
+  }
+  return `<div class="fu">
+    ${wizHead(4,'Get an Instant Quote')}
+    <div class="card cardpad">
+      <div class="qeyebrow">Packaging &amp; Services</div>
+      <p class="lede" style="margin-bottom:16px">Configure your packaging preferences</p>
+      ${section}
+      <div class="qeyebrow">Labels &amp; Design</div>
+      <div class="fgrid" style="margin-bottom:16px">
+        <div class="fgroup"><label class="fl">Labels Provided By *</label>${selectList('q.labelsBy', PROVIDED_BY, S.q.labelsBy)}</div>
+        <div class="fgroup"><label class="fl">Graphic Design By *</label>${selectList('q.designBy', PROVIDED_BY, S.q.designBy)}</div>
+      </div>
+      <div class="fgroup"><label class="fl">Additional Comments</label><textarea class="fi" data-bind="q.pkgComments" placeholder="Any other details about your project, special requests, timeline needs...">${S.q.pkgComments}</textarea></div>
+      ${wizFoot(4)}
+    </div>
+  </div>`;
+}
+
+// ══════════════════════════════════════════════════════
+// QUOTE STEP 5 — Contact + Review & Consent (recap panel is this
+// redesign's addition — real captured data, no invented content)
+// ══════════════════════════════════════════════════════
+function fmtLabel(v){ const f=FORMATS.find(x=>x.v===v); return f?f.l:v; }
+function renderQuote5(){
+  const q = S.q;
+  const pkgLine = (()=>{
+    const fmt = FORMATS.find(f=>f.v===q.deliveryFormat);
+    if(fmt.cat==='bottled') return [q.bottleType,q.bottleSize,q.bottleColor].filter(x=>x&&x!=='Undecided').join(' · ') || '—';
+    if(fmt.cat==='flexible-single') return [q.materialType,q.netWeight].filter(x=>x&&x!=='Undecided').join(' · ') || '—';
+    if(fmt.cat==='flexible-bulk') return [q.pouchSize,q.pkgMaterial].filter(x=>x&&x!=='Undecided').join(' · ') || '—';
+    return '—';
+  })();
+  return `<div class="fu">
+    ${wizHead(5,'Get an Instant Quote')}
+    <div class="card cardpad">
+      <div class="recap">
+        <h4>Review your request</h4>
+        <div class="recrow"><span class="rk">Delivery format</span><span class="rv">${fmtLabel(q.deliveryFormat)}</span></div>
+        <div class="recrow"><span class="rk">Ingredients</span><span class="rv">${q.ingredients.length} listed</span></div>
+        <div class="recrow"><span class="rk">Serving</span><span class="rv">${q.servingSize||'—'} per serving · ${q.servingsPerContainer||'—'} servings/container</span></div>
+        <div class="recrow"><span class="rk">Packaging</span><span class="rv">${pkgLine}</span></div>
+        <div class="recrow"><span class="rk">Labels / design by</span><span class="rv">${q.labelsBy||'—'} / ${q.designBy||'—'}</span></div>
+      </div>
+
+      <div class="fgrid">
+        <div class="fgroup"><label class="fl">Full Name *</label><input class="fi" data-bind="q.fullName" value="${q.fullName}"></div>
+        <div class="fgroup"><label class="fl">Email Address</label><input class="fi" value="${q.email}" disabled></div>
+      </div>
+      <div class="fgrid">
+        <div class="fgroup"><label class="fl">Phone *</label><input class="fi" data-bind="q.contactPhone" value="${q.contactPhone}"></div>
+        <div class="fgroup"><label class="fl">Company</label><input class="fi" data-bind="q.company" value="${q.company}"></div>
+      </div>
+      <div class="fgroup"><label class="fl">Tell us about your project</label><textarea class="fi" data-bind="q.projectNotes" placeholder="Tell us about your project, questions, or how we can help...">${q.projectNotes}</textarea></div>
+
+      <div class="consent">
+        <input type="checkbox" id="smsConsent" ${q.smsConsent?'checked':''} data-check="q.smsConsent">
+        <p>By checking this box, I expressly consent to receive transactional calls and text messages (SMS/MMS) from Ally Nutra LLC — including appointment confirmations, reminders, and account-related notifications — at the phone number provided. Consent is not required to make a purchase. Message frequency varies. Msg &amp; data rates may apply. Reply STOP to opt out at any time. View our Privacy Policy.</p>
+      </div>
+      <div class="consent" style="padding-top:0">
+        <span style="width:16px"></span>
+        <p>By submitting this form, you agree to receive email communications from Ally Nutra regarding your quote request and product updates. You can unsubscribe at any time.</p>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px">
+        <button class="btn-ghost" data-nav="quote-4">${ICONS.arrowLeft} Previous</button>
+        <button class="btn-navy" data-nav="bqa">Continue</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function wizHead(n, title){
+  const labels = ['Lead type','Delivery format','Formulation','Packaging','Review & consent'];
+  const steps = labels.map((l,i)=>({name:l, state: i<n-1?'done':i===n-1?'now':'todo'}));
+  return `<h2 class="pg" style="margin-bottom:4px">${title}</h2>
+  <div class="meta" style="margin-bottom:14px">Step ${n} of 5</div>
+  <div class="stepper" style="margin-bottom:22px">${stepperHtml(steps)}</div>`;
+}
+function wizFoot(n){
+  return `<div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
+    ${n>1?`<button class="btn-ghost" data-nav="quote-${n-1}">Previous</button>`:'<span></span>'}
+    <button class="btn-navy" data-nav="quote-${n+1}">Next</button>
+  </div>`;
+}
+function stepperHtml(steps){
+  return steps.map((s,i)=>{
+    const first=i===0, last=i===steps.length-1;
+    const ldone = s.state==='done' || (i>0 && steps[i-1].state==='done');
+    const rdone = s.state==='done';
+    const dotCls = s.state==='done'?'done':s.state==='now'?'now':'';
+    const mark = s.state==='done'?'✓':(i+1);
+    return `<div class="step">
+      <div class="line">
+        <div class="conn ${first?'hide':(ldone?'done':'')}"></div>
+        <div class="dot ${dotCls}">${mark}</div>
+        <div class="conn ${last?'hide':(rdone?'done':'')}"></div>
+      </div>
+      <div class="lbl ${s.state==='now'?'now':''}">${s.name}</div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════════
+// BQA — 3 questions, 100-point weighted score, pass at 60.
+// Score is computed but NEVER shown to the user — mirrors real
+// behavior, where only the outcome string reaches the client.
+// Bands: Qualified 60–100 · Under Review 40–59 · Waitlisted 0–39.
+// Q2 reproduces production's parent/leaf accordion (Qualify.tsx +
+// bqaBranches.ts): 3 flat top-level rows, then one disclosure row
+// ("500–1,000 units") that reveals 3 leaves when expanded — or is already
+// expanded if the current answer is one of its leaves. Pilot/Sample leaves
+// (36 pts each — a qualifying-worthy mid-tier, mirroring production's Q2
+// pilot/sample = 15/20) require an acknowledgement modal before the answer
+// is recorded (copy verbatim from src/components/bqa/bqaBranches.ts); the
+// one-off leaf sets immediately, no modal. NO outcome override for
+// pilot/sample — production removed that override deliberately; these
+// leads qualify on score like anyone else.
+// ══════════════════════════════════════════════════════
+const Q1_OPTS = [
+  {l:'Ready now / within 1 month', pts:32},
+  {l:'1–3 months', pts:24},
+  {l:'3–6 months', pts:16},
+  {l:'6+ months / just exploring', pts:8},
+];
+const Q2_TOP_OPTS = [
+  {l:'Large / ongoing volume, $50k+', pts:48},
+  {l:'Standard production run, ~$15k–50k', pts:36},
+  {l:'Small first order, ~$5k–15k', pts:24},
+];
+const Q2_LEAF_OPTS = [
+  {l:'Pilot run — 500–1,000 units', pts:36, ackKey:'pilot'},
+  {l:'Sample run — 5–10 units', pts:36, ackKey:'sample'},
+  {l:'No plans to scale — one-time order', pts:12},
+];
+// Flat scoring array — indices 0-2 are the top rows, 3-5 are the leaves.
+// bqaScore()/findIndex(ackKey) both index into this unchanged.
+const Q2_OPTS = [...Q2_TOP_OPTS, ...Q2_LEAF_OPTS];
+const Q3_OPTS = [
+  {l:'Established, scaling multiple products', pts:20},
+  {l:'Established brand adding SKUs', pts:15},
+  {l:'Early stage, first product(s)', pts:10},
+  {l:'Just an idea / pre-launch', pts:5},
+];
+// Exact copy from src/components/bqa/bqaBranches.ts (ackContent.q2_a_pilot / q2_a_sample).
+const ACK_COPY = {
+  pilot: {
+    title: 'Pilot runs — minimum commitment',
+    body: 'A 500–1,000 unit pilot run starts at approximately $10,000. The final cost depends on your formulation — more or premium ingredients will increase the total.',
+  },
+  sample: {
+    title: 'Sample runs — minimum commitment',
+    body: 'A sample run is 5–10 units with a $2,000 minimum. For stick packs, each unit contains 3–6 sticks — so a 10-unit sample is 30–60 sticks total.',
+  },
+};
+
+function bqaAnswered(i){
+  return [S.bqa.a1!==null, S.bqa.a2!==null, S.bqa.a3!==null][i];
+}
+function bqaScore(){
+  let s = 0;
+  if(S.bqa.a1!==null) s += Q1_OPTS[S.bqa.a1].pts;
+  if(S.bqa.a2!==null) s += Q2_OPTS[S.bqa.a2].pts;
+  if(S.bqa.a3!==null) s += Q3_OPTS[S.bqa.a3].pts;
+  return s;
+}
+function scoreToOutcome(score){
+  if(score>=60) return 'qualified';
+  if(score>=40) return 'review';
+  return 'waitlisted';
+}
+
+function renderBqa(){
+  const i = S.bqa.qIndex;
+  const total = 3;
+  const steps = Array.from({length:total},(_,n)=>({name:'', state: n<i?'done':n===i?'now':'todo'}));
+  let body = '';
+  if(i===0){
+    body = `<div class="qeyebrow">Question 01 of 03</div>
+    <div class="qtitle">How soon are you looking to start production?</div>
+    ${Q1_OPTS.map((o,n)=>optRow('bqa-a1',n,S.bqa.a1===n,o.l)).join('')}`;
+  } else if(i===1){
+    const selectedIsLeaf = S.bqa.a2!==null && S.bqa.a2 >= Q2_TOP_OPTS.length;
+    const showLeaves = S.bqa.q2Open || selectedIsLeaf;
+    const leafRows = Q2_LEAF_OPTS.map((o,n)=>{
+      const idx = Q2_TOP_OPTS.length + n;
+      return `<button class="subopt${S.bqa.a2===idx?' sel':''}" data-q2leaf="${idx}"${o.ackKey?` data-q2ack="${o.ackKey}"`:''}><span class="st">${o.l}</span></button>`;
+    }).join('');
+    body = `<div class="qeyebrow">Question 02 of 03</div>
+    <div class="qtitle">What scale and budget are you planning for your first order?</div>
+    ${Q2_TOP_OPTS.map((o,n)=>optRow('bqa-a2',n,S.bqa.a2===n,o.l)).join('')}
+    <div class="optionrow branch${showLeaves?' open':''}${selectedIsLeaf?' sel':''}">
+      <div class="bh" data-q2branchtoggle="1"><span class="rd"></span><span class="ot">500–1,000 units</span><span class="chev">${ICONS.chevronDown}</span></div>
+      <div class="subopts">
+        <div style="font-size:12px;color:var(--text-secondary);margin-bottom:2px">What kind of small run is this?</div>
+        ${leafRows}
+      </div>
+    </div>`;
+  } else {
+    body = `<div class="qeyebrow">Question 03 of 03</div>
+    <div class="qtitle">Where is your brand today?</div>
+    ${Q3_OPTS.map((o,n)=>optRow('bqa-a3',n,S.bqa.a3===n,o.l)).join('')}
+    <div class="phonenudge">${ICONS.phone} Prefer to talk? &nbsp;<a href="tel:+18887205888" data-nudge="1">Call (888) 720-5888</a></div>`;
+  }
+  const answeredCount = [0,1,2].filter(bqaAnswered).length;
+  const canContinue = bqaAnswered(i);
+  return `<div class="fu">
+    <div class="bqahead">
+      <div class="eyebrow2">Brand Qualification Assessment</div>
+      <h1>We'd love to learn about your brand.<br>Let's see how we can work together.</h1>
+      <p class="sub">A few quick questions so a specialist can tailor the right conversation.</p>
+    </div>
+    <div class="stepper" style="margin-bottom:22px">${stepperHtml(steps)}</div>
+    <div class="qcard">
+      ${body}
+      <div class="qfoot">
+        <span class="qcount">${answeredCount} of ${total} answered</span>
+        <div style="display:flex;gap:10px">
+          ${i>0?`<button class="btn-out" data-bqaback="1">Back</button>`:''}
+          <button class="btn-navy" data-bqanext="1" ${canContinue?'':'disabled'}>${i===total-1?'See my result':'Continue'}</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+function optRow(name, idx, sel, label, extraAttr=''){
+  return `<button class="optionrow${sel?' sel':''}" data-radio="${name}" data-idx="${idx}" ${extraAttr}><span class="rd"></span><span class="ot">${label}</span></button>`;
+}
+
+function renderScoring(){
+  return `<div class="fu scoringcard">
+    <span class="spin dark"></span>
+    <h2>Scoring your responses…</h2>
+    <p>This only takes a moment.</p>
+  </div>`;
+}
+
+// ══════════════════════════════════════════════════════
+// RESULT — 3 outcomes (Qualified / Under Review / Waitlisted copy
+// pulled from src/pages/QualifyResult.tsx; "Under review" is a new
+// distinct treatment for the borderline status per the agreed plan —
+// production currently renders borderline identically to waitlisted)
+// ══════════════════════════════════════════════════════
+function renderResult(){
+  const outcome = S.result.outcome || 'qualified';
+  const committed = S.result.committed;
+  const submitting = S.result.submitting;
+
+  const CFG = {
+    qualified: {
+      cls:'qualified', badge: ICONS.check, pillCls:'gold', pillTxt:'Qualified', h1:"Let's get on a call",
+      pre:"You're a great fit. Submit your request and then pick a time to talk with a specialist.",
+      post:'A specialist will walk through your project and align on a final quote. Pick a 30-minute window that works for you.',
+      postBtn:'Schedule your call',
+    },
+    review: {
+      cls:'review', badge: ICONS.search, pillCls:'navy', pillTxt:'Under review', h1:"Thanks — we're taking a closer look",
+      pre:'Your answers put you in a borderline band. Submit your request and a specialist will review the details personally.',
+      post:"A specialist is reviewing your responses manually and will follow up within 2 business days to confirm next steps.",
+      whatnext:['Your cost estimate is on its way and will arrive by email shortly.','If review confirms a fit, we\'ll reach out to schedule a call.','No action needed on your end right now.'],
+    },
+    waitlisted: {
+      cls:'waitlisted', badge: ICONS.clock, pillCls:'slate', pillTxt:'Waitlisted', h1:'Thanks for completing the assessment',
+      pre:'Submit your request and a specialist will review your responses.',
+      post:'A member of our team will review your responses manually within <strong>2 business days</strong> and reach out if there\'s a fit.',
+      whatnext:['Your cost estimate is on its way and will arrive by email shortly.','If the manual review confirms a fit, we\'ll contact you to schedule a call.','No need to do anything else right now.'],
+    },
+  };
+  const c = CFG[outcome];
+  const submitBtn = `<button class="btn-navy" data-submitreq="1" ${submitting?'disabled':''}>${submitting?'<span class="spin"></span> Submitting…':'Submit request'}</button>`;
+
+  let body;
+  if(!committed){
+    body = `<p class="rbody">${c.pre}</p><div class="ractions">${submitBtn}</div>`;
+  } else if(outcome==='qualified'){
+    body = `<p class="rbody">${c.post}</p><div class="ractions"><button class="btn-navy" data-schedule-call="1">${c.postBtn}</button></div>`;
+  } else {
+    body = `<p class="rbody">${c.post}</p>
+    <div class="whatnext"><h5>What happens next</h5><ul>${c.whatnext.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+    ${outcome==='waitlisted'?'<p class="redirtext">Returning you to the homepage shortly…</p>':''}`;
+  }
+
+  return `<div class="fu">
+    <div class="bqahead" style="margin-bottom:22px"><div class="eyebrow2">Brand Qualification Assessment</div></div>
+    <div class="resultcard ${c.cls}">
+      <div class="rbadge ${c.cls}">${c.badge}</div>
+      <div class="pill ${c.pillCls} rpill"><span class="d"></span>${c.pillTxt}</div>
+      <h1>${c.h1}</h1>
+      ${body}
+      <div class="phonenudge" style="justify-content:center">${ICONS.phone} Prefer to talk? &nbsp;<a href="tel:+18887205888" data-nudge="1">Call (888) 720-5888</a></div>
+    </div>
+  </div>`;
+}
+
+// ══════════════════════════════════════════════════════
+// BOOKING — Calendly-style flow (booking-intro → booking-schedule → booking-confirmed).
+// Two entry points: the "idea, need help refining" lead-type card (S.booking.origin='idea',
+// skips the quote wizard + BQA entirely) and the Qualified BQA outcome's "Schedule your call"
+// button (S.booking.origin='qualified'). Static mock — hardcoded days/slots, no real calendar,
+// no network calls.
+// ══════════════════════════════════════════════════════
+function renderBookingIntro(){
+  return `<div class="fu">
+    <div class="bqahead">
+      <div class="eyebrow2">Talk to a specialist</div>
+      <h1>Let's find a time to talk.</h1>
+      <p class="sub">A quick 15-minute call so we can understand your brand and map out next steps together.</p>
+    </div>
+    <div class="card cardpad" style="max-width:520px;margin:0 auto">
+      <div class="qeyebrow">What to expect</div>
+      <p class="lede" style="margin-bottom:16px">You'll talk with a formulation specialist who can help turn your idea into a manufacturable product — no pressure, no obligation.</p>
+      <ul style="margin:0 0 20px 18px;font-size:13px;color:var(--text-body);line-height:1.7">
+        <li>15 minutes, over video or phone — your choice</li>
+        <li>Bring whatever you have: a concept, a competitor product, or just an idea</li>
+        <li>We'll leave with a clear next step, whether that's a formula or a quote</li>
+      </ul>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <button class="btn-ghost" data-bookingback="1">${ICONS.arrowLeft} Back</button>
+        <button class="btn-navy" data-nav="booking-schedule">Continue</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderBookingSchedule(){
+  const steps = [
+    {name:'Intro', state:'done'},
+    {name:'Schedule', state:'now'},
+    {name:'Confirmed', state:'todo'},
+  ];
+  const dayTiles = BOOKING_DAYS.map(d=>`<button class="opt${S.booking.date===d.v?' sel':''}" data-set="booking.date" data-val="${d.v}">
+    <span><span class="on">${d.l}</span><br><span class="od">${d.d}</span></span>
+  </button>`).join('');
+  const slotRows = BOOKING_SLOTS.map(s=>`<button class="optionrow${S.booking.slot===s?' sel':''}" data-set="booking.slot" data-val="${s}"><span class="rd"></span><span class="ot">${s}</span></button>`).join('');
+  const canContinue = !!(S.booking.date && S.booking.slot);
+  return `<div class="fu">
+    <div class="bqahead">
+      <div class="eyebrow2">Talk to a specialist</div>
+      <h1>Pick a day and time</h1>
+      <p class="sub">All times shown in your local timezone.</p>
+    </div>
+    <div class="stepper" style="margin-bottom:22px">${stepperHtml(steps)}</div>
+    <div class="qcard">
+      <div class="qeyebrow">Choose a day</div>
+      <div class="optgrid" style="grid-template-columns:repeat(5,1fr);margin-bottom:20px">${dayTiles}</div>
+      <div class="qeyebrow">Choose a time</div>
+      <div style="margin-bottom:20px">${slotRows}</div>
+      <div class="qeyebrow">Your details</div>
+      <div class="fgrid">
+        <div class="fgroup"><label class="fl">Full Name</label><input class="fi" data-bind="booking.name" value="${S.booking.name}" placeholder="Your name"></div>
+        <div class="fgroup"><label class="fl">Email</label><input class="fi" data-bind="booking.email" value="${S.booking.email}" placeholder="you@company.com"></div>
+      </div>
+      <div class="fgroup"><label class="fl">Phone</label><input class="fi" data-bind="booking.phone" value="${S.booking.phone}" placeholder="(555) 123-4567"></div>
+      <div class="qfoot">
+        <button class="btn-out" data-bookingback="1">Back</button>
+        <button class="btn-navy" data-bookingnext="1" ${canContinue?'':'disabled'}>Confirm booking</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderBookingConfirming(){
+  return `<div class="fu scoringcard">
+    <span class="spin dark"></span>
+    <h2>Confirming your booking…</h2>
+    <p>This only takes a moment.</p>
+  </div>`;
+}
+
+function renderBookingConfirmed(){
+  const dayObj = BOOKING_DAYS.find(d=>d.v===S.booking.date);
+  const whenLine = (dayObj && S.booking.slot) ? `${dayObj.l}, ${dayObj.d} at ${S.booking.slot}` : null;
+  const body = whenLine
+    ? `<p class="rbody">You're confirmed for <strong>${whenLine}</strong>. A calendar invite and video link are on their way to your email.</p>`
+    : `<p class="rbody">You're all set. A specialist will confirm your exact date and time by email shortly.</p>`;
+  return `<div class="fu">
+    <div class="bqahead" style="margin-bottom:22px"><div class="eyebrow2">Talk to a specialist</div></div>
+    <div class="resultcard qualified">
+      <div class="rbadge qualified">${ICONS.check}</div>
+      <div class="pill gold rpill"><span class="d"></span>Confirmed</div>
+      <h1>You're all set</h1>
+      ${body}
+      <div class="ractions">
+        <button class="btn-out" disabled title="Decorative in this mockup — no real calendar integration">Add to Google Calendar</button>
+        <button class="btn-out" disabled title="Decorative in this mockup — no real calendar integration">Add to Outlook</button>
+      </div>
+      <div class="whatnext"><h5>What happens next</h5><ul>
+        <li>You'll receive a calendar invite with a video link at the email you provided.</li>
+        <li>A specialist will review anything you've shared beforehand.</li>
+        <li>Need to reschedule? Just reply to the confirmation email.</li>
+      </ul></div>
+      <div class="phonenudge" style="justify-content:center">${ICONS.phone} Prefer to talk sooner? &nbsp;<a href="tel:+18887205888" data-nudge="1">Call (888) 720-5888</a></div>
+    </div>
+  </div>`;
+}
+
+// ══════════════════════════════════════════════════════
+// render dispatch
+// ══════════════════════════════════════════════════════
+function render(){
+  const map = {
+    'quote-1':renderQuote1, 'quote-2':renderQuote2, 'quote-3':renderQuote3, 'quote-4':renderQuote4, 'quote-5':renderQuote5,
+    'bqa':renderBqa, 'scoring':renderScoring, 'result':renderResult,
+    'booking-intro':renderBookingIntro, 'booking-schedule':renderBookingSchedule,
+    'booking-confirming':renderBookingConfirming, 'booking-confirmed':renderBookingConfirmed,
+  };
+  document.getElementById('content').innerHTML = (map[S.screen]||renderQuote1)();
+  renderSwitcher();
+}
+
+// ── design-review jump switcher ──────────────────────────
+function renderSwitcher(){
+  const chip=(id,label,active)=>`<button class="sw-chip${active?' current':''}" data-jump="${id}">${label}</button>`;
+  document.getElementById('swPanel').innerHTML = `
+    <div class="sw-grp"><h6>Quote wizard</h6><div class="sw-row">
+      ${chip('quote-1','1 · Lead type', S.screen==='quote-1')}
+      ${chip('quote-2','2 · Format', S.screen==='quote-2')}
+      ${chip('quote-3','3 · Formulation', S.screen==='quote-3')}
+      ${chip('quote-4','4 · Packaging', S.screen==='quote-4')}
+      ${chip('quote-5','5 · Review & consent', S.screen==='quote-5')}
+    </div></div>
+    <div class="sw-grp"><h6>BQA questions</h6><div class="sw-row">
+      ${[0,1,2].map(n=>`<button class="sw-chip${S.screen==='bqa'&&S.bqa.qIndex===n?' current':''}" data-jumpq="${n}">Q${n+1}</button>`).join('')}
+    </div></div>
+    <div class="sw-grp"><h6>BQA result</h6><div class="sw-row">
+      <button class="sw-chip${S.screen==='result'&&S.result.outcome==='qualified'?' current':''}" data-jumpr="qualified">Qualified</button>
+      <button class="sw-chip${S.screen==='result'&&S.result.outcome==='review'?' current':''}" data-jumpr="review">Under review</button>
+      <button class="sw-chip${S.screen==='result'&&S.result.outcome==='waitlisted'?' current':''}" data-jumpr="waitlisted">Waitlisted</button>
+    </div></div>
+    <div class="sw-grp"><h6>Confirmation</h6><div class="sw-row">
+      <button class="sw-chip${S.screen==='result'&&S.result.committed?' current':''}" data-jumpsubmit="1">Submitted confirmation</button>
+    </div></div>
+    <div class="sw-grp"><h6>Booking flow</h6><div class="sw-row">
+      ${chip('booking-intro','1 · Intro', S.screen==='booking-intro')}
+      ${chip('booking-schedule','2 · Schedule', S.screen==='booking-schedule')}
+      ${chip('booking-confirmed','3 · Confirmed', S.screen==='booking-confirmed')}
+    </div></div>
+    <button class="sw-reset" data-resetall="1">Reset mockup to step 1</button>
+  `;
+}
+
+// ── ack modal ──────────────────────────────────────────
+function openAck(key){
+  const c = ACK_COPY[key];
+  document.getElementById('ackModal').innerHTML = `<h3>${c.title}</h3><p>${c.body}</p>
+    <div class="mrow"><button class="btn-out" data-ackcancel="1">Cancel</button><button class="btn-navy" data-ackok="${key}">Acknowledge &amp; continue</button></div>`;
+  document.getElementById('ackBg').classList.add('open');
+}
+function closeAck(){ document.getElementById('ackBg').classList.remove('open'); }
+
+// ── event delegation ───────────────────────────────────
+function setDeep(path, val){
+  const parts = path.split('.'); let obj = S;
+  for(let i=0;i<parts.length-1;i++) obj = obj[parts[i]];
+  obj[parts[parts.length-1]] = val;
+}
+
+document.addEventListener('click', e=>{
+  // switcher toggle
+  const swBtn = e.target.closest('#swBtn');
+  if(swBtn){ document.getElementById('sw').classList.toggle('open'); return; }
+  if(!e.target.closest('#sw')) document.getElementById('sw').classList.remove('open');
+
+  const jump = e.target.closest('[data-jump]'); if(jump){ go(jump.dataset.jump); closeSwitcher(); return; }
+  const jumpq = e.target.closest('[data-jumpq]'); if(jumpq){ S.bqa.qIndex=+jumpq.dataset.jumpq; S.bqa.q2Open=false; go('bqa'); closeSwitcher(); return; }
+  const jumpr = e.target.closest('[data-jumpr]'); if(jumpr){ S.result.outcome=jumpr.dataset.jumpr; S.result.committed=false; go('result'); closeSwitcher(); return; }
+  const jumpsub = e.target.closest('[data-jumpsubmit]'); if(jumpsub){ if(!S.result.outcome) S.result.outcome='qualified'; S.result.committed=true; go('result'); closeSwitcher(); return; }
+  const resetAll = e.target.closest('[data-resetall]');
+  if(resetAll){
+    S.bqa.qIndex=0; S.bqa.a1=S.bqa.a2=S.bqa.a3=null;
+    S.bqa.ackedQ2={pilot:false,sample:false}; S.bqa.pendingAck=null; S.bqa.q2Open=false;
+    S.result.outcome=null; S.result.committed=false; S.result.submitting=false;
+    S.booking.origin=null; S.booking.date=null; S.booking.slot=null;
+    S.booking.name=''; S.booking.email=''; S.booking.phone='';
+    go('quote-1'); closeSwitcher(); return;
+  }
+
+  const nav = e.target.closest('[data-nav]'); if(nav){ go(nav.dataset.nav); return; }
+
+  const ideaStart = e.target.closest('[data-idea-start]');
+  if(ideaStart){ S.q.leadType='needs-refining'; S.booking.origin='idea'; go('booking-intro'); return; }
+
+  const optset = e.target.closest('[data-set]');
+  if(optset){ setDeep(optset.dataset.set, optset.dataset.val); render(); return; }
+
+  const addIng = e.target.closest('[data-addIng]');
+  if(addIng){ S.q.ingredients.push({name:'',amount:'',unit:'mg'}); render(); return; }
+  const rmIng = e.target.closest('[data-rmIng]');
+  if(rmIng){ S.q.ingredients.splice(+rmIng.dataset.rmIng,1); render(); return; }
+
+  // Q2 parent/leaf accordion. The parent only toggles the reveal — it never
+  // records an answer. A leaf click either opens the ack modal (unacked
+  // pilot/sample — answer withheld until confirm) or sets S.bqa.a2 directly
+  // (the one-off leaf, or a leaf already acknowledged this session).
+  const q2branch = e.target.closest('[data-q2branchtoggle]');
+  if(q2branch){ S.bqa.q2Open = !S.bqa.q2Open; render(); return; }
+  const q2leaf = e.target.closest('[data-q2leaf]');
+  if(q2leaf){
+    const idx = +q2leaf.dataset.q2leaf;
+    const ackKey = q2leaf.dataset.q2ack;
+    if(ackKey && !S.bqa.ackedQ2[ackKey]){
+      S.bqa.pendingAck = ackKey;
+      openAck(ackKey);
+      return;
+    }
+    S.bqa.a2 = idx;
+    render();
+    return;
+  }
+  const ackOk = e.target.closest('[data-ackok]');
+  if(ackOk){
+    const key = ackOk.dataset.ackok;
+    S.bqa.ackedQ2[key] = true;
+    S.bqa.a2 = Q2_OPTS.findIndex(o=>o.ackKey===key);
+    S.bqa.pendingAck = null;
+    closeAck();
+    render();
+    return;
+  }
+  if(e.target.closest('[data-ackcancel]')){ S.bqa.pendingAck=null; closeAck(); return; }
+
+  // BQA radios
+  const radio = e.target.closest('[data-radio]');
+  if(radio){
+    const name = radio.dataset.radio, idx = +radio.dataset.idx;
+    if(name==='bqa-a1') S.bqa.a1 = idx;
+    if(name==='bqa-a2') S.bqa.a2 = idx;
+    if(name==='bqa-a3') S.bqa.a3 = idx;
+    render(); return;
+  }
+
+  const nudge = e.target.closest('[data-nudge]'); if(nudge){ e.preventDefault(); /* logged as bqa_call_nudge_exit in production; no-op here */ return; }
+
+  const bqaBack = e.target.closest('[data-bqaback]');
+  if(bqaBack){ S.bqa.qIndex = Math.max(0, S.bqa.qIndex-1); S.bqa.q2Open=false; render(); return; }
+  const bqaNext = e.target.closest('[data-bqanext]');
+  if(bqaNext){
+    if(S.bqa.qIndex < 2){ S.bqa.qIndex++; S.bqa.q2Open=false; render(); }
+    else {
+      go('scoring');
+      setTimeout(()=>{ S.result.outcome = scoreToOutcome(bqaScore()); S.result.committed=false; go('result'); }, 700);
+    }
+    return;
+  }
+
+  const bookingBack = e.target.closest('[data-bookingback]');
+  if(bookingBack){ go(S.booking.origin==='idea' ? 'quote-1' : 'result'); return; }
+  const bookingNext = e.target.closest('[data-bookingnext]');
+  if(bookingNext){
+    go('booking-confirming');
+    setTimeout(()=>{ go('booking-confirmed'); }, 700);
+    return;
+  }
+  const scheduleCall = e.target.closest('[data-schedule-call]');
+  if(scheduleCall){ S.booking.origin='qualified'; go('booking-intro'); return; }
+
+  const submitReq = e.target.closest('[data-submitreq]');
+  if(submitReq){
+    S.result.submitting = true; render();
+    setTimeout(()=>{ S.result.submitting=false; S.result.committed=true; render(); }, 550);
+    return;
+  }
+});
+
+document.addEventListener('input', e=>{
+  const bind = e.target.closest('[data-bind]');
+  if(bind){ setDeep(bind.dataset.bind, e.target.value); return; }
+  const ing = e.target.closest('[data-ing]');
+  if(ing){ const [i,field] = ing.dataset.ing.split('.'); S.q.ingredients[i][field] = e.target.value; return; }
+});
+document.addEventListener('change', e=>{
+  const bind = e.target.closest('[data-bind]');
+  if(bind && (e.target.tagName==='SELECT')){ setDeep(bind.dataset.bind, e.target.value); render(); return; }
+  const check = e.target.closest('[data-check]');
+  if(check){ setDeep(check.dataset.check, e.target.checked); return; }
+});
+document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ S.bqa.pendingAck=null; closeAck(); document.getElementById('sw').classList.remove('open'); } });
+
+render();
+</script>
+</body>
+</html>

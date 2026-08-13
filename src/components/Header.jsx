@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import logoWhite from '../assets/images/logo-white.png';
 import { SERVICE_KEYS, pageKeyFromPathname } from '../lib/pages.js';
+import { useDemoRole } from '../contexts/DemoRoleContext.jsx';
+import { quoteUrl, portalUrl } from '../lib/demoRole.js';
 
 const SERVICE_LINKS = [
   { to: '/services', label: 'All services' },
@@ -16,6 +18,22 @@ const MAIN_LINKS = [
   { to: '/about', label: 'About us' },
   { to: '/faq', label: 'FAQs' },
   { to: '/contact', label: 'Contact' },
+];
+
+// Client-only workspace bar (feature/role-and-links) — internal chrome for a
+// logged-in client, deliberately removed from the public site earlier and
+// restored here for the `client` demo role only. Labels/view ids match the
+// portal's own left-rail nav verbatim (NAV in public/portal/index.html) for
+// the first four; "Workspace" has no corresponding tab in the portal itself
+// (it's a decorative item inside the portal's own account-menu dropdown, not
+// a real view) so it links to the portal root rather than a specific view —
+// called out in the PR description rather than invented as a fake tab.
+const WORKSPACE_LINKS = [
+  { view: 'dashboard', label: 'Dashboard' },
+  { view: 'orders', label: 'Orders' },
+  { view: 'documents', label: 'Documents' },
+  { view: 'quotes', label: 'Quotes' },
+  { view: undefined, label: 'Workspace' },
 ];
 
 // Ported from the source file's canonical header + its hash-router IIFE. Three
@@ -39,6 +57,7 @@ export default function Header() {
   const navigate = useNavigate();
   const currentKey = pageKeyFromPathname(location.pathname);
   const onServiceView = SERVICE_KEYS.includes(currentKey);
+  const { role, isClient, setRole } = useDemoRole();
 
   const [desktopOpen, setDesktopOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -208,11 +227,27 @@ export default function Header() {
               {link.label}
             </NavLink>
           ))}
+          {isClient && (
+            <span className="workspace-bar">
+              {WORKSPACE_LINKS.map((link) => (
+                <a key={link.label} href={portalUrl(role, link.view)}>
+                  {link.label}
+                </a>
+              ))}
+              <button type="button" className="workspace-logout" onClick={() => setRole('visitor')}>
+                Logout
+              </button>
+            </span>
+          )}
         </nav>
-        {showStickyQuote ? (
-          <Link to="/contact" className="call-btn">
+        {isClient ? (
+          <a href={portalUrl(role)} className="call-btn">
+            <span>Go to portal</span>
+          </a>
+        ) : showStickyQuote ? (
+          <a href={quoteUrl(role)} className="call-btn">
             <span>Start your quote</span>
-          </Link>
+          </a>
         ) : (
           <a href="tel:+18887205888" className="call-btn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -282,6 +317,18 @@ export default function Header() {
             {link.label}
           </NavLink>
         ))}
+        {isClient && (
+          <div className="workspace-bar workspace-bar-mobile">
+            {WORKSPACE_LINKS.map((link) => (
+              <a key={link.label} href={portalUrl(role, link.view)}>
+                {link.label}
+              </a>
+            ))}
+            <button type="button" className="workspace-logout" onClick={() => setRole('visitor')}>
+              Logout
+            </button>
+          </div>
+        )}
         <a href="tel:+18887205888" className="btn btn-primary call-btn">
           Call (888) 720-5888
         </a>

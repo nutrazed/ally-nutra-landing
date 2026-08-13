@@ -2,6 +2,8 @@ import { useEffect } from 'react';
 import { HashRouter, Routes, Route, Navigate, Outlet, useLocation } from 'react-router-dom';
 import Header from './components/Header.jsx';
 import Footer from './components/Footer.jsx';
+import DemoRoleSwitch from './components/DemoRoleSwitch.jsx';
+import { DemoRoleProvider } from './contexts/DemoRoleContext.jsx';
 import Home from './views/Home.jsx';
 import Services from './views/Services.jsx';
 import ContractManufacturing from './views/ContractManufacturing.jsx';
@@ -45,23 +47,26 @@ function Layout() {
 
 export default function App() {
   return (
-    <HashRouter>
-      <Routes>
-        <Route element={<Layout />}>
-          <Route path="/" element={<Navigate to="/home" replace />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/contract-manufacturing" element={<ContractManufacturing />} />
-          <Route path="/private-label" element={<PrivateLabel />} />
-          <Route path="/capsule-manufacturing" element={<CapsuleManufacturing />} />
-          <Route path="/facility" element={<Facility />} />
-          <Route path="/certifications" element={<Certifications />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/faq" element={<Faq />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="*" element={<Navigate to="/home" replace />} />
-        </Route>
-      </Routes>
-    </HashRouter>
+    <DemoRoleProvider>
+      <HashRouter>
+        <Routes>
+          <Route element={<Layout />}>
+            <Route path="/" element={<Navigate to="/home" replace />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/contract-manufacturing" element={<ContractManufacturing />} />
+            <Route path="/private-label" element={<PrivateLabel />} />
+            <Route path="/capsule-manufacturing" element={<CapsuleManufacturing />} />
+            <Route path="/facility" element={<Facility />} />
+            <Route path="/certifications" element={<Certifications />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/faq" element={<Faq />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="*" element={<Navigate to="/home" replace />} />
+          </Route>
+        </Routes>
+      </HashRouter>
+      <DemoRoleSwitch />
+    </DemoRoleProvider>
   );
 }

@@ -105,7 +105,7 @@ p{font-size:15px;line-height:1.7;color:hsl(var(--muted-foreground));}
    "never stretch the wordmark" rule; width follows the source's own aspect ratio. */
 .logo-img{height:36px;width:auto;display:block;}
 .main-nav{display:flex;align-items:center;gap:6px;flex:1;justify-content:center;}
-.main-nav a{font-size:14px;font-weight:500;color:hsl(0 0% 100% / .75);padding:8px 14px;border-radius:var(--radius-sm);transition:color .15s;}
+.main-nav a{font-size:14px;font-weight:500;color:hsl(0 0% 100% / .75);padding:8px 14px;border-radius:var(--radius-sm);transition:color .15s;white-space:nowrap;}
 .main-nav a:hover{color:#fff;}
 .main-nav a.active{color:hsl(var(--ally-orange));font-weight:700;}
 
@@ -149,6 +149,20 @@ p{font-size:15px;line-height:1.7;color:hsl(var(--muted-foreground));}
   .main-nav{display:none;}
   .hamburger{display:flex;}
 }
+
+/* ---- Workspace bar (feature/role-and-links, `client` demo role only) ----
+   Internal chrome for a logged-in client — removed from the public site
+   earlier, restored here behind the demo role switch. Set apart from the
+   marketing nav with a left divider + slightly dimmer default color rather
+   than a whole separate row, per "do not restructure the layout." */
+.workspace-bar{display:flex;align-items:center;gap:2px;margin-left:10px;padding-left:14px;border-left:1px solid hsl(0 0% 100% / .18);flex-wrap:nowrap;}
+.workspace-bar a{font-size:13px;font-weight:500;color:hsl(0 0% 100% / .6);padding:8px 10px;border-radius:var(--radius-sm);transition:color .15s;white-space:nowrap;}
+.workspace-bar a:hover{color:#fff;}
+.workspace-logout{font-family:inherit;font-size:13px;font-weight:600;color:hsl(var(--ally-orange));background:none;border:none;padding:8px 10px;cursor:pointer;white-space:nowrap;}
+.workspace-logout:hover{color:hsl(var(--ally-orange)/.8);}
+.workspace-bar-mobile{display:flex;flex-wrap:wrap;gap:2px;padding:12px 24px;background:hsl(0 0% 100% / .04);border-bottom:1px solid hsl(0 0% 100% / .06);}
+.workspace-bar-mobile a{font-size:13.5px;font-weight:500;color:hsl(0 0% 100% / .7);padding:8px 10px;}
+.workspace-bar-mobile .workspace-logout{padding:8px 10px;}
 
 /* ---- Footer (canonical) ---- */
 .site-footer{background:hsl(var(--ally-navy));color:hsl(0 0% 100% / .7);padding:64px 0 28px;margin-top:0;}
@@ -1018,3 +1032,32 @@ html.no-js .stat-live{display:none;}
   }
   .varieties-grid{grid-template-columns:1fr;}
 }
+
+/* ---- Demo role switch (feature/role-and-links) ----
+   Presentation-only prototype control, not a shipped feature — deliberately
+   styled like a dev tool (mono type, muted, dashed border) rather than a
+   product affordance. public/shared/demo-role.js injects matching styles
+   inline for the two static pages, since they can't import this file. */
+.demo-switch{
+  position:fixed;left:16px;bottom:16px;z-index:9999;
+  display:flex;align-items:center;gap:8px;
+  padding:7px 12px;
+  background:hsl(215 45% 12% / .92);
+  border:1px dashed hsl(0 0% 100% / .28);
+  border-radius:var(--radius-md);
+  font-family:var(--font-mono);
+  font-size:11px;
+  color:hsl(0 0% 100% / .65);
+  letter-spacing:.04em;
+}
+.demo-switch-label{white-space:nowrap;}
+.demo-switch button{
+  font-family:inherit;font-size:11px;font-weight:600;letter-spacing:.03em;
+  background:none;border:none;color:hsl(0 0% 100% / .55);
+  cursor:pointer;padding:3px 6px;border-radius:4px;
+}
+.demo-switch button[aria-pressed="true"]{color:#fff;background:hsl(0 0% 100% / .14);}
+.demo-switch button:hover{color:#fff;}
+.demo-switch button:focus-visible{outline:2px solid hsl(var(--ally-orange));outline-offset:1px;}
+.demo-switch-sep{color:hsl(0 0% 100% / .25);}
+@media (max-width:480px){.demo-switch{left:8px;bottom:8px;padding:6px 9px;}}

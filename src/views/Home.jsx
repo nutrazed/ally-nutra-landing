@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom';
 import { sx } from '../lib/styleString.js';
 import { hideAndTint } from '../lib/imgFallback.js';
 import ProductCardsGrid from '../components/ProductCardsGrid.jsx';
+import { useDemoRole } from '../contexts/DemoRoleContext.jsx';
+import { quoteUrl } from '../lib/demoRole.js';
 
 import homeHero from '../assets/images/home-hero.jpg';
 import heroMachineWebm from '../assets/videos/hero-machine.webm';
@@ -42,15 +44,16 @@ import facility06 from '../assets/images/facility-06.jpg';
 
 import { useEffect, useRef, useState } from 'react';
 
-// Real, live Calendly scheduling link — found read-only in the company repo
-// (Ally-Nutra-LLC-New/ally-nutra), src/lib/calendlyBooking.ts, JOSH_CALENDLY_URL,
-// on an unpublished local branch (landing-redesign/an-design-001-full-site, not yet
-// on that repo's main). The company's own /schedule route will eventually host this
-// same Calendly embed, but that migration isn't live on main yet, so linking to
-// allynutra.com/schedule today would hit the old native booking flow instead. The
-// raw Calendly URL works right now regardless of that migration's status. Update
-// this constant (and drop this comment) once /schedule ships the embed on main.
-const BOOKING_URL = 'https://calendly.com/josh-p-allynutra';
+// The hero/final-CTA "Book a call" button used to point at a real, live
+// Calendly link (found read-only in the company repo, src/lib/calendlyBooking.ts,
+// JOSH_CALENDLY_URL). feature/role-and-links repoints both "Book a call" buttons
+// at the new /quote/ static flow instead (see quoteUrl() usage below), since the
+// quote mockup's own booking step is meant to be the demo's booking entry point
+// now — Calendly is no longer linked from here. The quote mockup has no
+// URL-addressable state at all (confirmed: no location/hash/URLSearchParams
+// references anywhere in its script), so this currently lands on the quote
+// wizard's first step rather than jumping ahead to the booking screen — see the
+// PR description for why an anchor wasn't invented to fake that.
 
 // "6 questions" = the six required fields on the real /contact form (fname, lname,
 // email, brand, service, details — src/views/Contact.jsx:79-136), not the "5
@@ -284,6 +287,7 @@ const EXPLORE_LINKS = [
 ];
 
 export default function Home() {
+  const { role, isClient } = useDemoRole();
   return (
     <>
       {/* 01 — HERO: the only job of this section is stating what we do, for whom, and
@@ -310,8 +314,8 @@ export default function Home() {
               transparent pricing, and formulation help if you need it.
             </p>
             <div className="hero-ctas">
-              <Link to="/contact" className="btn btn-primary btn-lg">Start your quote →</Link>
-              <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer" className="btn btn-outline-invert btn-lg">Not sure yet? Book a call</a>
+              <a href={quoteUrl(role)} className="btn btn-primary btn-lg">{isClient ? 'Start a new quote' : 'Start your quote →'}</a>
+              <a href={quoteUrl(role)} className="btn btn-outline-invert btn-lg">Not sure yet? Book a call</a>
             </div>
             <p className="hero-expectation">{EXPECTATION_LINE}</p>
             <div className="qual-bar">
@@ -590,8 +594,8 @@ export default function Home() {
             <em style={sx('font-style:italic;color:hsl(var(--ally-orange));')}>actually</em> reorder?
           </h2>
           <div className="hero-ctas" style={sx('justify-content:center;margin-top:0;')}>
-            <Link to="/contact" className="btn btn-primary btn-lg">Start your quote →</Link>
-            <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer" className="btn btn-outline-invert btn-lg">Not sure yet? Book a call</a>
+            <a href={quoteUrl(role)} className="btn btn-primary btn-lg">{isClient ? 'Start a new quote' : 'Start your quote →'}</a>
+            <a href={quoteUrl(role)} className="btn btn-outline-invert btn-lg">Not sure yet? Book a call</a>
           </div>
           <p className="hero-expectation" style={sx('color:hsl(0 0% 100% / .82);margin-top:20px;')}>{EXPECTATION_LINE}</p>
           <p style={sx('margin-top:12px;font-size:13px;color:hsl(0 0% 100% / .5);')}>
