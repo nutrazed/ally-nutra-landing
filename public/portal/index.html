@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AllyNutra · Client Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Roboto+Slab:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap">
+<!-- AN-DEMO role switch (feature/role-and-links) — presentation-only, no auth.
+     Relative path: this file is served one level under the site root
+     (/ally-nutra-landing/portal/), so ../shared/ resolves correctly under
+     Vite's configured base path in dev, preview, and the deployed GitHub
+     Pages build alike, without hardcoding the base path here. -->
+<script defer src="../shared/demo-role.js"></script>
+<style>
+  /* ── AllyNutra tokens — Direction 1A · Document (v1.0 ADOPTED) ─────────
+     Navy carries the brand; amber is a single functional mark per view.
+     Ported wholesale from the Zed client portal prototype — this IS the
+     AN-DESIGN-001 spec, not a re-derivation of it. */
+  :root{
+    /* brand */
+    --ally-navy:#1E3A5F; --ally-navy-2:#2E5D9E; --ally-navy-line:#33507A;
+    /* amber — spent, not splashed */
+    --ally-amber:#F0A829; --ally-amber-deep:#9A6B12;
+    --ally-amber-tint:rgba(240,168,41,0.10); --ally-amber-tint-line:rgba(240,168,41,0.35);
+    /* ink on paper */
+    --ally-ink:#1B1D20; --ally-ink-2:#3A3E43;
+    --text-primary:#1B1D20; --text-body:#3A3E43; --text-secondary:#5B6168;
+    --text-muted:#5B6168; --text-meta:#71717A;
+    --color-accent-text:var(--ally-amber-deep);
+    /* surfaces — panels sit on warm paper; content on white */
+    --surface-page:#ECEAE6; --surface-paper:#F4F2ED; --surface-card:#FFFFFF;
+    --surface-muted:#F4F4F5;
+    --border-default:#E4E5E2; --border-hairline:#ECEEEA;
+    /* radius — 6px base, 8px max */
+    --radius:6px; --radius-lg:8px;
+    --destructive:#DC474C;
+    --ok-bg:#E6F4EA; --ok-fg:#2E7D46;
+    /* type — Roboto Slab states · Roboto explains · JetBrains Mono labels the evidence */
+    --font-display:'Roboto Slab',Georgia,'Times New Roman',serif;
+    --font-text:'Roboto',Helvetica,Arial,sans-serif;
+    --font-num:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+    --font-mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:var(--font-text);background:var(--surface-page);color:var(--text-body);-webkit-font-smoothing:antialiased}
+  .app{min-height:100vh;display:flex;flex-direction:column}
+  input::placeholder,textarea::placeholder{color:var(--text-muted)}
+  .sc::-webkit-scrollbar{width:9px}
+  .sc::-webkit-scrollbar-thumb{background:rgba(27,29,32,0.16);border-radius:2px}
+  @keyframes fade-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .fu{animation:fade-in .26s cubic-bezier(.4,0,.2,1) both}
+  @media (prefers-reduced-motion:reduce){.fu{animation:none}}
+  button{font-family:inherit;cursor:pointer}
+  a:focus-visible,button:focus-visible,.navitem:focus-visible,.tab:focus-visible{outline:2px solid var(--ally-amber);outline-offset:1px}
+  .track{height:7px;background:#EDEBE6;border-radius:99px;overflow:hidden}
+  .track > span{display:block;height:100%;background:var(--ally-navy);border-radius:99px}
+
+  /* ── marketing header (Wen structure) ──────────────────── */
+  header.mk{background:var(--ally-navy);border-bottom:1px solid var(--ally-navy-line);padding:14px 28px;flex:none}
+  header.mk .row{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:24px}
+  .logo{font-family:var(--font-display);font-size:19px;font-weight:600;letter-spacing:-0.02em;color:#fff}
+  .logo u{border-bottom:2px solid var(--ally-amber);padding-bottom:3px;text-decoration:none}
+  .mknav{display:flex;gap:22px;font-size:14px;color:#C3D0DF}
+  .mknav span{cursor:default}
+  .mknav a{color:inherit;text-decoration:none;cursor:pointer}
+  .mknav a:hover{color:#fff}
+  .callbtn{font-size:13px;font-weight:600;color:var(--ally-ink);background:var(--ally-amber);border:1px solid var(--ally-amber);border-radius:var(--radius);padding:9px 16px;white-space:nowrap}
+  .callbtn:hover{background:#E09A1A}
+
+  /* account menu */
+  .acct{position:relative}
+  .who{display:flex;align-items:center;gap:9px;padding:5px 8px 5px 18px;border-left:1px solid var(--ally-navy-line);background:none;border-top:none;border-right:none;border-bottom:none;border-radius:var(--radius);cursor:pointer}
+  .who:hover{background:rgba(255,255,255,.06)}
+  .who .nm{font-size:13px;color:#fff}
+  .who .cv{font-size:11px;color:#9FB2C7;transition:transform .15s ease}
+  .acct.open .who .cv{transform:rotate(180deg)}
+  .avatar{width:32px;height:32px;flex:none;border-radius:var(--radius);background:var(--ally-navy-2);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--font-text);font-size:11px;letter-spacing:.04em}
+
+  .menu{position:absolute;right:0;top:calc(100% + 12px);width:228px;background:var(--surface-card);border:1px solid var(--border-default);border-radius:var(--radius);box-shadow:0 12px 34px rgba(27,29,32,.20);overflow:hidden;z-index:60;opacity:0;transform:translateY(-4px);pointer-events:none;transition:opacity .14s ease,transform .14s ease}
+  .acct.open .menu{opacity:1;transform:none;pointer-events:auto}
+  .menu .head{padding:11px 12px 10px;border-bottom:1px solid var(--border-hairline)}
+  .menu .head .n{font-size:13px;font-weight:600;color:var(--text-primary)}
+  .menu .head .c{font-size:11.5px;color:var(--text-secondary);margin-top:1px}
+  .menu .sect{padding:6px 0}
+  .mi{display:flex;align-items:center;gap:10px;width:100%;padding:9px 12px;background:none;border:none;text-align:left;font-size:13px;color:var(--text-body);cursor:pointer}
+  .mi:hover{background:var(--surface-muted);color:var(--text-primary)}
+  .mi svg{color:var(--text-muted);flex:none}
+  .mi:hover svg{color:var(--ally-navy)}
+  .mi.danger{color:var(--color-accent-text)} .mi.danger svg{color:currentColor}
+  .menu .div{height:1px;background:var(--border-hairline);margin:6px 0}
+
+  /* ── portal shell ───────────────────────────────────────── */
+  .region{flex:1;overflow-y:auto;background:var(--surface-page)}
+  .wrap{max-width:1180px;margin:0 auto;padding:22px 28px 48px}
+  .crumb{display:flex;align-items:baseline;gap:10px;margin-bottom:14px}
+  .crumb .cat{font-family:var(--font-text);font-size:10px;letter-spacing:.16em;color:var(--color-accent-text);text-transform:uppercase}
+  .crumb .pg{font-size:13px;color:var(--text-muted)}
+  .panel{background:var(--surface-page);border:1px solid var(--border-default);border-radius:var(--radius);overflow:hidden;display:flex;align-items:stretch;min-height:600px}
+
+  /* rail — solid navy (darker/industrial signature), Wen's structure */
+  aside.rail{width:216px;flex:none;background:var(--ally-navy);border-right:1px solid var(--ally-navy-line);display:flex;flex-direction:column;padding:22px 14px 16px}
+  .navitem{position:relative;display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:var(--radius);color:#C3D0DF;font-size:14px;background:none;border:none;width:100%;text-align:left;transition:background .12s ease,color .12s ease}
+  .navitem svg{color:#8FA6C4;transition:color .12s ease}
+  .navitem:hover{background:rgba(255,255,255,.07);color:#fff}
+  .navitem:hover svg{color:#fff}
+  .navitem .bar{position:absolute;left:0;top:8px;bottom:8px;width:3px;background:var(--ally-amber);border-radius:0 3px 3px 0;display:none}
+  .navitem:hover .bar{display:block}
+  .navitem.active{background:var(--ally-amber);color:#2A1D05;font-weight:600}
+  .navitem.active svg{color:#2A1D05}
+  .navitem.active:hover{background:var(--ally-amber)}
+  .navitem.active .bar{display:none}
+  .railsep{height:1px;background:var(--ally-navy-line);margin:8px 4px}
+
+  .content{flex:1;min-width:0;padding:34px 40px 40px;background:var(--surface-card)}
+  .content .view{display:none}
+  .content .view.on{display:block}
+
+  /* plain headings — Wen's structure, no gradient banner */
+  h2.pg{margin:0 0 4px;font-family:var(--font-display);font-size:24px;font-weight:600;letter-spacing:-0.015em;color:var(--text-primary)}
+  h2.pg.big{margin:0;font-size:30px;font-weight:600;letter-spacing:-0.02em}
+  h2.pg.settingsbig{font-size:26px}
+  .lede{margin:0;font-size:14px;color:var(--text-secondary)}
+  .lede.dash{font-size:15px;line-height:1.6;color:var(--text-secondary);max-width:62ch;margin-top:8px}
+  .viewhead{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+
+  .btn-navy{font-size:13px;font-weight:600;color:#fff;background:var(--ally-navy);border:none;border-radius:var(--radius);padding:9px 15px;white-space:nowrap}
+  .btn-navy:hover{background:#17314f}
+  .btn-out{font-size:13px;font-weight:600;color:var(--ally-navy);background:var(--surface-card);border:1px solid var(--ally-navy);border-radius:var(--radius);padding:8px 14px;white-space:nowrap}
+  .btn-ghost{font-size:12.5px;font-weight:600;color:var(--text-secondary);background:none;border:none}
+  .card{background:var(--surface-page);border:1px solid var(--border-default);border-radius:var(--radius)}
+  .num{font-family:var(--font-num)}
+  .meta{font-family:var(--font-num);font-size:10.5px;letter-spacing:.05em;color:var(--text-meta);text-transform:uppercase}
+
+  .pill{display:inline-flex;align-items:center;gap:6px;border-radius:99px;padding:3px 10px;font-size:11.5px;font-weight:500}
+  .pill .d{width:6px;height:6px;border-radius:50%}
+  .pill.ok{background:var(--ok-bg);color:var(--ok-fg)} .pill.ok .d{background:var(--ok-fg)}
+  .pill.amber{background:var(--ally-amber-tint);color:var(--color-accent-text)} .pill.amber .d{background:var(--ally-amber)}
+  .pill.navy{background:rgba(30,58,95,.08);color:var(--ally-navy)} .pill.navy .d{background:var(--ally-navy)}
+  .pill.solid{background:var(--ally-amber);color:#2A1D05;font-weight:600}
+
+  .tabs{display:flex;gap:2px;margin:18px 0;border-bottom:1px solid var(--border-hairline);flex-wrap:wrap}
+  .tab{font-size:13px;font-weight:500;color:var(--text-secondary);background:none;border:none;padding:9px 14px;border-bottom:2px solid transparent;margin-bottom:-1px}
+  .tab.on{color:var(--text-primary);border-bottom-color:var(--ally-navy)}
+  .tab:hover{color:var(--text-primary)}
+
+  /* stepper */
+  .stepper{display:flex;align-items:flex-start}
+  .step{flex:1;display:flex;flex-direction:column;align-items:center}
+  .step .line{display:flex;align-items:center;width:100%}
+  .step .conn{flex:1;height:1px;background:var(--border-default)}
+  .step .conn.done{background:var(--ally-navy)}
+  .step .conn.hide{background:transparent}
+  .step .dot{width:24px;height:24px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-text);font-size:10px;font-weight:500;border:1px solid var(--border-default);background:var(--surface-card);color:var(--text-muted)}
+  .step .dot.done{background:var(--ally-navy);border-color:var(--ally-navy);color:#fff}
+  .step .dot.now{background:var(--ally-amber);border-color:var(--ally-amber);color:#fff;font-size:7px}
+  .step .lbl{font-family:var(--font-text);font-size:9px;letter-spacing:.05em;margin-top:8px;text-align:center;text-transform:uppercase;color:var(--text-muted)}
+  .step .lbl.now{color:var(--text-primary)}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .datecube{width:50px;flex:none;text-align:center;border:1px solid var(--border-default);border-radius:var(--radius);overflow:hidden}
+  .datecube .m{background:var(--ally-navy);color:#fff;font-family:var(--font-text);font-size:10px;letter-spacing:.06em;padding:4px 0}
+  .datecube .d{font-family:var(--font-display);font-size:20px;font-weight:600;color:var(--text-primary);padding:3px 0 4px}
+
+  .doc-row{display:grid;grid-template-columns:2.6fr 1.2fr 1fr 110px;gap:14px;padding:15px 18px;border-bottom:1px solid var(--border-hairline);align-items:center;background:var(--surface-page)}
+  .inv-row{display:grid;grid-template-columns:1fr 2fr 1fr 1.1fr 84px;gap:14px;padding:15px 18px;border-bottom:1px solid var(--border-hairline);align-items:center;background:var(--surface-page)}
+  .listwrap{border:1px solid var(--border-default);border-radius:var(--radius);overflow:hidden}
+  .listwrap > *:last-child{border-bottom:none}
+  .note{display:flex;align-items:center;gap:10px;padding:12px 15px;background:var(--ally-amber-tint);border:1px solid var(--ally-amber-tint-line);border-radius:var(--radius)}
+
+  /* ── dashboard quick reorder (ported from Zed) ───────────── */
+  .reorder{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .rocard{background:var(--surface-page);border:1px solid var(--border-default);border-radius:var(--radius-lg);padding:16px;display:flex;flex-direction:column}
+  .rocard .rtop{display:flex;gap:11px;align-items:flex-start}
+  .rocard .rsw{width:40px;height:50px;flex:none;border-radius:var(--radius);display:flex;align-items:flex-end;justify-content:center;padding-bottom:4px;color:#fff;font-family:var(--font-num);font-size:7px;letter-spacing:.12em}
+  .rocard .rname{font-family:var(--font-display);font-size:14.5px;font-weight:600;color:var(--text-primary);line-height:1.2}
+  .rocard .rfmt{font-size:11.5px;color:var(--text-secondary);margin-top:2px}
+  .rocard .rmeta{font-family:var(--font-num);font-size:10px;letter-spacing:.03em;color:var(--text-meta);text-transform:uppercase;margin-top:11px}
+  .rocard .rprice{display:flex;align-items:baseline;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-hairline)}
+  .rocard .rprice .est{font-family:var(--font-num);font-size:14px;font-weight:600;color:var(--text-primary)}
+  .rocard .rprice .un{font-family:var(--font-num);font-size:10.5px;color:var(--text-meta)}
+  .qty{display:flex;align-items:center;border:1px solid var(--border-default);border-radius:var(--radius);overflow:hidden;background:var(--surface-card)}
+  .qty button{width:28px;height:28px;border:none;background:none;color:var(--ally-navy);font-size:16px;line-height:1;cursor:pointer}
+  .qty button:hover{background:var(--surface-muted)}
+  .qty input{width:64px;border:none;text-align:center;font-family:var(--font-num);font-size:12px;color:var(--text-primary);background:none;padding:6px 0}
+  .qty input:focus{outline:none}
+  .rorow{display:flex;align-items:center;gap:10px;margin-top:12px}
+  .robtn{flex:1;font-size:13px;font-weight:600;color:#fff;background:var(--ally-navy);border:none;border-radius:var(--radius);padding:9px 12px;cursor:pointer}
+  .robtn:hover{background:#17314f}
+  .roconfirm{margin-top:12px;background:var(--ok-bg);border:1px solid #BFE3CA;border-radius:var(--radius);padding:11px 13px}
+  .roconfirm .rc-h{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--ok-fg)}
+  .roconfirm .rc-s{font-size:11.5px;color:var(--text-secondary);margin-top:4px;line-height:1.4}
+  .roconfirm .rc-a{display:flex;gap:14px;margin-top:8px}
+  .roconfirm .rc-a span{font-size:12px;font-weight:600;color:var(--ally-navy);cursor:pointer}
+  .roconfirm .rc-a span:hover{color:var(--ally-amber-deep)}
+
+  /* footer (Wen structure) */
+  footer.mk{background:var(--ally-navy);border-top:1px solid var(--ally-navy-line)}
+  footer.mk .cols{max-width:1180px;margin:0 auto;padding:44px 28px 26px;display:grid;grid-template-columns:1.7fr 1fr 1fr 1.3fr;gap:32px}
+  footer.mk h4{font-family:var(--font-display);font-size:15px;font-weight:600;color:#fff;margin-bottom:16px}
+  footer.mk .lnk{display:flex;flex-direction:column;gap:12px;font-size:13.5px;color:#9FB2C7}
+  footer.mk .lnk span{cursor:pointer}
+  footer.mk .lnk a{color:inherit;text-decoration:none;cursor:pointer}
+  footer.mk .lnk a:hover{color:#fff}
+  footer.mk .contact{display:flex;flex-direction:column;gap:14px;font-size:13.5px}
+  footer.mk .contact .row{display:flex;align-items:center;gap:11px;color:#9FB2C7}
+  footer.mk .contact .row.amber{color:var(--ally-amber);font-weight:600}
+  footer.mk .bar{max-width:1180px;margin:0 auto;padding:18px 28px;border-top:1px solid var(--ally-navy-line);display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap;font-size:13px;color:#8497AB}
+  svg{flex:none}
+
+  @media (max-width:860px){
+    .who{padding-left:12px}
+    .who .nm{display:none}
+    .menu{width:240px}
+    .panel{flex-direction:column}
+    aside.rail{width:100%;flex-direction:row;overflow-x:auto;border-right:none;border-bottom:1px solid var(--ally-navy-line);padding:10px}
+    aside.rail .railsep{display:none}
+    .navitem{width:auto;white-space:nowrap}
+    .content{padding:24px 18px 32px}
+    .grid2,.grid3,.reorder{grid-template-columns:1fr}
+    .doc-row,.inv-row{grid-template-columns:1fr auto}
+    footer.mk .cols{grid-template-columns:1fr}
+    .mknav{display:none}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- marketing header (Wen structure) -->
+  <header class="mk">
+    <div class="row">
+      <a class="logo" style="text-decoration:none" href="../?role=visitor" data-an-role-href="../?role={role}"><u>Ally</u>Nutra</a>
+      <nav class="mknav">
+        <a href="../?role=visitor#/home" data-an-role-href="../?role={role}#/home">Home</a>
+        <a href="../?role=visitor#/services" data-an-role-href="../?role={role}#/services">Our Services ▾</a>
+        <a href="../?role=visitor#/facility" data-an-role-href="../?role={role}#/facility">Facility</a>
+        <a href="../?role=visitor#/certifications" data-an-role-href="../?role={role}#/certifications">Certifications</a>
+        <a href="../?role=visitor#/about" data-an-role-href="../?role={role}#/about">About Us</a>
+      </nav>
+      <div style="flex:1"></div>
+      <button class="callbtn">Call now · (888) 720-5888</button>
+
+      <div class="acct" id="acct">
+        <button class="who" id="whoBtn" aria-haspopup="true" aria-expanded="false">
+          <span class="avatar" id="hdrAvatar">JW</span>
+          <span class="nm">Jordan</span>
+          <span class="cv">▾</span>
+        </button>
+        <div class="menu" role="menu" aria-label="Account">
+          <div class="head">
+            <div class="n">Jordan Wells</div>
+            <div class="c">Coastline Wellness Co.</div>
+          </div>
+          <div class="sect">
+            <button class="mi" role="menuitem" data-go="dashboard"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Dashboard</button>
+            <button class="mi" role="menuitem"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Admin</button>
+            <button class="mi" role="menuitem"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Workspace</button>
+          </div>
+          <div class="div"></div>
+          <div class="sect">
+            <button class="mi danger" role="menuitem" id="logout"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Log out</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- portal region -->
+  <div class="region sc">
+    <div class="wrap">
+      <div class="crumb"><span class="cat">CLIENT PORTAL</span><span class="pg" id="crumbTitle">/ Dashboard</span></div>
+      <div class="panel">
+        <!-- rail -->
+        <aside class="rail" id="rail"></aside>
+
+        <!-- content -->
+        <div class="content" id="content">
+
+          <!-- ═══ DASHBOARD ═══ -->
+          <section class="view on" data-view="dashboard">
+            <div class="fu">
+              <h2 class="pg big">Welcome back, Jordan.</h2>
+              <p class="lede dash">Your Marine Collagen quote request has an AI estimate and a call scheduled. Two orders are in production. Here's the latest.</p>
+
+              <!-- §4.6 smart nudge — Ally-shared document -->
+              <div class="note" style="margin-top:22px">
+                <span style="width:30px;height:30px;border-radius:var(--radius);background:var(--surface-card);border:1px solid var(--ally-amber-tint-line);display:flex;align-items:center;justify-content:center;flex:none">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent-text)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                </span>
+                <span style="flex:1;font-size:13.5px;color:var(--text-primary);line-height:1.45"><strong>Ally Nutra shared invoice INV-3092</strong> for you to review — due Jul 15.</span>
+                <button class="btn-out" data-go="billing" style="padding:7px 13px;font-size:12.5px">Review</button>
+              </div>
+
+              <!-- quick reorder (ported from Zed) -->
+              <div style="margin-top:24px;display:flex;align-items:flex-end;justify-content:space-between;gap:12px">
+                <div>
+                  <h3 style="font-family:var(--font-display);font-size:17px;font-weight:600;color:var(--text-primary)">Quick reorder</h3>
+                  <div style="font-size:13px;color:var(--text-secondary);margin-top:3px">Re-order a product you've bought before in a couple of clicks — no new quote needed.</div>
+                </div>
+                <span data-go="orders" style="font-size:13px;font-weight:600;color:var(--ally-navy);border-bottom:2px solid var(--ally-amber);padding-bottom:2px;cursor:pointer;white-space:nowrap">All orders</span>
+              </div>
+              <div class="reorder" id="reorderGrid" style="margin-top:14px"></div>
+
+              <!-- quote request tracker + AI estimate -->
+              <div class="card" style="margin-top:16px;overflow:hidden">
+                <div style="padding:18px 22px;border-bottom:1px solid var(--border-hairline);display:flex;align-items:baseline;justify-content:space-between;gap:12px">
+                  <div>
+                    <h3 style="font-family:var(--font-display);font-size:16px;font-weight:600;color:var(--text-primary)">Your quote request</h3>
+                    <div class="meta" style="margin-top:3px">QR-2087 · MARINE COLLAGEN PEPTIDES · STICK PACKS</div>
+                  </div>
+                  <span class="pill solid">FINAL QUOTE READY</span>
+                </div>
+                <div style="padding:24px 22px 6px">
+                  <div class="stepper" id="qtracker"></div>
+                </div>
+                <div style="margin:16px 22px 22px;background:var(--surface-card);border:1px solid var(--border-default);border-left:3px solid var(--ally-amber);border-radius:var(--radius);padding:18px 20px">
+                  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent-text)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.8H20l-4.9 3.6 1.9 5.8L12 14.6 7 18.2l1.9-5.8L4 8.8h6.1z"/></svg>
+                      <span style="font-size:10px;letter-spacing:.1em;color:var(--color-accent-text);text-transform:uppercase">AI ESTIMATE</span>
+                    </div>
+                    <span class="pill ok"><span class="d"></span>Qualified · priority</span>
+                  </div>
+                  <div style="display:flex;align-items:flex-end;gap:24px;margin-top:12px;flex-wrap:wrap">
+                    <div><div class="num" style="font-size:28px;font-weight:600;letter-spacing:-.02em;color:var(--text-primary)">$1.21<span style="font-size:14px;font-weight:500;color:var(--text-secondary)"> / unit</span></div><div style="font-size:10px;letter-spacing:.05em;color:var(--text-meta);margin-top:2px;text-transform:uppercase">PER-UNIT ESTIMATE</div></div>
+                    <div><div class="num" style="font-size:28px;font-weight:600;letter-spacing:-.02em;color:var(--text-primary)">$48,200</div><div style="font-size:10px;letter-spacing:.05em;color:var(--text-meta);margin-top:2px;text-transform:uppercase">TOTAL AT 40,000 UNITS</div></div>
+                    <div style="flex:1;min-width:180px;font-size:12px;color:var(--text-secondary);line-height:1.5">Includes ingredients, manufacturing, packaging, and fees. Your rep will confirm the final quote on the call.</div>
+                  </div>
+                  <div style="display:flex;gap:14px;align-items:center;margin-top:16px">
+                    <button class="btn-navy" data-go="quotes">Review final quote</button>
+                    <span data-go="appointments" style="font-size:13px;font-weight:600;color:var(--ally-navy);cursor:pointer">Schedule a call</span>
+                  </div>
+                </div>
+              </div>
+
+              <div style="margin-top:24px;display:flex;align-items:baseline;justify-content:space-between">
+                <h3 style="font-family:var(--font-display);font-size:17px;font-weight:600;color:var(--text-primary)">In production</h3>
+                <span data-go="orders" style="font-size:13px;font-weight:600;color:var(--ally-navy);border-bottom:2px solid var(--ally-amber);padding-bottom:2px;cursor:pointer">All orders</span>
+              </div>
+              <div class="grid2" style="margin-top:14px" id="dashOrders"></div>
+
+              <div class="grid2" style="margin-top:16px">
+                <div class="card" style="padding:20px 22px;display:flex;align-items:center;justify-content:space-between">
+                  <div>
+                    <div style="font-size:15px;font-weight:600;color:var(--text-primary)">Amount due</div>
+                    <div class="num" style="font-size:26px;font-weight:600;letter-spacing:-.02em;color:var(--text-primary);margin-top:6px">$41,000</div>
+                    <div style="display:flex;align-items:center;gap:6px;margin-top:4px"><span style="width:6px;height:6px;border-radius:50%;background:var(--ally-amber)"></span><span style="font-size:10px;letter-spacing:.05em;color:var(--color-accent-text)">1 OVERDUE · 1 DUE JUL 15</span></div>
+                  </div>
+                  <button class="btn-navy" data-go="billing">Pay</button>
+                </div>
+                <div class="card" style="padding:20px 22px">
+                  <div style="font-size:15px;font-weight:600;color:var(--text-primary)">Next call</div>
+                  <div style="display:flex;gap:14px;margin-top:12px">
+                    <div class="datecube"><div class="m">JUL</div><div class="d">9</div></div>
+                    <div>
+                      <div style="font-size:13.5px;font-weight:500;color:var(--text-primary)">Formulation review call</div>
+                      <div style="font-size:12.5px;color:var(--text-secondary);margin-top:4px;line-height:1.5">2:00 PM EST · 30 min · with Dr. Lena Ortiz</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ═══ QUOTES ═══ -->
+          <section class="view" data-view="quotes">
+            <div class="fu">
+              <div class="viewhead">
+                <div><h2 class="pg">Quotes</h2><p class="lede">Your quote requests and the formal quotes we've sent back.</p></div>
+                <button class="btn-navy">Request a new quote</button>
+              </div>
+              <div class="tabs" data-tabs="quotes"><button class="tab on">All</button><button class="tab">Pending</button><button class="tab">With estimate</button><button class="tab">Finalized</button></div>
+              <div style="display:flex;flex-direction:column;gap:12px" id="quoteList"></div>
+            </div>
+          </section>
+
+          <!-- ═══ ORDERS ═══ -->
+          <section class="view" data-view="orders">
+            <div class="fu">
+              <h2 class="pg">Orders</h2>
+              <p class="lede" style="margin-bottom:18px">Live production progress, mirrored from our operations tracker.</p>
+              <div style="display:flex;flex-direction:column;gap:16px" id="orderList"></div>
+            </div>
+          </section>
+
+          <!-- ═══ APPOINTMENTS ═══ -->
+          <section class="view" data-view="appointments">
+            <div class="fu">
+              <div class="viewhead">
+                <div><h2 class="pg">Appointments</h2><p class="lede">Calls and reviews with your AllyNutra team.</p></div>
+                <button class="btn-navy">Schedule a call</button>
+              </div>
+              <div class="tabs" data-tabs="appts"><button class="tab on">Upcoming</button><button class="tab">Past</button></div>
+              <div style="display:flex;flex-direction:column;gap:12px" id="apptList"></div>
+            </div>
+          </section>
+
+          <!-- ═══ BILLING ═══ -->
+          <section class="view" data-view="billing">
+            <div class="fu">
+              <h2 class="pg">Billing</h2>
+              <p class="lede" style="margin-bottom:18px">Invoices and payment history. Pay by card via PayPal, or ACH via Ramp.</p>
+              <div class="grid3" style="margin-bottom:16px">
+                <div class="card" style="padding:18px 20px"><div style="font-size:9.5px;letter-spacing:.12em;color:var(--text-meta);text-transform:uppercase">TOTAL OUTSTANDING</div><div class="num" style="font-size:26px;font-weight:600;letter-spacing:-.02em;color:var(--text-primary);margin-top:8px">$41,000</div></div>
+                <div class="card" style="padding:18px 20px;border-top:3px solid var(--ally-amber)"><div style="font-size:9.5px;letter-spacing:.12em;color:var(--color-accent-text);text-transform:uppercase">OVERDUE</div><div class="num" style="font-size:26px;font-weight:600;letter-spacing:-.02em;color:var(--text-primary);margin-top:8px">$24,600</div></div>
+                <div class="card" style="padding:18px 20px"><div style="font-size:9.5px;letter-spacing:.12em;color:var(--text-meta);text-transform:uppercase">PAID THIS YEAR</div><div class="num" style="font-size:26px;font-weight:600;letter-spacing:-.02em;color:var(--text-primary);margin-top:8px">$32,100</div></div>
+              </div>
+              <div class="note" style="margin-bottom:16px">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent-text)" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                <span style="font-size:12.5px;color:var(--text-secondary)">When paying by ACH, please include your <strong style="color:var(--text-primary)">invoice number</strong> as the payment reference so we can match it to your project.</span>
+              </div>
+              <div class="listwrap" id="invList"></div>
+            </div>
+          </section>
+
+          <!-- ═══ DOCUMENTS ═══ -->
+          <section class="view" data-view="documents">
+            <div class="fu">
+              <div class="viewhead">
+                <div><h2 class="pg">Documents</h2><p class="lede">Everything AllyNutra shares with you lands here automatically — COAs, specs, agreements, invoices.</p></div>
+                <button class="btn-out" style="display:inline-flex;align-items:center;gap:7px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Upload</button>
+              </div>
+              <div class="tabs" data-tabs="docs"><button class="tab on">All</button><button class="tab">Agreements</button><button class="tab">COAs</button><button class="tab">Spec sheets</button><button class="tab">Artwork</button><button class="tab">Invoices</button></div>
+              <div class="listwrap" id="docList"></div>
+            </div>
+          </section>
+
+          <!-- ═══ SETTINGS ═══ -->
+          <section class="view" data-view="settings">
+            <div class="fu" style="max-width:760px">
+              <h2 class="pg settingsbig">Account Settings</h2>
+              <p class="lede" style="margin-bottom:22px">View your profile information and manage your account</p>
+
+              <div class="card" style="padding:22px 24px;margin-bottom:16px">
+                <div style="display:flex;align-items:center;gap:10px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--ally-amber)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><h3 style="font-family:var(--font-display);font-size:18px;font-weight:600;color:var(--text-primary)">Profile Information</h3></div>
+                <p style="margin:6px 0 0;font-size:13px;color:var(--text-secondary)">Your account details</p>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px 24px;margin-top:20px">
+                  <div><div style="font-size:12.5px;color:var(--text-secondary)">Full Name</div><div style="margin-top:6px;font-size:15px;font-weight:600;color:var(--text-primary)">Jordan Wells</div></div>
+                  <div><div style="font-size:12.5px;color:var(--text-secondary)">Email</div><div style="margin-top:6px;font-size:15px;font-weight:600;color:var(--text-primary)">jordan@coastlinewellness.co</div></div>
+                  <div><div style="font-size:12.5px;color:var(--text-secondary)">Company</div><div style="margin-top:6px;font-size:15px;color:var(--text-muted)">Not provided</div></div>
+                  <div><div style="font-size:12.5px;color:var(--text-secondary)">Phone</div><div style="margin-top:6px;font-size:15px;color:var(--text-muted)">Not provided</div></div>
+                </div>
+              </div>
+
+              <div class="card" style="padding:22px 24px;margin-bottom:16px">
+                <div style="display:flex;align-items:center;gap:10px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--ally-amber)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><h3 style="font-family:var(--font-display);font-size:18px;font-weight:600;color:var(--text-primary)">Security</h3></div>
+                <p style="margin:6px 0 0;font-size:13px;color:var(--text-secondary)">Manage your account security settings</p>
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px 0;border-bottom:1px solid var(--border-hairline);margin-top:6px">
+                  <div><div style="font-size:14px;font-weight:600;color:var(--text-primary)">Email Verification</div><div style="font-size:13px;color:var(--text-secondary);margin-top:3px">Your email address is verified</div></div>
+                  <span class="pill ok" style="padding:5px 11px;font-size:12px"><span class="d"></span>Verified</span>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px 0 4px">
+                  <div><div style="font-size:14px;font-weight:600;color:var(--text-primary)">Password</div><div style="font-size:13px;color:var(--text-secondary);margin-top:3px">Change your password by requesting a reset email</div></div>
+                  <button class="btn-out">Change Password</button>
+                </div>
+              </div>
+
+              <div class="card" style="padding:22px 24px">
+                <div style="display:flex;align-items:center;gap:10px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--ally-amber)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><h3 style="font-family:var(--font-display);font-size:18px;font-weight:600;color:var(--text-primary)">Account Information</h3></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px 0 0"><div><div style="font-size:14px;font-weight:600;color:var(--text-primary)">Account Status</div><div style="font-size:13px;color:var(--text-secondary);margin-top:3px">Your account is active</div></div><span class="pill ok" style="padding:5px 12px;font-size:12px">Active</span></div>
+                <div style="padding:18px 0 0"><div style="font-size:14px;font-weight:600;color:var(--text-primary)">Member Since</div><div style="font-size:13px;color:var(--text-secondary);margin-top:3px">June 25, 2026</div></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ═══ FAQ / HOW TO USE THE PORTAL ═══ -->
+          <section class="view" data-view="help">
+            <div class="fu" style="max-width:760px">
+              <div style="display:flex;align-items:center;gap:10px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ally-amber)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><h2 class="pg" style="margin:0">FAQ / How to use the portal</h2></div>
+              <p class="lede" style="margin-top:8px">Quick answers and a short guide to getting around your client portal.</p>
+
+              <div class="card" style="margin-top:22px;padding:22px 24px">
+                <h3 style="font-family:var(--font-display);font-size:17px;font-weight:600;color:var(--text-primary)">Getting started</h3>
+                <div class="grid3" style="margin-top:16px">
+                  <div><div style="font-size:13px;font-weight:600;color:var(--text-primary)">1 · Request a quote</div><div style="font-size:12.5px;color:var(--text-secondary);margin-top:4px;line-height:1.5">Start on Quotes → Request a new quote. You'll get an AI estimate, then a call.</div></div>
+                  <div><div style="font-size:13px;font-weight:600;color:var(--text-primary)">2 · Approve &amp; produce</div><div style="font-size:12.5px;color:var(--text-secondary);margin-top:4px;line-height:1.5">Approve the final quote and track production live under Orders.</div></div>
+                  <div><div style="font-size:13px;font-weight:600;color:var(--text-primary)">3 · Pay &amp; download</div><div style="font-size:12.5px;color:var(--text-secondary);margin-top:4px;line-height:1.5">Settle invoices in Billing; COAs and specs arrive in Documents.</div></div>
+                </div>
+              </div>
+
+              <div class="listwrap" style="margin-top:16px" id="faqList"></div>
+
+              <div class="note" style="margin-top:16px">
+                <span style="font-size:13.5px;color:var(--ally-ink);line-height:1.5">Still stuck? Call us at <strong style="font-weight:700">(888) 720-5888</strong> — Mon–Fri, EST.</span>
+              </div>
+            </div>
+          </section>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- marketing footer (Wen structure) -->
+    <footer class="mk">
+      <div class="cols">
+        <div>
+          <a class="logo" style="font-size:20px;text-decoration:none" href="../?role=visitor" data-an-role-href="../?role={role}"><u>Ally</u>Nutra</a>
+          <p style="margin:16px 0 0;font-size:13.5px;line-height:1.6;color:#9FB2C7;max-width:34ch">Full-service supplement manufacturer — capsules, sachets, stick packs, and pouches.</p>
+          <button class="callbtn" style="display:inline-flex;align-items:center;gap:8px;margin-top:18px">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            Call: (888) 720-5888
+          </button>
+        </div>
+        <div><h4>Quick Links</h4><div class="lnk">
+          <span data-go="dashboard">Home</span>
+          <a href="../?role=visitor#/services" data-an-role-href="../?role={role}#/services">Our Services</a>
+          <a href="../?role=visitor#/certifications" data-an-role-href="../?role={role}#/certifications">Certifications</a>
+          <span title="No matching page on the marketing site yet">Careers</span>
+        </div></div>
+        <div><h4>Services</h4><div class="lnk"><span>Custom Manufacturing</span><span>Packaging Design</span><span>Amazon FBA Preparation</span></div></div>
+        <div>
+          <h4>Contact Us</h4>
+          <div class="contact">
+            <div class="row"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ally-amber)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>support@allynutra.com</div>
+            <div class="row amber"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>(888) 720-5888</div>
+            <div class="row"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ally-amber)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>631 Ridgely St, STE 1, Dover DE 19904</div>
+            <div class="row"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ally-amber)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>Follow us on Instagram</div>
+          </div>
+        </div>
+      </div>
+      <div class="bar">
+        <span>© 2026 Ally Nutra. All rights reserved.</span><span style="color:#41618a">|</span>
+        <span style="cursor:pointer">Privacy Policy</span><span style="color:#41618a">|</span>
+        <span style="cursor:pointer">Terms of Service</span>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<script>
+// ── icons (only the 8 kept tabs — no ingredients/products) ──
+const I = {
+  dashboard:'<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>',
+  quotes:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="m9 15 2 2 4-4"/>',
+  orders:'<path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/>',
+  appointments:'<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>',
+  billing:'<path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M8 7h8"/><path d="M8 11h8"/>',
+  documents:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/>',
+  settings:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>',
+  help:'<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>'
+};
+const icon = (name,size=17) => `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${I[name]}</svg>`;
+
+// ── nav — Wen's tab set, no My Lab / My Products ──
+const NAV = [
+  ['dashboard','Dashboard'],['quotes','Quotes'],['orders','Orders'],
+  ['appointments','Appointments'],['billing','Billing'],['documents','Documents'],
+  ['settings','Settings'],['sep',''],['help','FAQ & Help']
+];
+const TITLES = {dashboard:'Dashboard',quotes:'Quotes',orders:'Orders',appointments:'Appointments',billing:'Billing',documents:'Documents',settings:'Settings',help:'FAQ / How to use the portal'};
+const rail = document.getElementById('rail');
+rail.innerHTML = NAV.map(([id,label]) =>
+  id==='sep' ? '<div class="railsep"></div>'
+  : `<button class="navitem${id==='dashboard'?' active':''}" data-go="${id}"><span class="bar"></span>${icon(label==='FAQ & Help'?'help':id)}${label}</button>`
+).join('');
+
+// ── stepper builder ───────────────────────────────────
+function stepper(steps){ // steps: [{name, state:'done'|'now'|'todo'}]
+  return steps.map((s,i)=>{
+    const first=i===0, last=i===steps.length-1;
+    const ldone = s.state==='done' || (i>0 && steps[i-1].state==='done');
+    const rdone = s.state==='done';
+    const dotCls = s.state==='done'?'done':s.state==='now'?'now':'';
+    const mark = s.state==='done'?'✓':(s.state==='now'?'●':(i+1));
+    return `<div class="step">
+      <div class="line">
+        <div class="conn ${first?'hide':(ldone?'done':'')}"></div>
+        <div class="dot ${dotCls}">${mark}</div>
+        <div class="conn ${last?'hide':(rdone?'done':'')}"></div>
+      </div>
+      <div class="lbl ${s.state==='now'?'now':''}">${s.name}</div>
+    </div>`;
+  }).join('');
+}
+
+// quote request tracker — Wen's data (Submitted/AI estimate done, Schedule call now, Final quote todo)
+document.getElementById('qtracker').innerHTML = stepper([
+  {name:'Submitted',state:'done'},{name:'AI estimate',state:'done'},
+  {name:'Schedule call',state:'now'},{name:'Final quote',state:'todo'}
+]);
+
+// ── data (Wen's content, verbatim) ────────────────────
+const pill = (cls,dot,txt)=>`<span class="pill ${cls}">${dot?'<span class="d"></span>':''}${txt}</span>`;
+
+const dashOrders = [
+  {product:'Magnesium Glycinate Capsules',status:'In encapsulation now — on track to ship Aug 12.',pct:'64%',meta:'ON-1042 · 25,000 units'},
+  {product:'Marine Collagen Stick Packs',status:'In flavoring — expected to ship Aug 26.',pct:'38%',meta:'ON-1038 · 40,000 units'}
+];
+document.getElementById('dashOrders').innerHTML = dashOrders.map(o=>`
+  <div class="card" style="padding:20px 22px">
+    <div style="font-size:15px;font-weight:600;color:var(--text-primary)">${o.product}</div>
+    <div style="font-size:13px;color:var(--text-secondary);margin-top:5px;line-height:1.5">${o.status}</div>
+    <div style="display:flex;align-items:center;gap:12px;margin-top:16px"><div class="track" style="flex:1"><span style="width:${o.pct}"></span></div><span class="num" style="font-size:13px;color:var(--text-secondary)">${o.pct}</span></div>
+    <div class="meta" style="margin-top:12px">${o.meta}</div>
+  </div>`).join('');
+
+const quotesRaw = [
+  {product:'Marine Collagen Peptides',meta:'QR-2087 · Stick Packs · 40,000 units · sent 2 days ago',total:'$48,200',est:'AI EST. $1.21/UNIT',pillHtml:pill('amber',true,'FINAL QUOTE READY'),actionable:true,g:'finalized'},
+  {product:'Daily Greens Blend',meta:'QR-2061 · Sachets · 15,000 units · sent 2 weeks ago',total:'$22,400',est:'AI EST. $1.49/UNIT',pillHtml:pill('navy',true,'WITH ESTIMATE'),actionable:false,g:'estimate'},
+  {product:'Electrolyte Mix',meta:'QR-2048 · Stick Packs · 20,000 units · sent 3 weeks ago',total:'—',est:'AWAITING CALL',pillHtml:pill('navy',true,'PENDING'),actionable:false,g:'pending'},
+  {product:'Magnesium Glycinate',meta:'QR-2074 · Capsules · 25,000 units · approved Jun 30',total:'$31,750',est:'FINAL',pillHtml:pill('navy',true,'APPROVED'),actionable:false,g:'finalized'}
+];
+let quoteFilter='all';
+function renderQuotes(){
+  const rows = quotesRaw.filter(q=>quoteFilter==='all'||q.g===quoteFilter);
+  document.getElementById('quoteList').innerHTML = rows.map(q=>`
+    <div class="card" style="padding:18px 20px">
+      <div style="display:flex;align-items:center;gap:18px">
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><span style="font-size:14.5px;font-weight:600;color:var(--text-primary)">${q.product}</span>${q.pillHtml}</div>
+          <div class="meta" style="margin-top:5px;text-transform:uppercase">${q.meta}</div>
+        </div>
+        <div style="text-align:right"><div class="num" style="font-size:16px;font-weight:600;color:var(--text-primary)">${q.total}</div><div class="num" style="font-size:10.5px;color:var(--text-meta);margin-top:2px">${q.est}</div></div>
+      </div>
+      ${q.actionable?`<div style="display:flex;gap:12px;align-items:center;margin-top:15px;padding-top:15px;border-top:1px solid var(--border-hairline)">
+        <button class="btn-navy" style="padding:8px 14px;font-size:12.5px">Approve quote</button>
+        <button class="btn-out" style="padding:7px 13px;font-size:12.5px">Request changes</button>
+        <button class="btn-ghost">Decline</button></div>`:''}
+    </div>`).join('');
+}
+renderQuotes();
+
+// orders — Wen's 5-step journey
+const journey = ['Quote','Approval','Production','QC','Delivery'];
+const orders = [
+  {product:'Magnesium Glycinate Capsules',number:'ON-1042',qty:'25,000',ship:'AUG 12',stateHtml:pill('navy',true,'IN PRODUCTION'),now:3,line:'Currently in encapsulation (production stage 7 of 11 in our ops tracker). We’ll notify you when it enters final QC.'},
+  {product:'Marine Collagen Stick Packs',number:'ON-1038',qty:'40,000',ship:'AUG 26',stateHtml:pill('navy',true,'IN PRODUCTION'),now:3,line:'Currently in flavoring (production stage 4 of 11). Procurement and raw-material QC are complete.'},
+  {product:'Daily Greens Sachets',number:'ON-1021',qty:'15,000',ship:'JUN 18',stateHtml:pill('navy',true,'DELIVERED'),now:6,line:'Delivered to your Amazon FBA warehouse on Jun 18. COA and packing list are in Documents.'}
+];
+document.getElementById('orderList').innerHTML = orders.map(o=>{
+  const steps = journey.map((n,i)=>({name:n,state:(i+1)<o.now?'done':(i+1)===o.now?'now':'todo'}));
+  return `<div class="card" style="padding:20px 22px">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
+      <div style="min-width:0"><div style="font-size:15px;font-weight:600;color:var(--text-primary)">${o.product}</div><div class="meta" style="margin-top:3px">${o.number} · ${o.qty} UNITS · SHIPS ${o.ship}</div></div>
+      ${o.stateHtml}
+    </div>
+    <div class="stepper" style="margin-top:20px">${stepper(steps)}</div>
+    <div style="margin-top:16px;font-size:13px;color:var(--text-secondary);line-height:1.5">${o.line}</div>
+  </div>`;
+}).join('');
+
+// documents — Wen's 6 items
+const docsRaw = [
+  {name:'Master Manufacturing Agreement',type:'Agreement',date:'Jun 2, 2026',pillHtml:pill('navy',true,'SIGNED'),src:'SHARED BY ALLY',action:'Download',primary:false,g:'agreements'},
+  {name:'Purchase Order — ON-1042',type:'Agreement',date:'Jul 5, 2026',pillHtml:pill('amber',true,'AWAITING SIGNATURE'),src:'SHARED BY ALLY',action:'Review & sign',primary:true,g:'agreements'},
+  {name:'COA — Magnesium Glycinate, Lot MG-2405',type:'COA',date:'Jul 1, 2026',pillHtml:pill('amber',true,'NEW'),src:'SHARED BY ALLY',action:'Download',primary:false,g:'coas'},
+  {name:'Supplement Facts — Daily Greens Blend',type:'Supp. Facts',date:'Jun 20, 2026',pillHtml:pill('navy',true,'FINAL'),src:'SHARED BY ALLY',action:'Download',primary:false,g:'specs'},
+  {name:'Label Artwork — Electrolyte Mix v3',type:'Artwork',date:'Jun 15, 2026',pillHtml:pill('navy',false,'YOUR UPLOAD'),src:'UPLOADED BY YOU',action:'Download',primary:false,g:'artwork'},
+  {name:'Invoice — INV-3092',type:'Invoice',date:'Jul 1, 2026',pillHtml:pill('navy',true,'DUE JUL 15'),src:'SHARED BY ALLY',action:'Download',primary:false,g:'invoices'}
+];
+let docTab='all';
+function renderDocs(){
+  const rows = docsRaw.filter(d=>docTab==='all'||d.g===docTab);
+  document.getElementById('docList').innerHTML = rows.map(d=>`
+    <div class="doc-row">
+      <div style="min-width:0"><div style="font-size:13.5px;font-weight:500;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${d.name}</div><div style="display:flex;align-items:center;gap:8px;margin-top:5px;flex-wrap:wrap">${d.pillHtml}<span style="font-family:var(--font-num);font-size:9px;letter-spacing:.06em;color:var(--text-muted);text-transform:uppercase">${d.src}</span></div></div>
+      <span style="font-size:11px;letter-spacing:.05em;color:var(--text-secondary);text-transform:uppercase">${d.type}</span>
+      <span class="num" style="font-size:11px;letter-spacing:.05em;color:var(--text-secondary);text-transform:uppercase">${d.date}</span>
+      <button class="${d.primary?'btn-navy':'btn-out'}" style="padding:7px 11px;font-size:12px">${d.action}</button>
+    </div>`).join('');
+}
+renderDocs();
+
+// billing invoices — Wen's 4 items
+const invoices = [
+  {number:'INV-3092',desc:'Deposit — ON-1042 Magnesium Glycinate',dateline:'Issued Jul 1 · Due Jul 15',amount:'$16,400',pillHtml:pill('navy',true,'DUE SOON'),action:'Pay',pay:true},
+  {number:'INV-3081',desc:'Final payment — ON-1038 Marine Collagen',dateline:'Issued Jun 12 · Due Jul 1',amount:'$24,600',pillHtml:pill('amber',true,'OVERDUE'),action:'Pay',pay:true},
+  {number:'INV-3060',desc:'Deposit — ON-1038 Marine Collagen',dateline:'Paid Jun 10 · Ramp ACH',amount:'$12,300',pillHtml:pill('navy',true,'PAID'),action:'Receipt',pay:false},
+  {number:'INV-3044',desc:'Final payment — ON-1021 Daily Greens',dateline:'Paid May 28 · PayPal',amount:'$19,800',pillHtml:pill('navy',true,'PAID'),action:'Receipt',pay:false}
+];
+document.getElementById('invList').innerHTML = invoices.map(i=>`
+  <div class="inv-row">
+    <span class="num" style="font-size:12px;letter-spacing:.04em;color:var(--text-primary)">${i.number}</span>
+    <div style="min-width:0"><div style="font-size:13.5px;color:var(--text-body)">${i.desc}</div><div class="num" style="font-size:10px;letter-spacing:.04em;color:var(--text-meta);margin-top:2px;text-transform:uppercase">${i.dateline}</div></div>
+    <span class="num" style="font-size:15px;font-weight:600;color:var(--text-primary)">${i.amount}</span>
+    <span>${i.pillHtml}</span>
+    <button class="${i.pay?'btn-navy':'btn-out'}" style="padding:7px 12px;font-size:12.5px">${i.action}</button>
+  </div>`).join('');
+
+// appointments — Wen's 4 items
+const apptsRaw = [
+  {title:'Formulation review call',month:'JUL',day:'9',when:'JUL 9 · 2:00 PM EST',withWho:'DR. LENA ORTIZ',pillHtml:pill('navy',true,'CONFIRMED'),g:'upcoming',actions:[{l:'Join',pri:true},{l:'Reschedule',pri:false},{l:'Cancel',ghost:true}]},
+  {title:'Quarterly account review',month:'JUL',day:'22',when:'JUL 22 · 10:00 AM EST',withWho:'MARCUS REED',pillHtml:pill('navy',true,'SCHEDULED'),g:'upcoming',actions:[{l:'Reschedule',pri:false},{l:'Cancel',ghost:true}]},
+  {title:'Production kickoff — ON-1042',month:'JUL',day:'3',when:'JUL 3 · 11:00 AM EST',withWho:'OPS TEAM',pillHtml:pill('navy',false,'COMPLETED'),g:'past',actions:[{l:'Notes',ghost:true}]},
+  {title:'Onboarding & discovery',month:'MAY',day:'6',when:'MAY 6 · 1:00 PM EST',withWho:'MARCUS REED',pillHtml:pill('navy',false,'COMPLETED'),g:'past',actions:[{l:'Notes',ghost:true}]}
+];
+let apptTab='upcoming';
+function renderAppts(){
+  const rows = apptsRaw.filter(a=>a.g===apptTab);
+  document.getElementById('apptList').innerHTML = rows.map(a=>`
+    <div class="card" style="padding:18px 20px;display:flex;align-items:center;gap:18px">
+      <div class="datecube"><div class="m">${a.month}</div><div class="d">${a.day}</div></div>
+      <div style="flex:1;min-width:0"><div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><span style="font-size:14.5px;font-weight:600;color:var(--text-primary)">${a.title}</span>${a.pillHtml}</div><div class="meta" style="margin-top:5px">${a.when} · ${a.withWho}</div></div>
+      <div style="display:flex;gap:10px;align-items:center">${a.actions.map(ac=>ac.pri?`<button class="btn-navy" style="padding:8px 14px;font-size:12.5px">${ac.l}</button>`:ac.ghost?`<button class="btn-ghost">${ac.l}</button>`:`<button class="btn-out" style="padding:7px 13px;font-size:12.5px">${ac.l}</button>`).join('')}</div>
+    </div>`).join('');
+}
+renderAppts();
+
+// faq — Wen's 5 items
+const faqs = [
+  {q:'How do I request a quote?',a:'Go to Quotes and choose “Request a new quote.” We’ll send an AI estimate within minutes, then confirm the final quote on a call.'},
+  {q:'Where do I track my order?',a:'Open Orders to see each product’s live stage — Quote, Approval, Production, QC, and Delivery — with expected ship dates.'},
+  {q:'How do I pay an invoice?',a:'In Billing, click Pay on any open invoice. Pay by card via PayPal or by ACH via Ramp — include your invoice number as the reference.'},
+  {q:'Where are my COAs and documents?',a:'Everything we share — COAs, spec sheets, agreements, invoices — lands in Documents automatically. You can also upload your own artwork there.'},
+  {q:'How do I sign an agreement?',a:'Documents marked “Awaiting signature” show a Review & sign button. Signed copies are stored back in Documents for your records.'}
+];
+document.getElementById('faqList').innerHTML = faqs.map(f=>`
+  <div style="padding:16px 20px;border-bottom:1px solid var(--border-hairline);background:var(--surface-page)">
+    <div style="font-size:14px;font-weight:600;color:var(--text-primary)">${f.q}</div>
+    <div style="font-size:13px;color:var(--text-secondary);margin-top:6px;line-height:1.55">${f.a}</div>
+  </div>`).join('');
+
+// ── quick reorder (ported from Zed — standalone data, no inventory fields) ──
+const REORDER_PRODUCTS = [
+  {sku:'AN-COL-STK',name:'Marine Collagen Peptides',fmt:'Stick Packs',variant:'Unflavored',hue:'#2E6F7A',lastOrdered:'Jun 2, 2026',lastQty:40000,price:1.21},
+  {sku:'AN-ELX-STK',name:'Electrolyte Hydration',fmt:'Stick Packs',variant:'Mixed Berry',hue:'#C25B4E',lastOrdered:'May 20, 2026',lastQty:50000,price:0.72},
+  {sku:'AN-ASH-CAP',name:'Ashwagandha Calm',fmt:'Capsules',variant:'90 ct',hue:'#6B4E8C',lastOrdered:'Jun 12, 2026',lastQty:25000,price:1.19}
+];
+const reorderState = {}; // sku -> {qty, confirmed}
+function roClamp(n){ return Math.max(1000, Math.round(n/1000)*1000); }
+function renderReorder(){
+  REORDER_PRODUCTS.forEach(p=>{ if(!reorderState[p.sku]) reorderState[p.sku]={qty:p.lastQty,confirmed:false}; });
+  document.getElementById('reorderGrid').innerHTML = REORDER_PRODUCTS.map(p=>{
+    const st = reorderState[p.sku];
+    const total = '$'+Math.round(st.qty*p.price).toLocaleString('en-US');
+    const controls = st.confirmed
+      ? `<div class="roconfirm">
+           <div class="rc-h"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Reorder requested</div>
+           <div class="rc-s">${st.qty.toLocaleString('en-US')} units of ${p.name}. We'll confirm pricing and lead time by email.</div>
+           <div class="rc-a"><span data-go="orders">View in orders</span><span data-undo="${p.sku}">Undo</span></div>
+         </div>`
+      : `<div class="rorow">
+           <div class="qty">
+             <button data-step="-1" data-sku="${p.sku}" aria-label="Decrease">−</button>
+             <input type="text" inputmode="numeric" data-qin="${p.sku}" value="${st.qty.toLocaleString('en-US')}">
+             <button data-step="1" data-sku="${p.sku}" aria-label="Increase">+</button>
+           </div>
+           <button class="robtn" data-reorder="${p.sku}">Reorder</button>
+         </div>`;
+    return `<div class="rocard">
+      <div class="rtop">
+        <div class="rsw" style="background:${p.hue}">ALLYNUTRA</div>
+        <div style="min-width:0"><div class="rname">${p.name}</div><div class="rfmt">${p.fmt} · ${p.variant}</div></div>
+      </div>
+      <div class="rmeta">Last ordered ${p.lastOrdered} · ${p.lastQty.toLocaleString('en-US')} units</div>
+      <div class="rprice"><span class="est">${total} <span class="un">est.</span></span><span class="un">$${p.price.toFixed(2)}/unit</span></div>
+      ${controls}
+    </div>`;
+  }).join('');
+}
+renderReorder();
+
+document.querySelector('[data-view="dashboard"]').addEventListener('click', e=>{
+  const step=e.target.closest('[data-step]');
+  if(step){ const sku=step.dataset.sku; reorderState[sku].qty=roClamp(reorderState[sku].qty + (+step.dataset.step)*5000); renderReorder(); return; }
+  const ro=e.target.closest('[data-reorder]');
+  if(ro){ reorderState[ro.dataset.reorder].confirmed=true; renderReorder(); return; }
+  const un=e.target.closest('[data-undo]');
+  if(un){ reorderState[un.dataset.undo].confirmed=false; renderReorder(); return; }
+});
+document.querySelector('[data-view="dashboard"]').addEventListener('change', e=>{
+  const qin=e.target.closest('[data-qin]');
+  if(qin){ const v=parseInt(qin.value.replace(/[^0-9]/g,''),10); reorderState[qin.dataset.qin].qty = roClamp(isNaN(v)?1000:v); renderReorder(); }
+});
+
+// ── routing ───────────────────────────────────────────
+const views = document.querySelectorAll('.content .view');
+const navitems = document.querySelectorAll('.navitem');
+const crumbTitle = document.getElementById('crumbTitle');
+function go(id){
+  views.forEach(v=>v.classList.toggle('on', v.dataset.view===id));
+  navitems.forEach(n=>n.classList.toggle('active', n.dataset.go===id));
+  crumbTitle.textContent = '/ ' + (TITLES[id]||id);
+  document.querySelector('.region').scrollTo({top:0,behavior:'auto'});
+}
+document.addEventListener('click', e=>{
+  const t = e.target.closest('[data-go]');
+  if(t){ go(t.dataset.go); closeAcct(); return; }
+  const tab = e.target.closest('.tab');
+  if(tab){
+    const group = tab.closest('.tabs');
+    group.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
+    tab.classList.add('on');
+    const idx = Array.from(group.children).indexOf(tab);
+    if(group.dataset.tabs==='quotes'){ quoteFilter=['all','pending','estimate','finalized'][idx]; renderQuotes(); }
+    if(group.dataset.tabs==='docs'){ docTab=['all','agreements','coas','specs','artwork','invoices'][idx]; renderDocs(); }
+    if(group.dataset.tabs==='appts'){ apptTab=['upcoming','past'][idx]; renderAppts(); }
+  }
+});
+// Initial view via ?view= (feature/role-and-links) — lets the app's header
+// workspace-bar links deep-link into a specific tab (e.g. ?view=quotes)
+// instead of every one of them landing on the dashboard. Falls back to
+// dashboard for a missing/invalid value, same as before this change.
+const VALID_VIEWS = ['dashboard','quotes','orders','appointments','billing','documents','settings','help'];
+const requestedView = new URLSearchParams(window.location.search).get('view');
+go(VALID_VIEWS.includes(requestedView) ? requestedView : 'dashboard');
+
+// ── account menu ──────────────────────────────────────
+const acct = document.getElementById('acct');
+const whoBtn = document.getElementById('whoBtn');
+function openAcct(){ acct.classList.add('open'); whoBtn.setAttribute('aria-expanded','true'); }
+function closeAcct(){ acct.classList.remove('open'); whoBtn.setAttribute('aria-expanded','false'); }
+whoBtn.addEventListener('click', e=>{ e.stopPropagation(); acct.classList.contains('open')?closeAcct():openAcct(); });
+document.addEventListener('click', e=>{ if(!acct.contains(e.target)) closeAcct(); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeAcct(); });
+document.getElementById('logout').addEventListener('click', closeAcct);
+</script>
+</body>
+</html>
