@@ -12,6 +12,19 @@ import product03 from '../assets/images/product-03.jpg';
 import product04 from '../assets/images/product-04.jpg';
 import product05 from '../assets/images/product-05.jpg';
 
+// Facility photo strip (proof bar, §5). Reused from the images already committed to
+// the repo — none sourced new for this strip. facility-01/02 remain unused after
+// this (available for a future need); facility-03 and facility-04 were only used by
+// Home's old FACILITY_ZONES gallery (removed in the PR #2 restructure) and are
+// otherwise unused anywhere else in the app today. facility-05/06 ARE also used by
+// Facility.jsx's own zone cards (Packaging, Logistics) — a thumbnail here and a full
+// card there is a deliberate decision, not an accident (see PR description).
+import facility03 from '../assets/images/facility-03.jpg';
+import capsule01 from '../assets/images/capsule-01.jpg';
+import facility04 from '../assets/images/facility-04.jpg';
+import facility05 from '../assets/images/facility-05.jpg';
+import facility06 from '../assets/images/facility-06.jpg';
+
 import { useEffect, useRef, useState } from 'react';
 
 // Real, live Calendly scheduling link — found read-only in the company repo
@@ -180,6 +193,28 @@ const COMPARISON_ROWS = [
   { notice: 'If you’re too small today', withUs: 'We say so, explain why, and keep you on the waitlist', usual: 'Strung along or ignored' },
 ];
 
+const CREDENTIAL_STRIP = [
+  { label: 'cGMP certified', to: '/certifications' },
+  { label: 'FDA registered', to: '/certifications' },
+  { label: 'NSF', to: '/certifications' },
+  { label: '50,000 sq ft', to: '/facility' },
+  { label: '500+ brands', to: '/about' },
+  { label: '2,000+ materials', to: '/about' },
+];
+
+// Captions corrected against the format-data fix already shipped: the encapsulation
+// cell reads "SIZES 000–3" (not "000–4") to match the corrected capsule-size claim
+// now canonical everywhere else in the repo (CapsuleManufacturing.jsx, Services.jsx,
+// this file's own PRODUCTS array) — see PR description for why this deliberately
+// deviates from the literal draft caption text.
+const FACILITY_STRIP = [
+  { img: facility03, alt: 'A large stainless steel blending tank on the production floor', caption: 'PRODUCTION FLOOR', sub: 'BLENDING · ISO 8' },
+  { img: capsule01, alt: 'A dense pile of freshly encapsulated two-piece capsules', caption: 'ENCAPSULATION', sub: 'SIZES 000–3 · ±2%' },
+  { img: facility04, alt: 'A gloved technician pipetting samples into a rack of test vials in the QC lab', caption: 'QC LABORATORY', sub: 'HPLC · MICROBIAL' },
+  { img: facility05, alt: 'A bottle moving under a filling funnel on an automated packaging line', caption: 'PACKAGING LINE', sub: 'INDUCTION SEAL' },
+  { img: facility06, alt: 'A warehouse aisle lined with shrink-wrapped stacks of finished goods cartons', caption: 'FINISHED GOODS', sub: 'FBA PREP · DIRECT SHIP' },
+];
+
 const EXPLORE_LINKS = [
   { to: '/facility', title: 'Facility', line: 'A tour of where your product is made.' },
   { to: '/certifications', title: 'Certifications', line: 'cGMP, FDA, NSF, and more — audited annually.' },
@@ -321,6 +356,33 @@ export default function Home() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* PROOF BAR: facility, certifications, and company stats were moved off the
+          home view in the PR #2 restructure. They come back here — compressed, but
+          with the photography intact, because the photographs ARE the proof of
+          operations. Row 1 text-only credential strip; row 2 five-photo facility
+          strip, captions required (an unlabelled photo is decoration, a labelled one
+          is evidence). Light section, no navy overlay — desaturation only. */}
+      <section className="section proof-bar-section">
+        <div className="container">
+          <div className="credential-strip">
+            {CREDENTIAL_STRIP.map((c) => (
+              <Link to={c.to} key={c.label}>{c.label}</Link>
+            ))}
+          </div>
+          <Link to="/facility" className="facility-strip">
+            {FACILITY_STRIP.map((f) => (
+              <div className="facility-strip-item" key={f.caption}>
+                <div className="facility-strip-photo">
+                  <img src={f.img} width="300" height="225" alt={f.alt} loading="lazy" onError={hideAndTint} />
+                </div>
+                <span className="facility-strip-caption">{f.caption}</span>
+                <span className="facility-strip-sub mono-chip">{f.sub}</span>
+              </div>
+            ))}
+          </Link>
         </div>
       </section>
 
