@@ -523,7 +523,7 @@ export default function Home() {
           </div>
           <p className="hero-expectation" style={sx('color:hsl(0 0% 100% / .82);margin-top:20px;')}>{EXPECTATION_LINE}</p>
           <p style={sx('margin-top:12px;font-size:13px;color:hsl(0 0% 100% / .5);')}>
-            Prefer to talk first? <a href="tel:+18887205888" style={sx('color:hsl(var(--ally-orange));font-weight:600;')}>(888) 720-5888</a>
+            Prefer to talk first? <a href="tel:+18887205888" style={sx('color:hsl(0 0% 100% / .82);font-weight:600;text-decoration:underline;')}>(888) 720-5888</a>
           </p>
         </div>
       </section>
