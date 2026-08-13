@@ -37,6 +37,12 @@ const EXPECTATION_LINE = '6 questions, about 3 minutes. Quote back in 5 business
 // here, not a rounded-down guess.
 const MOQ_LOWEST = '2,000 units';
 
+// The only stated response-time commitment found anywhere in this repo:
+// src/views/Contact.jsx:35 ("Response within 1 business day") and :157 ("Within 1
+// business day: We confirm receipt and assign a real account manager."). Both agree,
+// so this is a found fact, not a token.
+const RESPONSE_TIME = '1 business day';
+
 // Home hero encapsulation-machine video: falls back to the built-in SVG line
 // drawing under prefers-reduced-motion, or if the video errors out.
 function HeroMech() {
@@ -220,7 +226,20 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 2 — TRUST STRIP: replaces the old full-height Company Snapshot stat panel as
+      {/* 2 — PROMISE BAR: answers the ghosting objection at the top of the page, where
+          the decision is being made, instead of leaving it buried in FAQ Q.22. One
+          line, one amber dot, nothing else — this is a statement, not a pitch. */}
+      <section className="promise-bar">
+        <div className="container promise-bar-row">
+          <span className="promise-bar-dot" aria-hidden="true"></span>
+          <p>
+            We reply within {RESPONSE_TIME}. If you're not the right fit for us yet, we'll say
+            so and tell you why — you won't be strung along.
+          </p>
+        </div>
+      </section>
+
+      {/* TRUST STRIP: replaces the old full-height Company Snapshot stat panel as
           this page's credibility beat. The richer 8-stat animated panel moved to
           About.jsx, where a visitor who wants that depth already is. */}
       <section className="trust-strip">
