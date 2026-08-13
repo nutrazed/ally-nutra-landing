@@ -34,6 +34,12 @@ p{font-size:15px;line-height:1.7;color:hsl(var(--muted-foreground));}
 /* ---- Layout helpers ---- */
 .section{padding:88px 0;}
 .section-tight{padding:64px 0;}
+/* Section-banding fix: the light field (03-07) no longer differentiates its
+   sections by background colour (that's what created the grey/white/grey
+   stripe pattern) — this hairline replaces it. Not applied to the field's
+   first section (03), whose top edge already meets the navy promise bar and
+   doesn't need an echoed rule against a hard colour change. */
+.section-rule{border-top:1px solid hsl(var(--border));}
 .section-header{max-width:680px;margin:0 auto 48px;text-align:center;}
 .section-header.left{margin:0 0 40px;text-align:left;}
 .section-header h2{margin:12px 0 14px;}

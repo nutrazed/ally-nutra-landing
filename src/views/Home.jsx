@@ -350,12 +350,13 @@ export default function Home() {
           text-only trust strip that used to sit here (removed in this restructure) —
           the richer credential + photo proof bar at position 05 covers that job with
           more evidence, so a second, thinner version of the same claim right here
-          would have been redundant. */}
-      {/* padding-bottom trimmed to 32px (still on the 4px scale): the default
-          88px section padding, stacked against section-alt's own 88px top
-          padding right below, read as one ~176px dead zone of nothing but
-          background colour before "Why brands choose us" appeared. */}
-      <section className="section" style={sx('padding-bottom:32px;')}>
+          would have been redundant.
+          First section of the light field (03-07, see section-banding fix): its top
+          edge meets the navy promise bar, so that edge's padding is trimmed 88px→64px
+          per Fix 3 (a full 88px of light plus the navy block's own padding read as a
+          gap before a wall). Bottom edge is a within-field boundary against 04, so it
+          keeps the standard 88px. */}
+      <section className="section" style={sx('padding-top:64px;')}>
         <div className="container">
           <div className="section-header">
             <span className="eyebrow" style={sx('justify-content:center;')}>What we make</span>
@@ -368,8 +369,11 @@ export default function Home() {
       {/* 04 — COMPARISON: "why brands choose us", framed as what changes, not a features
           list. Right column characterises the industry-wide pattern, never a named
           competitor. Amber check glyph on the middle column only — everywhere else
-          on this section is navy and mono. Reflows to stacked cards below 760px. */}
-      <section className="section section-alt">
+          on this section is navy and mono. Reflows to stacked cards below 760px.
+          No longer section-alt (grey) — see section-banding fix: this section is part
+          of the continuous light field now, separated from its neighbours by the
+          section-rule hairline instead of a background change. */}
+      <section className="section section-rule">
         <div className="container">
           <div className="section-header">
             <span className="eyebrow" style={sx('justify-content:center;')}>Why brands choose us</span>
@@ -407,7 +411,7 @@ export default function Home() {
           operations. Row 1 text-only credential strip; row 2 five-photo facility
           strip, captions required (an unlabelled photo is decoration, a labelled one
           is evidence). Light section, no navy overlay — desaturation only. */}
-      <section className="section proof-bar-section">
+      <section className="section proof-bar-section section-rule">
         <div className="container">
           <div className="credential-strip">
             {CREDENTIAL_STRIP.map((c) => (
@@ -429,7 +433,7 @@ export default function Home() {
       </section>
 
       {/* 06 — WHY BRANDS STAY: unchanged claim-and-receipt rows. */}
-      <section className="section">
+      <section className="section section-rule">
         <div className="container">
           <span className="eyebrow">Why Ally Nutra</span>
           <h2 style={sx('margin:14px 0 16px;')}>Quality we can prove. Service you'll feel.</h2>
@@ -501,31 +505,14 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 07 — HOW IT WORKS: moved to immediately before the final ask (deliberate —
-          removes the last hesitation right before the click, rather than being read
-          early and forgotten). Deliberately navy + mono, no amber — amber on this
-          page marks the action, not the explanation. */}
-      <section className="section-navy how-it-works">
-        <div className="container">
-          <div className="section-header">
-            <span className="eyebrow on-dark" style={sx('justify-content:center;')}>How it works</span>
-            <h2>Four steps. No surprises.</h2>
-          </div>
-          <div className="grid grid-4 how-it-works-grid">
-            {HOW_IT_WORKS.map((s) => (
-              <div className="how-it-works-card" key={s.step}>
-                <span className="how-it-works-num mono-chip">{s.step}</span>
-                <h3>{s.title}</h3>
-                <p className="how-it-works-body">{s.body}</p>
-                <span className="how-it-works-time mono-chip">{s.time}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 08 — PROOF: unchanged testimonials, attributions unchanged. */}
-      <section className="section section-alt">
+      {/* 07 — PROOF: unchanged testimonials, attributions unchanged.
+          Section-banding fix: moved above "How it works" (previously the reverse
+          order). This is now the light field's last section — its bottom edge
+          meets the navy how-it-works/final-CTA block, so per Fix 3 that edge's
+          padding is trimmed 88px→64px (top edge stays 88px, a within-field
+          boundary against 06). Also drops section-alt (grey) for the same
+          section-rule hairline as its neighbours. */}
+      <section className="section section-rule" style={sx('padding-bottom:64px;')}>
         <div className="container">
           <div className="section-header">
             <span className="eyebrow" style={sx('justify-content:center;')}>What our partners say</span>
@@ -562,9 +549,41 @@ export default function Home() {
         </div>
       </section>
 
+      {/* 08 — HOW IT WORKS: immediately before the final ask (deliberate — removes
+          the last hesitation right before the click, rather than being read early
+          and forgotten). Deliberately navy + mono, no amber — amber on this page
+          marks the action, not the explanation.
+          Section-banding fix: now directly adjacent to the final CTA (09), both
+          navy — they read as one continuous navy block instead of two navy bands
+          with a grey testimonials band between them. Added the `section` class
+          for the standard symmetric 88px padding (this section previously had
+          none at all, relying only on its own internal content spacing); since
+          both edges here border navy (07 is the light→navy seam handled on 07's
+          side, not this one) or another navy section, no seam trim applies. */}
+      <section className="section section-navy how-it-works">
+        <div className="container">
+          <div className="section-header">
+            <span className="eyebrow on-dark" style={sx('justify-content:center;')}>How it works</span>
+            <h2>Four steps. No surprises.</h2>
+          </div>
+          <div className="grid grid-4 how-it-works-grid">
+            {HOW_IT_WORKS.map((s) => (
+              <div className="how-it-works-card" key={s.step}>
+                <span className="how-it-works-num mono-chip">{s.step}</span>
+                <h3>{s.title}</h3>
+                <p className="how-it-works-body">{s.body}</p>
+                <span className="how-it-works-time mono-chip">{s.time}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* 09 — FINAL CTA: both actions repeated, plus the same expectation line as the
-          hero and the phone number as a fallback. */}
-      <section className="section-navy" style={sx('text-align:center;')}>
+          hero and the phone number as a fallback.
+          Section-banding fix: added the `section` class (see 08's comment — this
+          section also had zero padding before, now the standard symmetric 88px). */}
+      <section className="section section-navy" style={sx('text-align:center;')}>
         <div className="container">
           <h2 style={sx('max-width:640px;margin:0 auto 24px;')}>
             Ready to build something your customers will{' '}
