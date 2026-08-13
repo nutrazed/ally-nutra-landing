@@ -225,7 +225,7 @@ const EXPLORE_LINKS = [
 export default function Home() {
   return (
     <>
-      {/* 1 — HERO: the only job of this section is stating what we do, for whom, and
+      {/* 01 — HERO: the only job of this section is stating what we do, for whom, and
           giving the visitor a way to act immediately. Everything that used to live here
           (the dosage-form checklist, the sticky-scroll About narrative) either restated
           a disputed claim or belonged on a page a genuinely interested visitor reaches
@@ -272,7 +272,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 2 — PROMISE BAR: answers the ghosting objection at the top of the page, where
+      {/* 02 — PROMISE BAR: answers the ghosting objection at the top of the page, where
           the decision is being made, instead of leaving it buried in FAQ Q.22. One
           line, one amber dot, nothing else — this is a statement, not a pitch. */}
       <section className="promise-bar">
@@ -285,22 +285,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* TRUST STRIP: replaces the old full-height Company Snapshot stat panel as
-          this page's credibility beat. The richer 8-stat animated panel moved to
-          About.jsx, where a visitor who wants that depth already is. */}
-      <section className="trust-strip">
-        <div className="container trust-strip-row">
-          <span>cGMP certified</span>
-          <span className="trust-strip-dot" aria-hidden="true">·</span>
-          <span>FDA registered</span>
-          <span className="trust-strip-dot" aria-hidden="true">·</span>
-          <span>Dover, Delaware</span>
-          <span className="trust-strip-dot" aria-hidden="true">·</span>
-          <span>500+ brands served</span>
-        </div>
-      </section>
-
-      {/* 3 — WHAT WE MAKE: exactly the four confirmed formats. */}
+      {/* 03 — WHAT WE MAKE: exactly the four confirmed formats. Supersedes the old
+          text-only trust strip that used to sit here (removed in this restructure) —
+          the richer credential + photo proof bar at position 05 covers that job with
+          more evidence, so a second, thinner version of the same claim right here
+          would have been redundant. */}
       <section className="section">
         <div className="container">
           <div className="section-header">
@@ -323,7 +312,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* COMPARISON: "why brands choose us", framed as what changes, not a features
+      {/* 04 — COMPARISON: "why brands choose us", framed as what changes, not a features
           list. Right column characterises the industry-wide pattern, never a named
           competitor. Amber check glyph on the middle column only — everywhere else
           on this section is navy and mono. Reflows to stacked cards below 760px. */}
@@ -359,7 +348,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* PROOF BAR: facility, certifications, and company stats were moved off the
+      {/* 05 — PROOF BAR: facility, certifications, and company stats were moved off the
           home view in the PR #2 restructure. They come back here — compressed, but
           with the photography intact, because the photographs ARE the proof of
           operations. Row 1 text-only credential strip; row 2 five-photo facility
@@ -386,30 +375,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 4 — HOW IT WORKS: the highest-value addition in this restructure. Answers
-          "what am I committing to if I click" before the click, which is what a B2B
-          buyer's hesitation is actually about. Deliberately navy + mono, no amber —
-          amber on this page marks the action, not the explanation. */}
-      <section className="section-navy how-it-works">
-        <div className="container">
-          <div className="section-header">
-            <span className="eyebrow on-dark" style={sx('justify-content:center;')}>How it works</span>
-            <h2>Four steps. No surprises.</h2>
-          </div>
-          <div className="grid grid-4 how-it-works-grid">
-            {HOW_IT_WORKS.map((s) => (
-              <div className="how-it-works-card" key={s.step}>
-                <span className="how-it-works-num mono-chip">{s.step}</span>
-                <h3>{s.title}</h3>
-                <p className="how-it-works-body">{s.body}</p>
-                <span className="how-it-works-time mono-chip">{s.time}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 5 — WHY BRANDS STAY: unchanged claim-and-receipt rows. */}
+      {/* 06 — WHY BRANDS STAY: unchanged claim-and-receipt rows. */}
       <section className="section">
         <div className="container">
           <span className="eyebrow">Why Ally Nutra</span>
@@ -482,7 +448,30 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 6 — PROOF: unchanged testimonials, attributions unchanged. */}
+      {/* 07 — HOW IT WORKS: moved to immediately before the final ask (deliberate —
+          removes the last hesitation right before the click, rather than being read
+          early and forgotten). Deliberately navy + mono, no amber — amber on this
+          page marks the action, not the explanation. */}
+      <section className="section-navy how-it-works">
+        <div className="container">
+          <div className="section-header">
+            <span className="eyebrow on-dark" style={sx('justify-content:center;')}>How it works</span>
+            <h2>Four steps. No surprises.</h2>
+          </div>
+          <div className="grid grid-4 how-it-works-grid">
+            {HOW_IT_WORKS.map((s) => (
+              <div className="how-it-works-card" key={s.step}>
+                <span className="how-it-works-num mono-chip">{s.step}</span>
+                <h3>{s.title}</h3>
+                <p className="how-it-works-body">{s.body}</p>
+                <span className="how-it-works-time mono-chip">{s.time}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 08 — PROOF: unchanged testimonials, attributions unchanged. */}
       <section className="section section-alt">
         <div className="container">
           <div className="section-header">
@@ -520,8 +509,28 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 7 — EXPLORE: compact reference index. This is how facility/certifications/R&D/
-          FAQ content stays reachable after being demoted off the home view. */}
+      {/* 09 — FINAL CTA: both actions repeated, plus the same expectation line as the
+          hero and the phone number as a fallback. */}
+      <section className="section-navy" style={sx('text-align:center;')}>
+        <div className="container">
+          <h2 style={sx('max-width:640px;margin:0 auto 24px;')}>
+            Ready to build something your customers will{' '}
+            <em style={sx('font-style:italic;color:hsl(var(--ally-orange));')}>actually</em> reorder?
+          </h2>
+          <div className="hero-ctas" style={sx('justify-content:center;margin-top:0;')}>
+            <Link to="/contact" className="btn btn-primary btn-lg">Start your quote →</Link>
+            <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer" className="btn btn-outline-invert btn-lg">Not sure yet? Book a call</a>
+          </div>
+          <p className="hero-expectation" style={sx('color:hsl(0 0% 100% / .82);margin-top:20px;')}>{EXPECTATION_LINE}</p>
+          <p style={sx('margin-top:12px;font-size:13px;color:hsl(0 0% 100% / .5);')}>
+            Prefer to talk first? <a href="tel:+18887205888" style={sx('color:hsl(var(--ally-orange));font-weight:600;')}>(888) 720-5888</a>
+          </p>
+        </div>
+      </section>
+
+      {/* 10 — EXPLORE: compact reference index, stays last. This is how
+          facility/certifications/R&D/FAQ content stays reachable after being
+          demoted off the home view. */}
       <section className="explore-strip">
         <div className="container">
           <div className="explore-grid">
@@ -532,20 +541,6 @@ export default function Home() {
                 <span className="explore-card-arrow" aria-hidden="true">→</span>
               </Link>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 8 — FINAL CTA: both actions repeated, plus the phone number. */}
-      <section className="section-navy" style={sx('text-align:center;')}>
-        <div className="container">
-          <h2 style={sx('max-width:640px;margin:0 auto 24px;')}>
-            Ready to build something your customers will{' '}
-            <em style={sx('font-style:italic;color:hsl(var(--ally-orange));')}>actually</em> reorder?
-          </h2>
-          <div className="hero-ctas" style={sx('justify-content:center;margin-top:0;')}>
-            <Link to="/contact" className="btn btn-primary btn-lg">Get a quote →</Link>
-            <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer" className="btn btn-outline-invert btn-lg">Book a 20-minute call</a>
           </div>
         </div>
       </section>

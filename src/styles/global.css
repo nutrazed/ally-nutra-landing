@@ -801,13 +801,6 @@ html.no-js .stat-live{display:none;}
   .facility-strip-item{width:calc(50% - 6px);}
 }
 
-/* Trust strip: thin credibility row directly under the hero, replacing the old
-   full-height Company Snapshot stat panel as Home's credibility beat. Kept under
-   90px tall on all but the narrowest viewports, where wrapping is unavoidable. */
-.trust-strip{padding:18px 0;background:hsl(var(--muted));border-bottom:1px solid hsl(var(--border));}
-.trust-strip-row{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;font-family:var(--font-mono);font-size:11.5px;letter-spacing:0.04em;text-transform:uppercase;color:hsl(var(--ally-navy)/.65);text-align:center;}
-.trust-strip-dot{color:hsl(var(--ally-navy)/.3);}
-
 /* How it works: deliberately navy + mono, no amber — amber marks the action on this
    page, and this section is the explanation, not the action. */
 .how-it-works-grid{margin-top:8px;}
