@@ -169,6 +169,17 @@ const HOW_IT_WORKS = [
   { step: '04', title: 'Production and ship', body: 'Blended, filled, packaged, and shipped to your warehouse or FBA.', time: '4–8 WEEKS' },
 ];
 
+// Right column characterises an industry-wide pattern a B2B buyer would recognize
+// from experience — never a named competitor.
+const COMPARISON_ROWS = [
+  { notice: 'Getting a quote', withUs: '5 business days, priced line by line', usual: '"We’ll get back to you shortly"' },
+  { notice: 'Who you deal with', withUs: 'One named account manager who knows your formula', usual: 'A shared sales inbox' },
+  { notice: 'The price you’re told', withUs: 'The number on your quote is the number on your invoice', usual: 'An estimate, then adjustments' },
+  { notice: 'Documentation', withUs: 'COA and batch records within one business day of asking', usual: 'Ask, then wait' },
+  { notice: 'Formula changes', withUs: 'Locked at sign-off; revisions documented, never silent', usual: 'Substitutions you find out about later' },
+  { notice: 'If you’re too small today', withUs: 'We say so, explain why, and keep you on the waitlist', usual: 'Strung along or ignored' },
+];
+
 const EXPLORE_LINKS = [
   { to: '/facility', title: 'Facility', line: 'A tour of where your product is made.' },
   { to: '/certifications', title: 'Certifications', line: 'cGMP, FDA, NSF, and more — audited annually.' },
@@ -270,6 +281,42 @@ export default function Home() {
                   <h3>{p.title}</h3>
                   <p className="product-desc">{p.desc}</p>
                   <div className="product-spec">{p.spec}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* COMPARISON: "why brands choose us", framed as what changes, not a features
+          list. Right column characterises the industry-wide pattern, never a named
+          competitor. Amber check glyph on the middle column only — everywhere else
+          on this section is navy and mono. Reflows to stacked cards below 760px. */}
+      <section className="section section-alt">
+        <div className="container">
+          <div className="section-header">
+            <span className="eyebrow" style={sx('justify-content:center;')}>Why brands choose us</span>
+            <h2>What you'll actually notice.</h2>
+          </div>
+          <div className="comparison-table">
+            <div className="comparison-row head">
+              <div>What you'll notice</div>
+              <div>With Ally Nutra</div>
+              <div>The usual experience</div>
+            </div>
+            {COMPARISON_ROWS.map((row) => (
+              <div className="comparison-row" key={row.notice}>
+                <div className="comparison-notice">{row.notice}</div>
+                <div className="comparison-withus">
+                  <span className="comparison-mobile-label">With Ally Nutra</span>
+                  <svg className="comparison-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                  <span>{row.withUs}</span>
+                </div>
+                <div className="comparison-usual">
+                  <span className="comparison-mobile-label">The usual experience</span>
+                  <span>{row.usual}</span>
                 </div>
               </div>
             ))}
