@@ -44,6 +44,34 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
 
+  // Persistent conversion affordance: once the home hero scrolls out of view, the
+  // header's call button swaps to a "Get a quote" link in the exact same slot —
+  // same class, same size — so there is no second element to collide with the logo
+  // or nav at any breakpoint. Driven by IntersectionObserver on #home-hero, not a
+  // scroll handler. Never active off the home view (the element it observes only
+  // exists there), so it is inherently absent on /contact too.
+  const [heroOutOfView, setHeroOutOfView] = useState(false);
+  const isHome = currentKey === 'home';
+
+  useEffect(() => {
+    if (!isHome) {
+      setHeroOutOfView(false);
+      return;
+    }
+    const heroEl = document.getElementById('home-hero');
+    if (!heroEl || typeof IntersectionObserver === 'undefined') return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setHeroOutOfView(!entry.isIntersecting && entry.boundingClientRect.top < 0);
+      },
+      { threshold: 0 }
+    );
+    observer.observe(heroEl);
+    return () => observer.disconnect();
+  }, [isHome, location.pathname]);
+
+  const showStickyQuote = isHome && heroOutOfView && currentKey !== 'contact';
+
   const dropdownRef = useRef(null);
   const triggerRef = useRef(null);
   const suppressDesktopCloseRef = useRef(false);
@@ -160,12 +188,18 @@ export default function Header() {
             </NavLink>
           ))}
         </nav>
-        <a href="tel:+18887205888" className="call-btn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.19 14.8a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-          </svg>
-          <span>(888) 720-5888</span>
-        </a>
+        {showStickyQuote ? (
+          <Link to="/contact" className="call-btn">
+            <span>Get a quote</span>
+          </Link>
+        ) : (
+          <a href="tel:+18887205888" className="call-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.19 14.8a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+            </svg>
+            <span>(888) 720-5888</span>
+          </a>
+        )}
         <button
           className="hamburger"
           id="hamburgerBtn"

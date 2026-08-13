@@ -7,6 +7,49 @@ import services02 from '../assets/images/services-02.jpg';
 import services03 from '../assets/images/services-03.jpg';
 import services04 from '../assets/images/services-04.jpg';
 
+import rd01 from '../assets/images/rd-01.jpg';
+import rd02 from '../assets/images/rd-02.jpg';
+import rd03 from '../assets/images/rd-03.jpg';
+import rd04 from '../assets/images/rd-04.jpg';
+
+// Relocated from the home view (2026 conversion restructure) — expands on the
+// "Custom formulation R&D" teaser in the Additional services grid below. See
+// docs/PLAN.md for why this moved off Home.
+const RD_CELLS = [
+  {
+    num: '01 · Formulation',
+    img: rd01,
+    alt: 'A gloved formulator weighing powder on an analytical balance',
+    title: 'From concept to locked formula',
+    body: 'Ingredient selection, standardisation percentages, dosing, and label claims are resolved before anything is fixed. We screen for compatibility, run stability and accelerated aging studies, and tune taste, texture, and flow.',
+    receive: 'Formulation brief · stability data · label claim review',
+  },
+  {
+    num: '02 · Evidence review',
+    img: rd02,
+    alt: 'A researcher reading closely printed pages of a technical text',
+    title: 'Doses matched to the research',
+    body: 'We select ingredients with published human data and match your dose to the levels actually studied — not the level that costs least. Claims are checked against what the evidence will support.',
+    receive: 'Ingredient dossier · claim substantiation notes',
+  },
+  {
+    num: '03 · Custom development',
+    img: rd03,
+    alt: 'Rows of empty small-batch glass sample bottles awaiting fill',
+    title: 'Bench to production batch',
+    body: 'Bring a concept or a competitor product. We benchmark it, model target cost, run prototype rounds with you, then scale from bench to full production without the formula drifting.',
+    receive: 'Prototypes · cost model · scale-up plan',
+  },
+  {
+    num: '04 · Sustainability',
+    img: rd04,
+    alt: 'An empty kraft cardboard packaging box seen from above',
+    title: 'A supply-chain decision',
+    body: 'Sustainability is a sourcing decision, not a marketing one. We prioritise suppliers with transparent sourcing and work with packaging partners on recyclable formats — and say so only where it is true.',
+    receive: 'Sourcing disclosure · packaging options',
+  },
+];
+
 export default function Services() {
   return (
     <section aria-labelledby="services-h1">
@@ -58,9 +101,9 @@ export default function Services() {
                 <h3 style={sx("font-size:18px;margin-bottom:4px;")}>Capsules</h3>
                 <p style={sx("font-size:12px;margin-bottom:14px;")}>Two-piece · liquid-fill · vegan or gelatin</p>
                 <ul className="bullet-list" style={sx('margin-bottom:14px;')}>
-                  <li>Size 000 through size 4</li>
+                  <li>Size 000 through size 3</li>
                   <li>Vegan HPMC or bovine gelatin</li>
-                  <li>MOQ from 10,000 units</li>
+                  <li>MOQ from 2,500 units</li>
                 </ul>
                 <Link to="/contact" className="btn-ghost" style={sx('font-size:13px;')}>Get a capsule quote →</Link>
               </div>
@@ -165,6 +208,36 @@ export default function Services() {
                 <li style={sx("color:hsl(0 0% 100% / .7);")}>Direct-to-FC shipping available</li>
               </ul>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="container">
+          <div className="section-header">
+            <span className="eyebrow" style={sx('justify-content:center;')}>R&amp;D and innovation</span>
+            <h2>Science is the product.</h2>
+            <p>
+              Our in-house team works where nutrition science meets manufacturing — turning
+              ingredient research into formulas that work, taste good, and hold up on the shelf.
+            </p>
+          </div>
+
+          <div className="rd-matrix">
+            {RD_CELLS.map((cell) => (
+              <div className="rd-cell" key={cell.num}>
+                <span className="rd-cell-num">{cell.num}</span>
+                <div className="rd-cell-photo">
+                  <img src={cell.img} width="600" height="200" alt={cell.alt} loading="lazy" onError={hideAndTint} />
+                </div>
+                <h3>{cell.title}</h3>
+                <p className="rd-cell-body">{cell.body}</p>
+                <div className="rd-cell-receive">
+                  <span className="rd-cell-receive-label">You receive</span>
+                  <p className="rd-cell-receive-text">{cell.receive}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>

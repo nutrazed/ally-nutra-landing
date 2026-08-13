@@ -1,9 +1,381 @@
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { sx } from '../lib/styleString.js';
 import { hideAndTint } from '../lib/imgFallback.js';
 import { scrollToId } from '../lib/scrollToId.js';
 
+import about01 from '../assets/images/about-01.jpg';
+import about02 from '../assets/images/about-02.jpg';
+import about03 from '../assets/images/about-03.jpg';
+import about04 from '../assets/images/about-04.jpg';
+import about05 from '../assets/images/about-05.jpg';
 import about06 from '../assets/images/about-06.jpg';
+
+// Relocated from the home view (2026 conversion restructure) — the process
+// narrative a visitor wants once they're already interested in the company, not
+// before. See docs/PLAN.md for why this moved off Home.
+const ABOUT_STAGES = [
+  {
+    stage: 1,
+    img: about01,
+    alt: 'A lab technician pipetting a coloured solution into a multi-well tray during formulation work',
+    title: 'Formulation support',
+    body: "We help shape the formula before anything is locked — ingredient selection, standardisation percentages, dosages, and label claims. Bring a finished lab-verified formula or just a concept and a target benefit; both start the same way. Our formulators check ingredient compatibility, run stability and accelerated aging studies, and tune taste, texture, and flow. Once you sign off, the formulation is locked and the quote version is frozen for that run.",
+  },
+  {
+    stage: 2,
+    img: about02,
+    alt: 'Two technicians running instrumented tests on samples in a materials testing lab',
+    title: 'Ingredient sourcing',
+    body: 'Raw materials are sourced against your approved spec and held in quarantine on arrival. Every shipment is sampled and identity-tested — FTIR, HPLC, or DNA verification depending on the material — before it is released to production. Supplier certificates of analysis are verified against our own results rather than taken on trust. Storage is temperature- and humidity-controlled with FIFO lot tracking and dedicated allergen segregation.',
+  },
+  {
+    stage: 3,
+    img: about03,
+    alt: 'A tray of freshly filled capsules on an encapsulation line, ready for inspection',
+    title: 'cGMP manufacturing',
+    body: 'Blending, encapsulation, and compression run under 21 CFR Part 111 in our Dover, Delaware facility. V-blenders and ribbon mixers from 50L to 1,500L handle the blend; tamping-pin encapsulators fill sizes 000 through 3 at ±2% weight tolerance with in-process weight verification. Every batch carries documented in-process checks and a full batch record, so the run is traceable from raw material lot through to finished goods release.',
+  },
+  {
+    stage: 4,
+    img: about04,
+    alt: 'A worker tending an automated bottle-filling line loading amber glass bottles',
+    title: 'Packaging and labeling',
+    body: 'Product leaves retail-ready, not as bulk you still have to finish. Automated counting and filling, induction sealing, labeling, and shrink banding, plus sachet, stick pack, and stand-up pouch lines. We generate the FDA supplement facts panel, review claims for compliance, and set up barcode and lot coding. Artwork comes back print-ready with a structural dieline and mockup.',
+  },
+  {
+    stage: 5,
+    img: about05,
+    alt: 'Rows of pallet racking stocked with boxed finished goods in a climate-controlled warehouse',
+    title: 'Fulfillment',
+    body: 'Finished goods are held in climate-controlled storage and ship from the East Coast, which puts most US destinations within two days. Amazon FBA prep is handled in-house — FNSKU labeling, poly-bagging, carton marking, pallet prep, and direct-to-fulfilment-center shipping. Multi-unit bundling and kitting available. Your client workspace shows order status and documents throughout, so you are not chasing email for a ship date.',
+  },
+];
+
+// Sticky-scroll narrative. Ported from Home.jsx's original IntersectionObserver-driven
+// implementation — always acts on the entry with the largest intersectionRatio, never
+// more than one stage per callback, so two captions never both read as active during a
+// fast scroll. Disconnected below 901px, where CSS switches to a plain inline stack.
+function AboutScroll() {
+  const stageRefs = useRef({});
+  const [activeStage, setActiveStage] = useState(1);
+  const activeStageRef = useRef(1);
+
+  useEffect(() => {
+    activeStageRef.current = activeStage;
+  }, [activeStage]);
+
+  useEffect(() => {
+    if (typeof IntersectionObserver === 'undefined') return;
+    let observer = null;
+
+    function connect() {
+      if (observer) return;
+      observer = new IntersectionObserver(
+        (entries) => {
+          let best = null;
+          entries.forEach((entry) => {
+            if (entry.isIntersecting && (!best || entry.intersectionRatio > best.intersectionRatio)) {
+              best = entry;
+            }
+          });
+          if (best) {
+            const stage = Number(best.target.dataset.stage);
+            if (stage !== activeStageRef.current) {
+              activeStageRef.current = stage;
+              setActiveStage(stage);
+            }
+          }
+        },
+        { rootMargin: '-35% 0px -45% 0px', threshold: 0 }
+      );
+      Object.values(stageRefs.current).forEach((el) => el && observer.observe(el));
+    }
+    function disconnect() {
+      if (!observer) return;
+      observer.disconnect();
+      observer = null;
+    }
+
+    const mq = window.matchMedia('(min-width: 901px)');
+    function syncToBreakpoint() {
+      if (mq.matches) connect();
+      else disconnect();
+    }
+    syncToBreakpoint();
+    if (mq.addEventListener) mq.addEventListener('change', syncToBreakpoint);
+    else if (mq.addListener) mq.addListener(syncToBreakpoint);
+
+    return () => {
+      disconnect();
+      if (mq.removeEventListener) mq.removeEventListener('change', syncToBreakpoint);
+      else if (mq.removeListener) mq.removeListener(syncToBreakpoint);
+    };
+  }, []);
+
+  function goTo(stage) {
+    stageRefs.current[stage]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  return (
+    <section className="section about-scroll">
+      <div className="container about-scroll-grid">
+        <div className="about-sticky-col">
+          <div className="about-frame">
+            {ABOUT_STAGES.map((s) => (
+              <img
+                key={s.stage}
+                className={`about-img${activeStage === s.stage ? ' on' : ''}`}
+                data-stage={s.stage}
+                src={s.img}
+                width="900"
+                height="675"
+                alt={s.alt}
+                loading={s.stage === 1 ? 'eager' : 'lazy'}
+                onError={hideAndTint}
+              />
+            ))}
+            <div className="about-img-tint" aria-hidden="true"></div>
+          </div>
+          <div className="about-rail" role="group" aria-label="Jump to a stage">
+            {ABOUT_STAGES.map((s) => (
+              <button
+                key={s.stage}
+                type="button"
+                className={`about-rail-num${activeStage === s.stage ? ' on' : ''}`}
+                data-goto={s.stage}
+                aria-label={`Go to stage ${s.stage}: ${s.title}`}
+                onClick={() => goTo(s.stage)}
+              >
+                {String(s.stage).padStart(2, '0')}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <div className="about-intro">
+            <span className="eyebrow">How we work</span>
+            <h2 style={sx('margin:14px 0 18px;')}>
+              From formula to finished product — <em style={sx('font-style:italic;color:hsl(var(--ally-navy))')}>five stages</em>.
+            </h2>
+            <p>
+              Every order moves through the same documented process, whether it's your
+              first SKU or your fiftieth.
+            </p>
+          </div>
+
+          {ABOUT_STAGES.map((s) => (
+            <div
+              key={s.stage}
+              ref={(el) => {
+                stageRefs.current[s.stage] = el;
+              }}
+              className={`about-stage${activeStage === s.stage ? ' on' : ''}`}
+              data-stage={s.stage}
+            >
+              <div className="about-stage-mobile-img">
+                <img
+                  src={s.img}
+                  width="900"
+                  height="675"
+                  alt={s.alt}
+                  loading={s.stage === 1 ? 'eager' : 'lazy'}
+                  onError={hideAndTint}
+                />
+              </div>
+              <span className="about-stage-num">{String(s.stage).padStart(2, '0')}</span>
+              <h3>{s.title}</h3>
+              <p>{s.body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Relocated from the home view's "Company snapshot" — scroll-triggered count-up,
+// played once via IntersectionObserver (never a scroll listener) + requestAnimationFrame
+// (never setInterval). Certifications and format counts corrected to match the
+// dedicated Certifications and Home pages exactly (see docs/PLAN.md).
+function AnimatedStat({ count, suffix, mode, delay }) {
+  const [display, setDisplay] = useState('0');
+  const rafRef = useRef(null);
+
+  useEffect(() => {
+    if (mode === 'final') {
+      setDisplay(count.toLocaleString() + suffix);
+      return;
+    }
+    if (mode !== 'animate') return;
+
+    let start = null;
+    let cancelled = false;
+    const duration = 1400;
+    function easeOutCubic(p) {
+      return 1 - Math.pow(1 - p, 3);
+    }
+    const timer = setTimeout(() => {
+      function step(ts) {
+        if (cancelled) return;
+        if (start === null) start = ts;
+        const p = Math.min(1, (ts - start) / duration);
+        const eased = easeOutCubic(p);
+        const current = Math.round(eased * count);
+        // Suffix only on the true final frame — a counting "347+" is a lie.
+        setDisplay(current.toLocaleString() + (p >= 1 ? suffix : ''));
+        if (p < 1) rafRef.current = requestAnimationFrame(step);
+      }
+      rafRef.current = requestAnimationFrame(step);
+    }, delay);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, [mode, count, suffix, delay]);
+
+  return (
+    <span className="stat-live" aria-hidden="true" data-count={count} data-suffix={suffix}>
+      {display}
+    </span>
+  );
+}
+
+function StatPanel() {
+  const panelRef = useRef(null);
+  const [mode, setMode] = useState('idle');
+  const [revealed, setRevealed] = useState(false);
+
+  useEffect(() => {
+    const panel = panelRef.current;
+    if (!panel) return;
+
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) {
+      setMode('final');
+      setRevealed(true);
+      return;
+    }
+    if (typeof IntersectionObserver === 'undefined') {
+      setMode('final');
+      setRevealed(true);
+      return;
+    }
+
+    const initialRect = panel.getBoundingClientRect();
+    if (initialRect.bottom < 0) {
+      setMode('final');
+      setRevealed(true);
+      return;
+    }
+
+    let played = false;
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (played) return;
+          if (entry.isIntersecting) {
+            played = true;
+            setRevealed(true);
+            setMode('animate');
+            io.unobserve(panel);
+          } else if (entry.boundingClientRect.bottom < 0) {
+            played = true;
+            setMode('final');
+            setRevealed(true);
+            io.unobserve(panel);
+          }
+        });
+      },
+      { threshold: [0, 0.5] }
+    );
+    io.observe(panel);
+    return () => io.disconnect();
+  }, []);
+
+  return (
+    <div className={`stat-panel${revealed ? ' in' : ''}`} ref={panelRef}>
+      <div className="stat-panel-head">
+        <span>System · Ally Nutra QMS</span>
+        <span>Dover, Delaware</span>
+      </div>
+      <div className="grid grid-4" style={sx('gap:0;')}>
+        <div className="stat-cell">
+          <span className="mono-chip">CH-01</span>
+          <div className="stat-label">Years in business</div>
+          <div className="stat-value" aria-label="10+">
+            <span className="stat-ghost" aria-hidden="true">10+</span>
+            <AnimatedStat count={10} suffix="+" mode={mode} delay={0} />
+          </div>
+          <div className="stat-sub">Operating since 2015<br />Dover, Delaware · USA</div>
+        </div>
+        <div className="stat-cell">
+          <span className="mono-chip">CH-02</span>
+          <div className="stat-label">Brands served</div>
+          <div className="stat-value stat-value-accent" aria-label="500+">
+            <span className="stat-ghost" aria-hidden="true">500+</span>
+            <AnimatedStat count={500} suffix="+" mode={mode} delay={60} />
+          </div>
+          <div className="stat-sub">US &amp; international markets<br />DTC · retail · B2B</div>
+        </div>
+        <div className="stat-cell">
+          <span className="mono-chip">CH-03</span>
+          <div className="stat-label">Units shipped</div>
+          <div className="stat-value" aria-label="10M+">
+            <span className="stat-ghost" aria-hidden="true">10M+</span>
+            <AnimatedStat count={10} suffix="M+" mode={mode} delay={120} />
+          </div>
+          <div className="stat-sub">Across 500+ brands<br />US &amp; international</div>
+        </div>
+        <div className="stat-cell" style={sx('border-right:none;')}>
+          <span className="mono-chip">CH-04</span>
+          <div className="stat-label">Facility size</div>
+          <div className="stat-value" data-static="true">50,000</div>
+          <div className="stat-sub">Sq ft · Dover, Delaware<br />cGMP-certified</div>
+        </div>
+        <div className="stat-cell" style={sx('border-bottom:none;')}>
+          <span className="mono-chip">CH-05</span>
+          <div className="stat-label">Formats manufactured</div>
+          <div className="stat-value" aria-label="4">
+            <span className="stat-ghost" aria-hidden="true">4</span>
+            <AnimatedStat count={4} suffix="" mode={mode} delay={180} />
+          </div>
+          <div className="stat-sub">Capsules · sachets<br />stick packs · pouches</div>
+        </div>
+        <div className="stat-cell" style={sx('border-bottom:none;')}>
+          <span className="mono-chip">CH-06</span>
+          <div className="stat-label">Certifications</div>
+          <div className="stat-value" aria-label="6">
+            <span className="stat-ghost" aria-hidden="true">6</span>
+            <AnimatedStat count={6} suffix="" mode={mode} delay={240} />
+          </div>
+          <div className="stat-sub">cGMP · FDA · NSF<br />organic · halal · kosher</div>
+        </div>
+        <div className="stat-cell" style={sx('border-bottom:none;')}>
+          <span className="mono-chip">CH-07</span>
+          <div className="stat-label">In-house formulators</div>
+          <div className="stat-value" aria-label="15+">
+            <span className="stat-ghost" aria-hidden="true">15+</span>
+            <AnimatedStat count={15} suffix="+" mode={mode} delay={300} />
+          </div>
+          <div className="stat-sub">PhDs · nutritionists<br />R&amp;D chemists on staff</div>
+        </div>
+        <div className="stat-cell" style={sx('border-right:none;border-bottom:none;')}>
+          <span className="mono-chip">CH-08</span>
+          <div className="stat-label">Raw materials on file</div>
+          <div className="stat-value" aria-label="2,000+">
+            <span className="stat-ghost" aria-hidden="true">2,000+</span>
+            <AnimatedStat count={2000} suffix="+" mode={mode} delay={360} />
+          </div>
+          <div className="stat-sub">Traceable ingredients<br />full COA on request</div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function About() {
   return (
@@ -44,12 +416,13 @@ export default function About() {
         </div>
       </section>
 
-      <section className="section-tight section-alt" style={sx('border-bottom:1px solid hsl(var(--border));')}>
-        <div className="container simple-stats">
-          <div className="simple-stat"><div className="num">500+</div><div className="lbl">Brands served</div></div>
-          <div className="simple-stat"><div className="num">10M+</div><div className="lbl">Units shipped</div></div>
-          <div className="simple-stat"><div className="num">50,000</div><div className="lbl">Sq ft facility</div></div>
-          <div className="simple-stat"><div className="num">100%</div><div className="lbl">Made in USA</div></div>
+      <section className="section-alt">
+        <div className="container">
+          <div className="section-header">
+            <span className="eyebrow" style={sx('justify-content:center;')}>Company snapshot</span>
+            <h2>Built for scale. Obsessed with quality.</h2>
+          </div>
+          <StatPanel />
         </div>
       </section>
 
@@ -112,6 +485,8 @@ export default function About() {
           </div>
         </div>
       </section>
+
+      <AboutScroll />
 
       <section className="section-alt">
         <div className="container">
