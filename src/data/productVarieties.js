@@ -51,8 +51,15 @@ export const CAPSULE_VARIETIES = {
     {
       id: 'size',
       name: 'Capsule sizes',
-      spec: '{{CAPSULE_SIZES}}',
-      note: 'UNRESOLVED — see PR description. No capsule size range exists in the company repo at tier 1 or 2 (the pricing engine has no per-size cost table, and the quote form has no size field). A tier-3 lead exists (src/pages/FAQs.tsx:56: "sizes from 00 to 4") but the brief restricts this specific resolution to tier 1/2, so this is deliberately left as a token rather than published as fact.',
+      // UNRESOLVED — {{CAPSULE_SIZES}}. No capsule size range exists in the company
+      // repo at tier 1 or 2 (the pricing engine has no per-size cost table, and the
+      // quote form has no size field). A tier-3 lead exists (src/pages/FAQs.tsx:56:
+      // "sizes from 00 to 4") but the brief restricts this specific resolution to
+      // tier 1/2, so this stays unresolved rather than published as fact — flagged
+      // in the PR description, not published. `spec` below is the presentation-safe
+      // stand-in; the token above is what a source reader should treat as ground
+      // truth still owed.
+      spec: 'Sizes — confirming with production.',
       visual: 'rung3',
       source: 'UNRESOLVED — flagged in PR description, not published',
     },
