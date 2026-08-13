@@ -21,7 +21,22 @@ export default function ProductCard({ product, cardHeight, onOpenVarieties }) {
   // Moving focus with the flip: the trigger becomes inert as soon as the card flips,
   // so leaving focus on it would strand keyboard/AT users. Move focus onto the back
   // face's first control on open, and back to the front trigger on close.
+  //
+  // Skipped on initial mount (isFirstRender): this effect used to run unconditionally
+  // on every mount too, since effects fire after the first render regardless of the
+  // dependency array. That called frontRef.focus() on all four cards as they mounted —
+  // each call stealing focus from the previous card — so the page loaded with the
+  // LAST card's front button holding real, unrequested keyboard focus, visible as a
+  // stray focus-ring outline (:focus-visible uses --ring, amber) with zero user
+  // interaction. Confirmed by checking `.matches(':focus-visible')` on page load
+  // before this fix — it was true on card 4 (Pouches) and false on cards 1-3, matching
+  // exactly what the screenshot showed.
+  const isFirstRender = useRef(true);
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     if (flipped) {
       backFirstRef.current?.focus();
     } else {
@@ -43,7 +58,15 @@ export default function ProductCard({ product, cardHeight, onOpenVarieties }) {
           inert={flipped}
         >
           <div className="card-front-photo">
-            <img src={product.img} width="900" height="675" alt={product.alt} loading="lazy" onError={hideAndTint} />
+            <img
+              src={product.img}
+              width="900"
+              height="675"
+              alt={product.alt}
+              loading="lazy"
+              onError={hideAndTint}
+              style={product.imageScale ? { '--card-photo-scale': product.imageScale } : undefined}
+            />
           </div>
           <div className="product-body">
             <span className="product-format">{product.format}</span>

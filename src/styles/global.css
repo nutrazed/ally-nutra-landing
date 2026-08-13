@@ -69,14 +69,23 @@ p{font-size:15px;line-height:1.7;color:hsl(var(--muted-foreground));}
 .status-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:0.04em;}
 .status-badge.ok{background:hsl(150 55% 92%);color:hsl(150 45% 28%);}
 
-/* ---- Photo blocks (real images, navy fallback, amber-tinted duotone on heroes) ---- */
+/* ---- Photo blocks (real images, navy fallback, amber-tinted duotone on heroes) ----
+   Unified photo treatment (polish/presentation): every photograph on the site was
+   carrying its own colour temperature — this file's photos ranged from warm sepia to
+   plain saturate(.87), and the two bespoke card/strip photo classes below each had
+   their own slightly different values. One filter + one navy tint layer, applied
+   identically everywhere a photograph appears, so five images in a row read as one
+   shoot instead of five different sources. Tuned by eye against the proof strip (the
+   worst five-photos-in-a-row case on the site) — see the PR description for what was
+   tried before landing here. */
 .photo{position:relative;overflow:hidden;border-radius:var(--radius-lg);background:hsl(var(--ally-navy));isolation:isolate;}
-.photo img{width:100%;height:100%;object-fit:cover;display:block;}
+.photo img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.68) contrast(1.05) brightness(1.02);}
+.photo::after{content:'';position:absolute;inset:0;background:hsl(var(--ally-navy));mix-blend-mode:soft-light;opacity:.24;pointer-events:none;}
 .photo.ratio-16x9{aspect-ratio:16/9;}
 .photo.ratio-4x3{aspect-ratio:4/3;}
 .photo.ratio-1x1{aspect-ratio:1/1;}
 .photo.ratio-3x4{aspect-ratio:3/4;}
-.photo.duotone::after{content:'';position:absolute;inset:0;background:linear-gradient(160deg,hsl(var(--ally-navy)/.5),hsl(var(--ally-navy)/.15));mix-blend-mode:multiply;pointer-events:none;}
+.photo.duotone::after{background:linear-gradient(160deg,hsl(var(--ally-navy)/.5),hsl(var(--ally-navy)/.15));mix-blend-mode:multiply;opacity:1;}
 .photo-caption{font-family:var(--font-mono);font-size:10.5px;letter-spacing:0.06em;text-transform:uppercase;color:hsl(var(--muted-foreground));margin-top:10px;}
 
 /* ---- Header (canonical, used on every view) ---- */
@@ -788,8 +797,9 @@ html.no-js .stat-live{display:none;}
 
 .facility-strip{display:flex;gap:12px;justify-content:center;}
 .facility-strip-item{width:200px;flex-shrink:0;}
-.facility-strip-photo{width:100%;aspect-ratio:4/3;border-radius:var(--radius-md);overflow:hidden;background:hsl(var(--muted));}
-.facility-strip-photo img{width:100%;height:100%;object-fit:cover;filter:saturate(.87) sepia(.05);}
+.facility-strip-photo{position:relative;width:100%;aspect-ratio:4/3;border-radius:var(--radius-md);overflow:hidden;background:hsl(var(--muted));}
+.facility-strip-photo img{width:100%;height:100%;object-fit:cover;filter:saturate(.68) contrast(1.05) brightness(1.02);}
+.facility-strip-photo::after{content:'';position:absolute;inset:0;background:hsl(var(--ally-navy));mix-blend-mode:soft-light;opacity:.24;pointer-events:none;}
 .facility-strip-caption{display:block;margin-top:8px;font-family:var(--font-slab);font-weight:500;font-size:13px;color:hsl(var(--ally-navy));}
 .facility-strip-sub{display:block;margin-top:2px;color:hsl(var(--muted-foreground));font-size:10px;}
 
@@ -884,8 +894,15 @@ html.no-js .stat-live{display:none;}
    flex column ends up sized from its intrinsic dimensions (here 900x675) instead of
    the aspect-ratio override — confirmed via computed-style inspection. Aspect-ratio
    on a plain block wrapper with overflow:hidden does not have this problem. */
-.card-front-photo{aspect-ratio:4/3;width:100%;overflow:hidden;flex-shrink:0;}
-.card-front-photo img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.87) sepia(.08);}
+/* Surface panel behind the product photo, contain (not cover) with inset padding —
+   fixes two real problems: the capsule photo was cropped at the top under cover, and
+   the white stick-pack render nearly disappeared with no surface to sit against.
+   --card-photo-scale is set per-product (Home.jsx) to equalize apparent product
+   size — contain alone still left the stick pack, whose source frame is mostly
+   empty space around a thin subject, looking a third the size of the others. */
+.card-front-photo{position:relative;aspect-ratio:4/3;width:100%;overflow:hidden;flex-shrink:0;background:hsl(var(--muted));padding:14%;box-sizing:border-box;}
+.card-front-photo img{width:100%;height:100%;object-fit:contain;display:block;filter:saturate(.68) contrast(1.05) brightness(1.02);transform:scale(var(--card-photo-scale,1));}
+.card-front-photo::after{content:'';position:absolute;inset:0;background:hsl(var(--ally-navy));mix-blend-mode:soft-light;opacity:.24;pointer-events:none;}
 .card-front .product-body{flex:1;}
 .flip-affordance{display:block;margin-top:10px;color:hsl(var(--ally-orange)/.85);text-align:right;}
 
