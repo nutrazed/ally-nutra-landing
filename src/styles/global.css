@@ -725,7 +725,7 @@ html.no-js .stat-live{display:none;}
 /* ---- Home conversion restructure (2026) ---- */
 
 /* Hero expectation-setting line, directly under the two hero CTAs. */
-.hero-expectation{margin-top:14px;font-size:13px;color:hsl(0 0% 100% / .6);}
+.hero-expectation{margin-top:14px;font-size:15px;color:hsl(0 0% 100% / .92);}
 
 /* Trust strip: thin credibility row directly under the hero, replacing the old
    full-height Company Snapshot stat panel as Home's credibility beat. Kept under

@@ -14,6 +14,16 @@ import product05 from '../assets/images/product-05.jpg';
 
 import { useEffect, useRef, useState } from 'react';
 
+// Real, live Calendly scheduling link — found read-only in the company repo
+// (Ally-Nutra-LLC-New/ally-nutra), src/lib/calendlyBooking.ts, JOSH_CALENDLY_URL,
+// on an unpublished local branch (landing-redesign/an-design-001-full-site, not yet
+// on that repo's main). The company's own /schedule route will eventually host this
+// same Calendly embed, but that migration isn't live on main yet, so linking to
+// allynutra.com/schedule today would hit the old native booking flow instead. The
+// raw Calendly URL works right now regardless of that migration's status. Update
+// this constant (and drop this comment) once /schedule ships the embed on main.
+const BOOKING_URL = 'https://calendly.com/josh-p-allynutra';
+
 // Home hero encapsulation-machine video: falls back to the built-in SVG line
 // drawing under prefers-reduced-motion, or if the video errors out.
 function HeroMech() {
@@ -176,7 +186,7 @@ export default function Home() {
             </p>
             <div className="hero-ctas">
               <Link to="/contact" className="btn btn-primary btn-lg">Get a quote →</Link>
-              <a href="tel:+18887205888" className="btn btn-outline-invert btn-lg">Book a 20-minute call</a>
+              <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer" className="btn btn-outline-invert btn-lg">Book a 20-minute call</a>
             </div>
             <p className="hero-expectation">Quote in 5 business days. No commitment.</p>
           </div>
@@ -381,11 +391,8 @@ export default function Home() {
           </h2>
           <div className="hero-ctas" style={sx('justify-content:center;margin-top:0;')}>
             <Link to="/contact" className="btn btn-primary btn-lg">Get a quote →</Link>
-            <a href="tel:+18887205888" className="btn btn-outline-invert btn-lg">Book a 20-minute call</a>
+            <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer" className="btn btn-outline-invert btn-lg">Book a 20-minute call</a>
           </div>
-          <p style={sx('margin-top:20px;')}>
-            Or call us directly: <a href="tel:+18887205888" style={sx('color:hsl(var(--ally-orange));font-weight:600;')}>(888) 720-5888</a>
-          </p>
         </div>
       </section>
     </>
