@@ -45,7 +45,7 @@ export default function Header() {
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
 
   // Persistent conversion affordance: once the home hero scrolls out of view, the
-  // header's call button swaps to a "Get a quote" link in the exact same slot —
+  // header's call button swaps to a "Start your quote" link in the exact same slot —
   // same class, same size — so there is no second element to collide with the logo
   // or nav at any breakpoint. Driven by IntersectionObserver on #home-hero, not a
   // scroll handler. Never active off the home view (the element it observes only
@@ -70,7 +70,28 @@ export default function Header() {
     return () => observer.disconnect();
   }, [isHome, location.pathname]);
 
-  const showStickyQuote = isHome && heroOutOfView && currentKey !== 'contact';
+  // Mobile header CTA fix: at the same width the nav collapses to a hamburger
+  // (≤1100px), the persistent header slot leads with the quote CTA rather than the
+  // phone number — the phone stays reachable inside the hamburger drawer (below).
+  // A large amber phone button competing with "Start your quote" as the visible
+  // primary action was flagged in the PR #2 follow-up audit; this is the fix.
+  // Driven by matchMedia's change event, not a resize/scroll listener.
+  const [isNarrow, setIsNarrow] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 1100px)');
+    function sync() {
+      setIsNarrow(mq.matches);
+    }
+    sync();
+    if (mq.addEventListener) mq.addEventListener('change', sync);
+    else if (mq.addListener) mq.addListener(sync);
+    return () => {
+      if (mq.removeEventListener) mq.removeEventListener('change', sync);
+      else if (mq.removeListener) mq.removeListener(sync);
+    };
+  }, []);
+
+  const showStickyQuote = currentKey !== 'contact' && (isNarrow || (isHome && heroOutOfView));
 
   const dropdownRef = useRef(null);
   const triggerRef = useRef(null);
@@ -190,7 +211,7 @@ export default function Header() {
         </nav>
         {showStickyQuote ? (
           <Link to="/contact" className="call-btn">
-            <span>Get a quote</span>
+            <span>Start your quote</span>
           </Link>
         ) : (
           <a href="tel:+18887205888" className="call-btn">

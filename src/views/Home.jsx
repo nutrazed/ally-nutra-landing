@@ -12,7 +12,49 @@ import product03 from '../assets/images/product-03.jpg';
 import product04 from '../assets/images/product-04.jpg';
 import product05 from '../assets/images/product-05.jpg';
 
+// Facility photo strip (proof bar, §5). Reused from the images already committed to
+// the repo — none sourced new for this strip. facility-01/02 remain unused after
+// this (available for a future need); facility-03 and facility-04 were only used by
+// Home's old FACILITY_ZONES gallery (removed in the PR #2 restructure) and are
+// otherwise unused anywhere else in the app today. facility-05/06 ARE also used by
+// Facility.jsx's own zone cards (Packaging, Logistics) — a thumbnail here and a full
+// card there is a deliberate decision, not an accident (see PR description).
+import facility03 from '../assets/images/facility-03.jpg';
+import capsule01 from '../assets/images/capsule-01.jpg';
+import facility04 from '../assets/images/facility-04.jpg';
+import facility05 from '../assets/images/facility-05.jpg';
+import facility06 from '../assets/images/facility-06.jpg';
+
 import { useEffect, useRef, useState } from 'react';
+
+// Real, live Calendly scheduling link — found read-only in the company repo
+// (Ally-Nutra-LLC-New/ally-nutra), src/lib/calendlyBooking.ts, JOSH_CALENDLY_URL,
+// on an unpublished local branch (landing-redesign/an-design-001-full-site, not yet
+// on that repo's main). The company's own /schedule route will eventually host this
+// same Calendly embed, but that migration isn't live on main yet, so linking to
+// allynutra.com/schedule today would hit the old native booking flow instead. The
+// raw Calendly URL works right now regardless of that migration's status. Update
+// this constant (and drop this comment) once /schedule ships the embed on main.
+const BOOKING_URL = 'https://calendly.com/josh-p-allynutra';
+
+// "6 questions" = the six required fields on the real /contact form (fname, lname,
+// email, brand, service, details — src/views/Contact.jsx:79-136), not the "5
+// questions" figure originally drafted for this line. Verified against the form
+// itself rather than assumed, per the PR #2 follow-up audit finding that the site's
+// existing "5-minute form" claim already overstated the form's actual length.
+const EXPECTATION_LINE = '6 questions, about 3 minutes. Quote back in 5 business days.';
+
+// Lowest MOQ among the four corrected formats — Pouches, "MOQ FROM 2,000" in the
+// PRODUCTS array below (this file). Capsules/Sachets/Stick packs are all higher
+// (2,500 / 5,000 / 10,000 respectively), so 2,000 units is the honest floor to quote
+// here, not a rounded-down guess.
+const MOQ_LOWEST = '2,000 units';
+
+// The only stated response-time commitment found anywhere in this repo:
+// src/views/Contact.jsx:35 ("Response within 1 business day") and :157 ("Within 1
+// business day: We confirm receipt and assign a real account manager."). Both agree,
+// so this is a found fact, not a token.
+const RESPONSE_TIME = '1 business day';
 
 // Home hero encapsulation-machine video: falls back to the built-in SVG line
 // drawing under prefers-reduced-motion, or if the video errors out.
@@ -140,6 +182,39 @@ const HOW_IT_WORKS = [
   { step: '04', title: 'Production and ship', body: 'Blended, filled, packaged, and shipped to your warehouse or FBA.', time: '4–8 WEEKS' },
 ];
 
+// Right column characterises an industry-wide pattern a B2B buyer would recognize
+// from experience — never a named competitor.
+const COMPARISON_ROWS = [
+  { notice: 'Getting a quote', withUs: '5 business days, priced line by line', usual: '"We’ll get back to you shortly"' },
+  { notice: 'Who you deal with', withUs: 'One named account manager who knows your formula', usual: 'A shared sales inbox' },
+  { notice: 'The price you’re told', withUs: 'The number on your quote is the number on your invoice', usual: 'An estimate, then adjustments' },
+  { notice: 'Documentation', withUs: 'COA and batch records within one business day of asking', usual: 'Ask, then wait' },
+  { notice: 'Formula changes', withUs: 'Locked at sign-off; revisions documented, never silent', usual: 'Substitutions you find out about later' },
+  { notice: 'If you’re too small today', withUs: 'We say so, explain why, and keep you on the waitlist', usual: 'Strung along or ignored' },
+];
+
+const CREDENTIAL_STRIP = [
+  { label: 'cGMP certified', to: '/certifications' },
+  { label: 'FDA registered', to: '/certifications' },
+  { label: 'NSF', to: '/certifications' },
+  { label: '50,000 sq ft', to: '/facility' },
+  { label: '500+ brands', to: '/about' },
+  { label: '2,000+ materials', to: '/about' },
+];
+
+// Captions corrected against the format-data fix already shipped: the encapsulation
+// cell reads "SIZES 000–3" (not "000–4") to match the corrected capsule-size claim
+// now canonical everywhere else in the repo (CapsuleManufacturing.jsx, Services.jsx,
+// this file's own PRODUCTS array) — see PR description for why this deliberately
+// deviates from the literal draft caption text.
+const FACILITY_STRIP = [
+  { img: facility03, alt: 'A large stainless steel blending tank on the production floor', caption: 'PRODUCTION FLOOR', sub: 'BLENDING · ISO 8' },
+  { img: capsule01, alt: 'A dense pile of freshly encapsulated two-piece capsules', caption: 'ENCAPSULATION', sub: 'SIZES 000–3 · ±2%' },
+  { img: facility04, alt: 'A gloved technician pipetting samples into a rack of test vials in the QC lab', caption: 'QC LABORATORY', sub: 'HPLC · MICROBIAL' },
+  { img: facility05, alt: 'A bottle moving under a filling funnel on an automated packaging line', caption: 'PACKAGING LINE', sub: 'INDUCTION SEAL' },
+  { img: facility06, alt: 'A warehouse aisle lined with shrink-wrapped stacks of finished goods cartons', caption: 'FINISHED GOODS', sub: 'FBA PREP · DIRECT SHIP' },
+];
+
 const EXPLORE_LINKS = [
   { to: '/facility', title: 'Facility', line: 'A tour of where your product is made.' },
   { to: '/certifications', title: 'Certifications', line: 'cGMP, FDA, NSF, and more — audited annually.' },
@@ -150,7 +225,7 @@ const EXPLORE_LINKS = [
 export default function Home() {
   return (
     <>
-      {/* 1 — HERO: the only job of this section is stating what we do, for whom, and
+      {/* 01 — HERO: the only job of this section is stating what we do, for whom, and
           giving the visitor a way to act immediately. Everything that used to live here
           (the dosage-form checklist, the sticky-scroll About narrative) either restated
           a disputed claim or belonged on a page a genuinely interested visitor reaches
@@ -171,35 +246,50 @@ export default function Home() {
             <h1 style={sx('margin-top:14px;')}>Custom supplement manufacturing for wellness brands.</h1>
             <p className="lede" style={sx('margin:18px 0 24px;max-width:520px;')}>
               Capsules, sachets, stick packs, and pouches — cGMP-certified production,
-              transparent pricing, and in-house formulation expertise, from concept to
-              shipment.
+              transparent pricing, and formulation help if you need it.
             </p>
             <div className="hero-ctas">
-              <Link to="/contact" className="btn btn-primary btn-lg">Get a quote →</Link>
-              <a href="tel:+18887205888" className="btn btn-outline-invert btn-lg">Book a 20-minute call</a>
+              <Link to="/contact" className="btn btn-primary btn-lg">Start your quote →</Link>
+              <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer" className="btn btn-outline-invert btn-lg">Not sure yet? Book a call</a>
             </div>
-            <p className="hero-expectation">Quote in 5 business days. No commitment.</p>
+            <p className="hero-expectation">{EXPECTATION_LINE}</p>
+            <div className="qual-bar">
+              <div className="qual-cell">
+                <span className="qual-value">{MOQ_LOWEST}</span>
+                <span className="qual-label">Minimum order</span>
+              </div>
+              <div className="qual-cell">
+                <span className="qual-value">4–8 weeks</span>
+                <span className="qual-label">Concept to door</span>
+              </div>
+              <div className="qual-cell">
+                <span className="qual-value">500+ brands</span>
+                <span className="qual-label">Manufactured for</span>
+              </div>
+            </div>
           </div>
           <HeroMech />
         </div>
       </section>
 
-      {/* 2 — TRUST STRIP: replaces the old full-height Company Snapshot stat panel as
-          this page's credibility beat. The richer 8-stat animated panel moved to
-          About.jsx, where a visitor who wants that depth already is. */}
-      <section className="trust-strip">
-        <div className="container trust-strip-row">
-          <span>cGMP certified</span>
-          <span className="trust-strip-dot" aria-hidden="true">·</span>
-          <span>FDA registered</span>
-          <span className="trust-strip-dot" aria-hidden="true">·</span>
-          <span>Dover, Delaware</span>
-          <span className="trust-strip-dot" aria-hidden="true">·</span>
-          <span>500+ brands served</span>
+      {/* 02 — PROMISE BAR: answers the ghosting objection at the top of the page, where
+          the decision is being made, instead of leaving it buried in FAQ Q.22. One
+          line, one amber dot, nothing else — this is a statement, not a pitch. */}
+      <section className="promise-bar">
+        <div className="container promise-bar-row">
+          <span className="promise-bar-dot" aria-hidden="true"></span>
+          <p>
+            We reply within {RESPONSE_TIME}. If you're not the right fit for us yet, we'll say
+            so and tell you why — you won't be strung along.
+          </p>
         </div>
       </section>
 
-      {/* 3 — WHAT WE MAKE: exactly the four confirmed formats. */}
+      {/* 03 — WHAT WE MAKE: exactly the four confirmed formats. Supersedes the old
+          text-only trust strip that used to sit here (removed in this restructure) —
+          the richer credential + photo proof bar at position 05 covers that job with
+          more evidence, so a second, thinner version of the same claim right here
+          would have been redundant. */}
       <section className="section">
         <div className="container">
           <div className="section-header">
@@ -222,30 +312,70 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 4 — HOW IT WORKS: the highest-value addition in this restructure. Answers
-          "what am I committing to if I click" before the click, which is what a B2B
-          buyer's hesitation is actually about. Deliberately navy + mono, no amber —
-          amber on this page marks the action, not the explanation. */}
-      <section className="section-navy how-it-works">
+      {/* 04 — COMPARISON: "why brands choose us", framed as what changes, not a features
+          list. Right column characterises the industry-wide pattern, never a named
+          competitor. Amber check glyph on the middle column only — everywhere else
+          on this section is navy and mono. Reflows to stacked cards below 760px. */}
+      <section className="section section-alt">
         <div className="container">
           <div className="section-header">
-            <span className="eyebrow on-dark" style={sx('justify-content:center;')}>How it works</span>
-            <h2>Four steps. No surprises.</h2>
+            <span className="eyebrow" style={sx('justify-content:center;')}>Why brands choose us</span>
+            <h2>What you'll actually notice.</h2>
           </div>
-          <div className="grid grid-4 how-it-works-grid">
-            {HOW_IT_WORKS.map((s) => (
-              <div className="how-it-works-card" key={s.step}>
-                <span className="how-it-works-num mono-chip">{s.step}</span>
-                <h3>{s.title}</h3>
-                <p className="how-it-works-body">{s.body}</p>
-                <span className="how-it-works-time mono-chip">{s.time}</span>
+          <div className="comparison-table">
+            <div className="comparison-row head">
+              <div>What you'll notice</div>
+              <div>With Ally Nutra</div>
+              <div>The usual experience</div>
+            </div>
+            {COMPARISON_ROWS.map((row) => (
+              <div className="comparison-row" key={row.notice}>
+                <div className="comparison-notice">{row.notice}</div>
+                <div className="comparison-withus">
+                  <span className="comparison-mobile-label">With Ally Nutra</span>
+                  <svg className="comparison-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                  <span>{row.withUs}</span>
+                </div>
+                <div className="comparison-usual">
+                  <span className="comparison-mobile-label">The usual experience</span>
+                  <span>{row.usual}</span>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 5 — WHY BRANDS STAY: unchanged claim-and-receipt rows. */}
+      {/* 05 — PROOF BAR: facility, certifications, and company stats were moved off the
+          home view in the PR #2 restructure. They come back here — compressed, but
+          with the photography intact, because the photographs ARE the proof of
+          operations. Row 1 text-only credential strip; row 2 five-photo facility
+          strip, captions required (an unlabelled photo is decoration, a labelled one
+          is evidence). Light section, no navy overlay — desaturation only. */}
+      <section className="section proof-bar-section">
+        <div className="container">
+          <div className="credential-strip">
+            {CREDENTIAL_STRIP.map((c) => (
+              <Link to={c.to} key={c.label}>{c.label}</Link>
+            ))}
+          </div>
+          <Link to="/facility" className="facility-strip">
+            {FACILITY_STRIP.map((f) => (
+              <div className="facility-strip-item" key={f.caption}>
+                <div className="facility-strip-photo">
+                  <img src={f.img} width="300" height="225" alt={f.alt} loading="lazy" onError={hideAndTint} />
+                </div>
+                <span className="facility-strip-caption">{f.caption}</span>
+                <span className="facility-strip-sub mono-chip">{f.sub}</span>
+              </div>
+            ))}
+          </Link>
+        </div>
+      </section>
+
+      {/* 06 — WHY BRANDS STAY: unchanged claim-and-receipt rows. */}
       <section className="section">
         <div className="container">
           <span className="eyebrow">Why Ally Nutra</span>
@@ -318,7 +448,30 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 6 — PROOF: unchanged testimonials, attributions unchanged. */}
+      {/* 07 — HOW IT WORKS: moved to immediately before the final ask (deliberate —
+          removes the last hesitation right before the click, rather than being read
+          early and forgotten). Deliberately navy + mono, no amber — amber on this
+          page marks the action, not the explanation. */}
+      <section className="section-navy how-it-works">
+        <div className="container">
+          <div className="section-header">
+            <span className="eyebrow on-dark" style={sx('justify-content:center;')}>How it works</span>
+            <h2>Four steps. No surprises.</h2>
+          </div>
+          <div className="grid grid-4 how-it-works-grid">
+            {HOW_IT_WORKS.map((s) => (
+              <div className="how-it-works-card" key={s.step}>
+                <span className="how-it-works-num mono-chip">{s.step}</span>
+                <h3>{s.title}</h3>
+                <p className="how-it-works-body">{s.body}</p>
+                <span className="how-it-works-time mono-chip">{s.time}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 08 — PROOF: unchanged testimonials, attributions unchanged. */}
       <section className="section section-alt">
         <div className="container">
           <div className="section-header">
@@ -356,8 +509,28 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 7 — EXPLORE: compact reference index. This is how facility/certifications/R&D/
-          FAQ content stays reachable after being demoted off the home view. */}
+      {/* 09 — FINAL CTA: both actions repeated, plus the same expectation line as the
+          hero and the phone number as a fallback. */}
+      <section className="section-navy" style={sx('text-align:center;')}>
+        <div className="container">
+          <h2 style={sx('max-width:640px;margin:0 auto 24px;')}>
+            Ready to build something your customers will{' '}
+            <em style={sx('font-style:italic;color:hsl(var(--ally-orange));')}>actually</em> reorder?
+          </h2>
+          <div className="hero-ctas" style={sx('justify-content:center;margin-top:0;')}>
+            <Link to="/contact" className="btn btn-primary btn-lg">Start your quote →</Link>
+            <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer" className="btn btn-outline-invert btn-lg">Not sure yet? Book a call</a>
+          </div>
+          <p className="hero-expectation" style={sx('color:hsl(0 0% 100% / .82);margin-top:20px;')}>{EXPECTATION_LINE}</p>
+          <p style={sx('margin-top:12px;font-size:13px;color:hsl(0 0% 100% / .5);')}>
+            Prefer to talk first? <a href="tel:+18887205888" style={sx('color:hsl(0 0% 100% / .82);font-weight:600;text-decoration:underline;')}>(888) 720-5888</a>
+          </p>
+        </div>
+      </section>
+
+      {/* 10 — EXPLORE: compact reference index, stays last. This is how
+          facility/certifications/R&D/FAQ content stays reachable after being
+          demoted off the home view. */}
       <section className="explore-strip">
         <div className="container">
           <div className="explore-grid">
@@ -369,23 +542,6 @@ export default function Home() {
               </Link>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* 8 — FINAL CTA: both actions repeated, plus the phone number. */}
-      <section className="section-navy" style={sx('text-align:center;')}>
-        <div className="container">
-          <h2 style={sx('max-width:640px;margin:0 auto 24px;')}>
-            Ready to build something your customers will{' '}
-            <em style={sx('font-style:italic;color:hsl(var(--ally-orange));')}>actually</em> reorder?
-          </h2>
-          <div className="hero-ctas" style={sx('justify-content:center;margin-top:0;')}>
-            <Link to="/contact" className="btn btn-primary btn-lg">Get a quote →</Link>
-            <a href="tel:+18887205888" className="btn btn-outline-invert btn-lg">Book a 20-minute call</a>
-          </div>
-          <p style={sx('margin-top:20px;')}>
-            Or call us directly: <a href="tel:+18887205888" style={sx('color:hsl(var(--ally-orange));font-weight:600;')}>(888) 720-5888</a>
-          </p>
         </div>
       </section>
     </>

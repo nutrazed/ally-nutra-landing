@@ -725,14 +725,81 @@ html.no-js .stat-live{display:none;}
 /* ---- Home conversion restructure (2026) ---- */
 
 /* Hero expectation-setting line, directly under the two hero CTAs. */
-.hero-expectation{margin-top:14px;font-size:13px;color:hsl(0 0% 100% / .6);}
+.hero-expectation{margin-top:14px;font-size:15px;color:hsl(0 0% 100% / .92);}
 
-/* Trust strip: thin credibility row directly under the hero, replacing the old
-   full-height Company Snapshot stat panel as Home's credibility beat. Kept under
-   90px tall on all but the narrowest viewports, where wrapping is unavoidable. */
-.trust-strip{padding:18px 0;background:hsl(var(--muted));border-bottom:1px solid hsl(var(--border));}
-.trust-strip-row{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;font-family:var(--font-mono);font-size:11.5px;letter-spacing:0.04em;text-transform:uppercase;color:hsl(var(--ally-navy)/.65);text-align:center;}
-.trust-strip-dot{color:hsl(var(--ally-navy)/.3);}
+/* Qualification bar — hero, beneath the expectation line. Navy + mono, no amber:
+   this is the "can I even use this vendor" filter, not a call to action. */
+.qual-bar{display:flex;margin-top:24px;padding-top:16px;border-top:1px solid hsl(0 0% 100% / .15);max-width:480px;}
+.qual-cell{flex:1;padding:0 16px;border-left:1px solid hsl(0 0% 100% / .15);}
+.qual-cell:first-child{padding-left:0;border-left:none;}
+.qual-value{display:block;font-family:var(--font-mono);font-size:15px;font-weight:600;color:#fff;letter-spacing:0.01em;}
+.qual-label{display:block;font-size:10.5px;color:hsl(0 0% 100% / .5);text-transform:uppercase;letter-spacing:0.05em;margin-top:3px;}
+@media (max-width:520px){
+  .qual-bar{max-width:none;}
+  .qual-value{font-size:13px;}
+}
+
+/* Promise bar — full-width, navy, one line, ~64px tall. One amber dot is the only
+   decoration: no icon set, no card, no background image. */
+.promise-bar{background:hsl(var(--ally-navy));padding:20px 0;}
+.promise-bar-row{display:flex;align-items:center;justify-content:center;gap:12px;text-align:center;flex-wrap:wrap;}
+.promise-bar-row p{color:hsl(0 0% 100% / .82);font-size:14.5px;line-height:1.5;margin:0;max-width:1000px;}
+.promise-bar-dot{width:8px;height:8px;border-radius:50%;background:hsl(var(--ally-orange));flex-shrink:0;}
+@media (min-width:900px){
+  .promise-bar-row p{white-space:nowrap;}
+}
+@media (max-width:600px){
+  .promise-bar-row{flex-direction:column;gap:8px;}
+}
+
+/* Comparison table — desktop: 3-column grid table. Amber check glyph marks the
+   middle column only; everything else here is navy/ink and mono, no amber. */
+.comparison-table{max-width:960px;margin:0 auto;border:1px solid hsl(var(--border));border-radius:var(--radius-lg);overflow:hidden;background:hsl(var(--card));}
+.comparison-row{display:grid;grid-template-columns:1.1fr 1.4fr 1.4fr;border-bottom:1px solid hsl(var(--border));}
+.comparison-row:last-child{border-bottom:none;}
+.comparison-row.head{background:hsl(var(--muted));font-family:var(--font-mono);font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:hsl(var(--ally-navy)/.6);}
+.comparison-row.head>div{padding:14px 20px;}
+.comparison-row:not(.head)>div{padding:18px 20px;font-size:13.5px;line-height:1.5;}
+.comparison-notice{font-weight:700;color:hsl(var(--ally-navy));border-right:1px solid hsl(var(--border));display:flex;align-items:center;}
+.comparison-withus{display:flex;align-items:flex-start;gap:10px;border-right:1px solid hsl(var(--border));color:hsl(var(--ally-navy));}
+.comparison-check{width:16px;height:16px;flex-shrink:0;margin-top:2px;color:hsl(var(--ally-orange));}
+.comparison-usual{color:hsl(var(--muted-foreground));}
+.comparison-mobile-label{display:none;}
+
+@media (max-width:760px){
+  .comparison-row.head{display:none;}
+  .comparison-row{display:block;border:1px solid hsl(var(--border));border-radius:var(--radius-md);margin-bottom:12px;}
+  .comparison-table{border:none;background:transparent;}
+  .comparison-notice{border-right:none;border-bottom:1px solid hsl(var(--border));padding:14px 16px !important;}
+  .comparison-withus,.comparison-usual{border-right:none;padding:12px 16px !important;flex-direction:column;gap:4px;}
+  .comparison-withus{border-bottom:1px solid hsl(var(--border));flex-direction:row;flex-wrap:wrap;}
+  .comparison-mobile-label{display:block;font-family:var(--font-mono);font-size:10px;letter-spacing:0.05em;text-transform:uppercase;color:hsl(var(--muted-foreground));width:100%;margin-bottom:2px;}
+  .comparison-usual{display:flex;}
+}
+
+/* Proof bar (§5) — credential strip + facility photo strip, total under ~320px.
+   Light section, desaturation only, no navy overlay per the "light treatment" rule. */
+.proof-bar-section{padding:36px 0;}
+.credential-strip{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;margin-bottom:20px;font-family:var(--font-mono);font-size:11.5px;letter-spacing:0.04em;text-transform:uppercase;}
+.credential-strip a{color:hsl(var(--ally-navy)/.6);border-bottom:1px solid transparent;transition:border-color .15s,color .15s;}
+.credential-strip a:hover{color:hsl(var(--ally-navy));border-bottom-color:hsl(var(--ally-navy)/.4);}
+.credential-strip a:not(:last-child){position:relative;padding-right:16px;}
+.credential-strip a:not(:last-child)::after{content:'·';position:absolute;right:-9px;color:hsl(var(--ally-navy)/.3);}
+
+.facility-strip{display:flex;gap:12px;justify-content:center;}
+.facility-strip-item{width:200px;flex-shrink:0;}
+.facility-strip-photo{width:100%;aspect-ratio:4/3;border-radius:var(--radius-md);overflow:hidden;background:hsl(var(--muted));}
+.facility-strip-photo img{width:100%;height:100%;object-fit:cover;filter:saturate(.87) sepia(.05);}
+.facility-strip-caption{display:block;margin-top:8px;font-family:var(--font-slab);font-weight:500;font-size:13px;color:hsl(var(--ally-navy));}
+.facility-strip-sub{display:block;margin-top:2px;color:hsl(var(--muted-foreground));font-size:10px;}
+
+@media (max-width:1080px){
+  .facility-strip{flex-wrap:wrap;}
+  .facility-strip-item{width:calc(33.333% - 8px);}
+}
+@media (max-width:640px){
+  .facility-strip-item{width:calc(50% - 6px);}
+}
 
 /* How it works: deliberately navy + mono, no amber — amber marks the action on this
    page, and this section is the explanation, not the action. */
