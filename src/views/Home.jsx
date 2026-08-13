@@ -1,16 +1,22 @@
 import { Link } from 'react-router-dom';
 import { sx } from '../lib/styleString.js';
 import { hideAndTint } from '../lib/imgFallback.js';
+import ProductCardsGrid from '../components/ProductCardsGrid.jsx';
 
 import homeHero from '../assets/images/home-hero.jpg';
 import heroMachineWebm from '../assets/videos/hero-machine.webm';
 import heroMachineMp4 from '../assets/videos/hero-machine.mp4';
 import heroMachinePoster from '../assets/videos/hero-machine-poster.jpg';
 
-import product01 from '../assets/images/product-01.jpg';
-import product03 from '../assets/images/product-03.jpg';
-import product04 from '../assets/images/product-04.jpg';
-import product05 from '../assets/images/product-05.jpg';
+// Ally Nutra-owned format images (feature/product-cards-flip) — copied read-only from
+// the company repo (Ally-Nutra-LLC-New/ally-nutra, commit
+// 1d1b8f5ada2655441f21cbf0e52b9518a3e45955), where they're already the live images on
+// ally-nutra@main's own homepage (CapabilitiesSection.tsx). Replaces the four Unsplash
+// stock photos that were here before. See IMAGE-CREDITS.md for full provenance.
+import productCapsules from '../assets/images/products/product-capsules.png';
+import productSachets from '../assets/images/products/product-sachets.png';
+import productStickPacks from '../assets/images/products/product-stick-packs.jpg';
+import productPouches from '../assets/images/products/product-pouches.jpg';
 
 // Facility photo strip (proof bar, §5). Reused from the images already committed to
 // the repo — none sourced new for this strip. facility-01/02 remain unused after
@@ -168,11 +174,53 @@ function HeroMech() {
 // (ally-nutra@main) and the landing-page audit's product-claim reconciliation.
 // Do not add tablets, powders, gummies, liquids, or blister packs here — those were
 // removed as unconfirmed claims, not omitted by oversight.
+// desc/spec text is UNCHANGED from before this PR — §2 requires the front face keep
+// everything it has now. Only img/alt (§1, Ally Nutra's own images) and the two new
+// back-face fields (§4) are new. Note that desc/spec still carry claims the Phase 0
+// audit found UNCONFIRMED in the company repo (e.g. sachets "nitrogen flushed",
+// stick packs "High-barrier film options") — deliberately left as-is, since fixing
+// front-face copy accuracy is a separate task from this one; see PR description.
 const PRODUCTS = [
-  { img: product01, alt: 'A pile of amber softgel capsules', format: 'Format 01 · Capsules', title: 'Capsules', desc: 'Two-piece, liquid-fill, vegan HPMC or bovine gelatin.', spec: 'SIZE 000–3 · MOQ FROM 2,500' },
-  { img: product03, alt: 'Flat foil single-serve sachets stacked on a white surface', format: 'Format 02 · Sachets', title: 'Sachets', desc: 'Single-serve, foil-lined, nitrogen flushed, custom print.', spec: '3g–30g FILL · MOQ FROM 5,000' },
-  { img: product04, alt: 'A torn-open narrow stick pack lying on a white surface', format: 'Format 03 · Stick packs', title: 'Stick packs', desc: 'Narrow, portable, easy-tear. High-barrier film options.', spec: '2g–15g FILL · MOQ FROM 10,000' },
-  { img: product05, alt: 'A blank kraft stand-up pouch with a resealable zipper top', format: 'Format 04 · Pouches', title: 'Pouches', desc: 'Resealable stand-up, matte, gloss, or kraft finish.', spec: '50g–5,000g FILL · MOQ FROM 2,000' },
+  {
+    img: productCapsules,
+    alt: 'A red-and-white two-piece capsule, Ally Nutra brand render',
+    format: 'Format 01 · Capsules',
+    title: 'Capsules',
+    desc: 'Two-piece, liquid-fill, vegan HPMC or bovine gelatin.',
+    spec: 'SIZE 000–3 · MOQ FROM 2,500',
+    explanation: 'A two-piece shell that holds powder or oil. The most versatile format — it suits almost any blend, needs no flavouring, and is what most supplement brands start with. Available in plant-based HPMC or bovine gelatin, among other shell options.',
+    varietiesLabel: 'See the kinds of capsules',
+  },
+  {
+    img: productSachets,
+    alt: 'A blank silver foil sachet packet, Ally Nutra brand render',
+    format: 'Format 02 · Sachets',
+    title: 'Sachets',
+    desc: 'Single-serve, foil-lined, nitrogen flushed, custom print.',
+    spec: '3g–30g FILL · MOQ FROM 5,000',
+    explanation: 'A single-serve packet, sealed on all sides. Ideal for powders, granules, or liquids you want portioned out and easy to carry — no bottle, no scoop needed. Comes in a few material options depending on the barrier protection your formula needs.',
+    varietiesLabel: 'See sachet options',
+  },
+  {
+    img: productStickPacks,
+    alt: 'A blank white stick pack tube, Ally Nutra brand render',
+    format: 'Format 03 · Stick packs',
+    title: 'Stick packs',
+    desc: 'Narrow, portable, easy-tear. High-barrier film options.',
+    spec: '2g–15g FILL · MOQ FROM 10,000',
+    explanation: 'A narrow, single-serve tube — like a sachet, but slimmer and easier to tear open on the go. Common for energy powders, electrolytes, and focus or sleep blends aimed at direct-to-consumer brands. Shares the same material options as sachets.',
+    varietiesLabel: 'See stick pack options',
+  },
+  {
+    img: productPouches,
+    alt: 'Blank teal stand-up pouches with a resealable zipper top',
+    format: 'Format 04 · Pouches',
+    title: 'Pouches',
+    desc: 'Resealable stand-up, matte, gloss, or kraft finish.',
+    spec: '50g–5,000g FILL · MOQ FROM 2,000',
+    explanation: 'A resealable bag for multi-serve products — the format most bulk powders and greens blends ship in. Comes in a few stock sizes and a choice of closures, so your customer can reseal it between uses.',
+    varietiesLabel: 'See pouch options',
+  },
 ];
 
 const HOW_IT_WORKS = [
@@ -296,19 +344,7 @@ export default function Home() {
             <span className="eyebrow" style={sx('justify-content:center;')}>What we make</span>
             <h2>Four formats, all in-house.</h2>
           </div>
-          <div className="product-grid">
-            {PRODUCTS.map((p) => (
-              <div className="product-card" key={p.title}>
-                <img src={p.img} width="900" height="675" alt={p.alt} loading="lazy" onError={hideAndTint} />
-                <div className="product-body">
-                  <span className="product-format">{p.format}</span>
-                  <h3>{p.title}</h3>
-                  <p className="product-desc">{p.desc}</p>
-                  <div className="product-spec">{p.spec}</div>
-                </div>
-              </div>
-            ))}
-          </div>
+          <ProductCardsGrid products={PRODUCTS} />
         </div>
       </section>
 
