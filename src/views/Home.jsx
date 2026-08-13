@@ -24,6 +24,19 @@ import { useEffect, useRef, useState } from 'react';
 // this constant (and drop this comment) once /schedule ships the embed on main.
 const BOOKING_URL = 'https://calendly.com/josh-p-allynutra';
 
+// "6 questions" = the six required fields on the real /contact form (fname, lname,
+// email, brand, service, details — src/views/Contact.jsx:79-136), not the "5
+// questions" figure originally drafted for this line. Verified against the form
+// itself rather than assumed, per the PR #2 follow-up audit finding that the site's
+// existing "5-minute form" claim already overstated the form's actual length.
+const EXPECTATION_LINE = '6 questions, about 3 minutes. Quote back in 5 business days.';
+
+// Lowest MOQ among the four corrected formats — Pouches, "MOQ FROM 2,000" in the
+// PRODUCTS array below (this file). Capsules/Sachets/Stick packs are all higher
+// (2,500 / 5,000 / 10,000 respectively), so 2,000 units is the honest floor to quote
+// here, not a rounded-down guess.
+const MOQ_LOWEST = '2,000 units';
+
 // Home hero encapsulation-machine video: falls back to the built-in SVG line
 // drawing under prefers-reduced-motion, or if the video errors out.
 function HeroMech() {
@@ -181,14 +194,27 @@ export default function Home() {
             <h1 style={sx('margin-top:14px;')}>Custom supplement manufacturing for wellness brands.</h1>
             <p className="lede" style={sx('margin:18px 0 24px;max-width:520px;')}>
               Capsules, sachets, stick packs, and pouches — cGMP-certified production,
-              transparent pricing, and in-house formulation expertise, from concept to
-              shipment.
+              transparent pricing, and formulation help if you need it.
             </p>
             <div className="hero-ctas">
-              <Link to="/contact" className="btn btn-primary btn-lg">Get a quote →</Link>
-              <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer" className="btn btn-outline-invert btn-lg">Book a 20-minute call</a>
+              <Link to="/contact" className="btn btn-primary btn-lg">Start your quote →</Link>
+              <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer" className="btn btn-outline-invert btn-lg">Not sure yet? Book a call</a>
             </div>
-            <p className="hero-expectation">Quote in 5 business days. No commitment.</p>
+            <p className="hero-expectation">{EXPECTATION_LINE}</p>
+            <div className="qual-bar">
+              <div className="qual-cell">
+                <span className="qual-value">{MOQ_LOWEST}</span>
+                <span className="qual-label">Minimum order</span>
+              </div>
+              <div className="qual-cell">
+                <span className="qual-value">4–8 weeks</span>
+                <span className="qual-label">Concept to door</span>
+              </div>
+              <div className="qual-cell">
+                <span className="qual-value">500+ brands</span>
+                <span className="qual-label">Manufactured for</span>
+              </div>
+            </div>
           </div>
           <HeroMech />
         </div>

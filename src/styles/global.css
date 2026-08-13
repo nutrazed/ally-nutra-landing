@@ -727,6 +727,18 @@ html.no-js .stat-live{display:none;}
 /* Hero expectation-setting line, directly under the two hero CTAs. */
 .hero-expectation{margin-top:14px;font-size:15px;color:hsl(0 0% 100% / .92);}
 
+/* Qualification bar — hero, beneath the expectation line. Navy + mono, no amber:
+   this is the "can I even use this vendor" filter, not a call to action. */
+.qual-bar{display:flex;margin-top:24px;padding-top:16px;border-top:1px solid hsl(0 0% 100% / .15);max-width:480px;}
+.qual-cell{flex:1;padding:0 16px;border-left:1px solid hsl(0 0% 100% / .15);}
+.qual-cell:first-child{padding-left:0;border-left:none;}
+.qual-value{display:block;font-family:var(--font-mono);font-size:15px;font-weight:600;color:#fff;letter-spacing:0.01em;}
+.qual-label{display:block;font-size:10.5px;color:hsl(0 0% 100% / .5);text-transform:uppercase;letter-spacing:0.05em;margin-top:3px;}
+@media (max-width:520px){
+  .qual-bar{max-width:none;}
+  .qual-value{font-size:13px;}
+}
+
 /* Trust strip: thin credibility row directly under the hero, replacing the old
    full-height Company Snapshot stat panel as Home's credibility beat. Kept under
    90px tall on all but the narrowest viewports, where wrapping is unavoidable. */
