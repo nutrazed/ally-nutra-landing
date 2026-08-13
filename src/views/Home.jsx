@@ -26,7 +26,16 @@ import productPouches from '../assets/images/products/product-pouches.jpg';
 // Facility.jsx's own zone cards (Packaging, Logistics) — a thumbnail here and a full
 // card there is a deliberate decision, not an accident (see PR description).
 import facility03 from '../assets/images/facility-03.jpg';
-import capsule01 from '../assets/images/capsule-01.jpg';
+// capsule-01.jpg (a neon pink/yellow capsule pile) was here originally but did not
+// survive the polish/presentation unified-photo treatment even at saturate(.68) — it
+// stayed visibly more saturated than its four neighbors at every setting tried up to
+// saturate(.6), exactly the "may not survive any treatment" case flagged in that
+// task. Replaced with about-03.jpg, which is already documented in
+// IMAGE-CREDITS.md as "freshly filled capsules on an encapsulation line" (i.e.
+// actually captioned as an encapsulation photo, unlike capsule-02.jpg which is a
+// tablet-polishing pan despite its filename) and reads as metallic/neutral rather
+// than saturated, unifying cleanly with the rest of the strip.
+import about03 from '../assets/images/about-03.jpg';
 import facility04 from '../assets/images/facility-04.jpg';
 import facility05 from '../assets/images/facility-05.jpg';
 import facility06 from '../assets/images/facility-06.jpg';
@@ -190,6 +199,7 @@ const PRODUCTS = [
     spec: 'SIZE 000–3 · MOQ FROM 2,500',
     explanation: 'A two-piece shell that holds powder or oil. The most versatile format — it suits almost any blend, needs no flavouring, and is what most supplement brands start with. Available in plant-based HPMC or bovine gelatin, among other shell options.',
     varietiesLabel: 'See the kinds of capsules',
+    imageScale: 1,
   },
   {
     img: productSachets,
@@ -200,6 +210,7 @@ const PRODUCTS = [
     spec: '3g–30g FILL · MOQ FROM 5,000',
     explanation: 'A single-serve packet, sealed on all sides. Ideal for powders, granules, or liquids you want portioned out and easy to carry — no bottle, no scoop needed. Comes in a few material options depending on the barrier protection your formula needs.',
     varietiesLabel: 'See sachet options',
+    imageScale: 1.35,
   },
   {
     img: productStickPacks,
@@ -210,6 +221,7 @@ const PRODUCTS = [
     spec: '2g–15g FILL · MOQ FROM 10,000',
     explanation: 'A narrow, single-serve tube — like a sachet, but slimmer and easier to tear open on the go. Common for energy powders, electrolytes, and focus or sleep blends aimed at direct-to-consumer brands. Shares the same material options as sachets.',
     varietiesLabel: 'See stick pack options',
+    imageScale: 2.3,
   },
   {
     img: productPouches,
@@ -220,6 +232,7 @@ const PRODUCTS = [
     spec: '50g–5,000g FILL · MOQ FROM 2,000',
     explanation: 'A resealable bag for multi-serve products — the format most bulk powders and greens blends ship in. Comes in a few stock sizes and a choice of closures, so your customer can reseal it between uses.',
     varietiesLabel: 'See pouch options',
+    imageScale: 1.05,
   },
 ];
 
@@ -257,7 +270,7 @@ const CREDENTIAL_STRIP = [
 // deviates from the literal draft caption text.
 const FACILITY_STRIP = [
   { img: facility03, alt: 'A large stainless steel blending tank on the production floor', caption: 'PRODUCTION FLOOR', sub: 'BLENDING · ISO 8' },
-  { img: capsule01, alt: 'A dense pile of freshly encapsulated two-piece capsules', caption: 'ENCAPSULATION', sub: 'SIZES 000–3 · ±2%' },
+  { img: about03, alt: 'A tray of freshly filled capsules on an encapsulation line, ready for inspection', caption: 'ENCAPSULATION', sub: 'SIZES 000–3 · ±2%' },
   { img: facility04, alt: 'A gloved technician pipetting samples into a rack of test vials in the QC lab', caption: 'QC LABORATORY', sub: 'HPLC · MICROBIAL' },
   { img: facility05, alt: 'A bottle moving under a filling funnel on an automated packaging line', caption: 'PACKAGING LINE', sub: 'INDUCTION SEAL' },
   { img: facility06, alt: 'A warehouse aisle lined with shrink-wrapped stacks of finished goods cartons', caption: 'FINISHED GOODS', sub: 'FBA PREP · DIRECT SHIP' },
@@ -338,7 +351,11 @@ export default function Home() {
           the richer credential + photo proof bar at position 05 covers that job with
           more evidence, so a second, thinner version of the same claim right here
           would have been redundant. */}
-      <section className="section">
+      {/* padding-bottom trimmed to 32px (still on the 4px scale): the default
+          88px section padding, stacked against section-alt's own 88px top
+          padding right below, read as one ~176px dead zone of nothing but
+          background colour before "Why brands choose us" appeared. */}
+      <section className="section" style={sx('padding-bottom:32px;')}>
         <div className="container">
           <div className="section-header">
             <span className="eyebrow" style={sx('justify-content:center;')}>What we make</span>
