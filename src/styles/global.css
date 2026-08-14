@@ -96,15 +96,22 @@ p{font-size:15px;line-height:1.7;color:hsl(var(--muted-foreground));}
 
 /* ---- Header (canonical, used on every view) ---- */
 .site-header{position:sticky;top:0;z-index:100;background:hsl(var(--ally-navy));border-bottom:1px solid hsl(0 0% 100% / .08);}
-.header-inner{display:flex;align-items:center;justify-content:space-between;height:76px;gap:24px;}
-.logo{display:flex;align-items:center;flex-shrink:0;}
+/* Grid, not flex: with `.main-nav` as a flex:1/justify-content:center box,
+   an extra role-only sibling (the account menu) shrinks that box from one
+   side and re-centers it around a different point — Home visibly shifts
+   between roles. A 1fr/auto/1fr grid keeps the middle (auto) track centered
+   on the row regardless of how wide the flanking content actually is, as
+   long as it fits its own 1fr share, which logo/actions both do. */
+.header-inner{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;height:76px;gap:24px;}
+.logo{display:flex;align-items:center;flex-shrink:0;justify-self:start;}
 /* Real logo (public/lovable-uploads/ally-nutra-logo-white.png, trimmed to content, copied
    here as logo-white.png) replaces the old CSS text wordmark + amber ::after-style
    underline — the real mark already carries its own amber accents, so no separate
    underline is drawn here (would render two). Constrained by height only, per the
    "never stretch the wordmark" rule; width follows the source's own aspect ratio. */
 .logo-img{height:36px;width:auto;display:block;}
-.main-nav{display:flex;align-items:center;gap:6px;flex:1;justify-content:center;}
+.main-nav{display:flex;align-items:center;gap:6px;justify-self:center;}
+.header-actions{display:flex;align-items:center;gap:20px;justify-self:end;}
 .main-nav a{font-size:14px;font-weight:500;color:hsl(0 0% 100% / .75);padding:8px 14px;border-radius:var(--radius-sm);transition:color .15s;white-space:nowrap;}
 .main-nav a:hover{color:#fff;}
 .main-nav a.active{color:hsl(var(--ally-orange));font-weight:700;}
@@ -118,10 +125,20 @@ p{font-size:15px;line-height:1.7;color:hsl(var(--muted-foreground));}
 .nav-dropdown.is-open .nav-dropdown-caret{transform:rotate(180deg);}
 .nav-dropdown-panel{position:absolute;top:100%;left:0;margin-top:4px;background:#fff;border:1px solid hsl(var(--border));border-radius:var(--radius-md);min-width:250px;padding:8px;box-shadow:0 10px 30px rgba(0,0,0,.15);z-index:200;display:none;}
 .nav-dropdown.is-open .nav-dropdown-panel{display:block;}
-@media (hover:hover){.nav-dropdown:hover .nav-dropdown-panel{display:block;}}
+/* `.hover-open` opts a dropdown into hover-to-open (Services only) — the
+   Account menu shares every other mechanic (open state, caret rotate,
+   outside-click, Escape) via the plain `.nav-dropdown` class but stays
+   click-only, matching normal account-menu expectations. */
+@media (hover:hover){.nav-dropdown.hover-open:hover .nav-dropdown-panel{display:block;}}
 .nav-dropdown-panel a{display:block;padding:12px 18px;color:hsl(var(--ally-navy));font-size:14px;font-weight:500;border-radius:var(--radius-sm);text-decoration:none;transition:background .15s;}
 .nav-dropdown-panel a:hover{background:hsl(var(--ally-orange)/.12);}
 .nav-dropdown-panel a[aria-current="page"]{color:#9A6B12;font-weight:700;background:hsl(var(--ally-orange)/.1);}
+
+/* ---- Account menu panel — right-aligned variant of the same panel ---- */
+.nav-dropdown-panel--right{left:auto;right:0;min-width:200px;}
+.menu-divider{height:1px;background:hsl(var(--border));margin:6px 4px;}
+.nav-dropdown-panel .menu-item-muted{display:block;width:100%;text-align:left;background:none;border:none;font-family:inherit;color:hsl(var(--muted-foreground));font-size:14px;font-weight:500;padding:12px 18px;border-radius:var(--radius-sm);cursor:pointer;transition:background .15s,color .15s;}
+.nav-dropdown-panel .menu-item-muted:hover{background:hsl(var(--muted));color:hsl(var(--foreground));}
 
 .call-btn{display:inline-flex;align-items:center;gap:8px;background:hsl(var(--ally-orange));color:hsl(var(--ally-navy));padding:10px 18px;border-radius:var(--radius-md);font-weight:700;font-size:13.5px;flex-shrink:0;}
 .call-btn:hover{background:hsl(var(--ally-orange)/.85);}
@@ -147,22 +164,29 @@ p{font-size:15px;line-height:1.7;color:hsl(var(--muted-foreground));}
 
 @media (max-width:1100px){
   .main-nav{display:none;}
+  .account-menu{display:none;}
   .hamburger{display:flex;}
 }
 
-/* ---- Workspace bar (feature/role-and-links, `client` demo role only) ----
-   Internal chrome for a logged-in client — removed from the public site
-   earlier, restored here behind the demo role switch. Set apart from the
-   marketing nav with a left divider + slightly dimmer default color rather
-   than a whole separate row, per "do not restructure the layout." */
-.workspace-bar{display:flex;align-items:center;gap:2px;margin-left:10px;padding-left:14px;border-left:1px solid hsl(0 0% 100% / .18);flex-wrap:nowrap;}
-.workspace-bar a{font-size:13px;font-weight:500;color:hsl(0 0% 100% / .6);padding:8px 10px;border-radius:var(--radius-sm);transition:color .15s;white-space:nowrap;}
-.workspace-bar a:hover{color:#fff;}
-.workspace-logout{font-family:inherit;font-size:13px;font-weight:600;color:hsl(var(--ally-orange));background:none;border:none;padding:8px 10px;cursor:pointer;white-space:nowrap;}
-.workspace-logout:hover{color:hsl(var(--ally-orange)/.8);}
-.workspace-bar-mobile{display:flex;flex-wrap:wrap;gap:2px;padding:12px 24px;background:hsl(0 0% 100% / .04);border-bottom:1px solid hsl(0 0% 100% / .06);}
-.workspace-bar-mobile a{font-size:13.5px;font-weight:500;color:hsl(0 0% 100% / .7);padding:8px 10px;}
-.workspace-bar-mobile .workspace-logout{padding:8px 10px;}
+/* ---- Account menu trigger (feature/account-menu, `client` demo role only)
+   ---- Replaces the old workspace bar (feature/role-and-links): one compact
+   control instead of a row of links, rendered as its own flex item between
+   .main-nav and the "Go to portal" call-btn (outside .main-nav on purpose —
+   that's what stops toggling role from shifting the centered nav links). */
+.account-trigger{display:flex;align-items:center;gap:8px;background:none;border:none;cursor:pointer;font-family:inherit;padding:6px 8px;border-radius:var(--radius-sm);color:hsl(0 0% 100% / .85);transition:background .15s;flex-shrink:0;}
+.account-trigger:hover{background:hsl(0 0% 100% / .08);}
+.account-name{font-size:14px;font-weight:500;white-space:nowrap;}
+/* Avatar reuses the testimonials' navy/amber circle idiom (.author-avatar),
+   but on `--ally-light-navy` rather than `--ally-navy` — the header itself
+   is `--ally-navy`, so the exact same shade would make the badge invisible. */
+.account-avatar{width:28px;height:28px;border-radius:50%;background:hsl(var(--ally-light-navy));color:hsl(var(--ally-orange));font-weight:700;font-size:11px;display:flex;align-items:center;justify-content:center;font-family:var(--font-slab);flex-shrink:0;}
+@media (max-width:900px){.account-name{display:none;}}
+
+/* ---- Account group (mobile, nested inside the hamburger — same shape as
+   the Services group above) ---- */
+.mobile-account-label{display:flex;align-items:center;gap:10px;}
+.mobile-nav-sublist .menu-divider{background:hsl(0 0% 100% / .12);margin:4px 24px;}
+.mobile-nav-sublist-logout{display:block;width:100%;text-align:left;font-family:inherit;background:none;border:none;padding:13px 24px 13px 40px;font-size:14px;color:hsl(0 0% 100% / .5);cursor:pointer;border-bottom:1px solid hsl(0 0% 100% / .06);}
 
 /* ---- Footer (canonical) ---- */
 .site-footer{background:hsl(var(--ally-navy));color:hsl(0 0% 100% / .7);padding:64px 0 28px;margin-top:0;}

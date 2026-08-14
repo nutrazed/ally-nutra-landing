@@ -4,6 +4,7 @@ import logoWhite from '../assets/images/logo-white.png';
 import { SERVICE_KEYS, pageKeyFromPathname } from '../lib/pages.js';
 import { useDemoRole } from '../contexts/DemoRoleContext.jsx';
 import { quoteUrl, portalUrl } from '../lib/demoRole.js';
+import { useExclusiveDropdown } from '../hooks/useExclusiveDropdown.js';
 
 const SERVICE_LINKS = [
   { to: '/services', label: 'All services' },
@@ -20,21 +21,37 @@ const MAIN_LINKS = [
   { to: '/contact', label: 'Contact' },
 ];
 
-// Client-only workspace bar (feature/role-and-links) — internal chrome for a
-// logged-in client, deliberately removed from the public site earlier and
-// restored here for the `client` demo role only. Labels/view ids match the
+// Client-only account menu (feature/account-menu) — collapses what used to
+// be a second nav row of links (feature/role-and-links) into one dropdown
+// next to "Go to portal", so the header stays one row and toggling role no
+// longer shifts the centered main-nav links. Labels/view ids match the
 // portal's own left-rail nav verbatim (NAV in public/portal/index.html) for
 // the first four; "Workspace" has no corresponding tab in the portal itself
 // (it's a decorative item inside the portal's own account-menu dropdown, not
 // a real view) so it links to the portal root rather than a specific view —
-// called out in the PR description rather than invented as a fake tab.
-const WORKSPACE_LINKS = [
+// left exactly as-is rather than invented as a fake tab, called out in the
+// PR description.
+//
+// Divergence, also called out in the PR description: the portal's OWN
+// account-menu dropdown (public/portal/index.html, `.menu` markup) shows
+// Dashboard / Admin / Workspace / Log out — a shorter, different list than
+// this one. "Admin" is deliberately not added here: this demo's role model
+// (src/lib/demoRole.js) only defines `visitor` and `client`, no staff/admin
+// role exists to gate an Admin item behind, so adding it would invent a
+// destination and a permission tier the demo doesn't model.
+const ACCOUNT_LINKS = [
   { view: 'dashboard', label: 'Dashboard' },
   { view: 'orders', label: 'Orders' },
   { view: 'documents', label: 'Documents' },
   { view: 'quotes', label: 'Quotes' },
   { view: undefined, label: 'Workspace' },
 ];
+
+// Sourced from public/portal/index.html (#hdrAvatar "JW", .nm "Jordan") so
+// both demo surfaces present the same identity — see the divergence note
+// above for where the two intentionally differ (menu contents, not identity).
+const CLIENT_INITIALS = 'JW';
+const CLIENT_FIRST_NAME = 'Jordan';
 
 // Ported from the source file's canonical header + its hash-router IIFE. Three
 // pieces of interactive state that were plain DOM class toggles there:
@@ -59,9 +76,9 @@ export default function Header() {
   const onServiceView = SERVICE_KEYS.includes(currentKey);
   const { role, isClient, setRole } = useDemoRole();
 
-  const [desktopOpen, setDesktopOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
+  const [mobileAccountOpen, setMobileAccountOpen] = useState(false);
 
   // Persistent conversion affordance: once the home hero scrolls out of view, the
   // header's call button swaps to a "Start your quote" link in the exact same slot —
@@ -114,7 +131,17 @@ export default function Header() {
 
   const dropdownRef = useRef(null);
   const triggerRef = useRef(null);
+  const accountContainerRef = useRef(null);
+  const accountTriggerRef = useRef(null);
   const suppressDesktopCloseRef = useRef(false);
+
+  // Shared open/outside-click/Escape state machine for the two desktop
+  // panels — see useExclusiveDropdown.js. Registering both menus here (not
+  // in an effect) means opening one automatically closes the other.
+  const { openMenu, setOpenMenu, registerMenu, onEscapeKeyDown } = useExclusiveDropdown();
+  registerMenu('services', { containerRef: dropdownRef, triggerRef });
+  registerMenu('account', { containerRef: accountContainerRef, triggerRef: accountTriggerRef });
+  const desktopOpen = openMenu === 'services';
 
   // Route change closes every open menu, matching goToPage()'s
   // closeMobileMenu() + closeServicesDropdown() calls — except the desktop
@@ -122,49 +149,49 @@ export default function Header() {
   useEffect(() => {
     setMobileOpen(false);
     setMobileServicesOpen(false);
+    setMobileAccountOpen(false);
     if (suppressDesktopCloseRef.current) {
       suppressDesktopCloseRef.current = false;
       return;
     }
-    setDesktopOpen(false);
-  }, [location.pathname]);
-
-  // Outside click closes the desktop dropdown only.
-  useEffect(() => {
-    if (!desktopOpen) return;
-    function onDocClick(e) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setDesktopOpen(false);
-      }
-    }
-    document.addEventListener('click', onDocClick);
-    return () => document.removeEventListener('click', onDocClick);
-  }, [desktopOpen]);
-
-  function onDropdownKeyDown(e) {
-    if (e.key === 'Escape') {
-      setDesktopOpen(false);
-      triggerRef.current?.focus();
-    }
-  }
+    setOpenMenu(null);
+  }, [location.pathname, setOpenMenu]);
 
   function onHamburgerClick() {
     setMobileOpen((open) => {
       const next = !open;
-      if (!next) setMobileServicesOpen(false);
+      if (!next) {
+        setMobileServicesOpen(false);
+        setMobileAccountOpen(false);
+      }
       return next;
     });
   }
 
   function onDesktopTriggerClick() {
     suppressDesktopCloseRef.current = true;
-    setDesktopOpen(true);
+    setOpenMenu('services');
     navigate('/services');
   }
 
   function onMobileTriggerClick() {
     setMobileServicesOpen((open) => !open);
     navigate('/services');
+  }
+
+  // Plain toggle — unlike Services, a click closes the account menu if it's
+  // already open, and never navigates (this trigger only ever opens a menu).
+  function onAccountTriggerClick() {
+    setOpenMenu((current) => (current === 'account' ? null : 'account'));
+  }
+
+  function onMobileAccountTriggerClick() {
+    setMobileAccountOpen((open) => !open);
+  }
+
+  function onLogoutClick() {
+    setRole('visitor');
+    setOpenMenu(null);
   }
 
   return (
@@ -178,10 +205,10 @@ export default function Header() {
             Home
           </NavLink>
           <div
-            className={`nav-dropdown${desktopOpen ? ' is-open' : ''}`}
+            className={`nav-dropdown hover-open${desktopOpen ? ' is-open' : ''}`}
             id="servicesDropdown"
             ref={dropdownRef}
-            onKeyDown={onDropdownKeyDown}
+            onKeyDown={onEscapeKeyDown}
           >
             <button
               ref={triggerRef}
@@ -227,19 +254,58 @@ export default function Header() {
               {link.label}
             </NavLink>
           ))}
-          {isClient && (
-            <span className="workspace-bar">
-              {WORKSPACE_LINKS.map((link) => (
-                <a key={link.label} href={portalUrl(role, link.view)}>
+        </nav>
+        <div className="header-actions">
+        {isClient && (
+          <div
+            className={`nav-dropdown account-menu${openMenu === 'account' ? ' is-open' : ''}`}
+            id="accountMenu"
+            ref={accountContainerRef}
+            onKeyDown={onEscapeKeyDown}
+          >
+            <button
+              ref={accountTriggerRef}
+              type="button"
+              className="account-trigger"
+              aria-expanded={openMenu === 'account' ? 'true' : 'false'}
+              aria-haspopup="true"
+              aria-controls="accountMenuPanel"
+              onClick={onAccountTriggerClick}
+            >
+              <span className="account-avatar" aria-hidden="true">
+                {CLIENT_INITIALS}
+              </span>
+              <span className="account-name">{CLIENT_FIRST_NAME}</span>
+              <svg
+                className="nav-dropdown-caret"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </button>
+            <div
+              className="nav-dropdown-panel nav-dropdown-panel--right"
+              id="accountMenuPanel"
+              role="menu"
+              aria-label="Account"
+            >
+              {ACCOUNT_LINKS.map((link) => (
+                <a key={link.label} href={portalUrl(role, link.view)} role="menuitem">
                   {link.label}
                 </a>
               ))}
-              <button type="button" className="workspace-logout" onClick={() => setRole('visitor')}>
+              <div className="menu-divider" role="separator" />
+              <button type="button" className="menu-item-muted" role="menuitem" onClick={onLogoutClick}>
                 Logout
               </button>
-            </span>
-          )}
-        </nav>
+            </div>
+          </div>
+        )}
         {isClient ? (
           <a href={portalUrl(role)} className="call-btn">
             <span>Go to portal</span>
@@ -270,6 +336,7 @@ export default function Header() {
             <line x1="3" y1="18" x2="21" y2="18" />
           </svg>
         </button>
+        </div>
       </div>
       <nav id="mobileNav" className={`mobile-nav${mobileOpen ? ' is-open' : ''}`} aria-label="Mobile">
         <NavLink to="/home" className={({ isActive }) => (isActive ? 'active' : undefined)}>
@@ -318,15 +385,43 @@ export default function Header() {
           </NavLink>
         ))}
         {isClient && (
-          <div className="workspace-bar workspace-bar-mobile">
-            {WORKSPACE_LINKS.map((link) => (
-              <a key={link.label} href={portalUrl(role, link.view)}>
-                {link.label}
-              </a>
-            ))}
-            <button type="button" className="workspace-logout" onClick={() => setRole('visitor')}>
-              Logout
+          <div className={`mobile-nav-group${mobileAccountOpen ? ' is-open' : ''}`} id="mobileAccountGroup">
+            <button
+              type="button"
+              className="mobile-nav-group-trigger"
+              aria-expanded={mobileAccountOpen ? 'true' : 'false'}
+              aria-controls="mobileAccountList"
+              onClick={onMobileAccountTriggerClick}
+            >
+              <span className="mobile-account-label">
+                <span className="account-avatar" aria-hidden="true">
+                  {CLIENT_INITIALS}
+                </span>
+                {CLIENT_FIRST_NAME}
+              </span>
+              <svg
+                className="nav-dropdown-caret"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
             </button>
+            <div className="mobile-nav-sublist" id="mobileAccountList">
+              {ACCOUNT_LINKS.map((link) => (
+                <a key={link.label} href={portalUrl(role, link.view)}>
+                  {link.label}
+                </a>
+              ))}
+              <div className="menu-divider mobile-menu-divider" role="separator" />
+              <button type="button" className="mobile-nav-sublist-logout" onClick={onLogoutClick}>
+                Logout
+              </button>
+            </div>
           </div>
         )}
         <a href="tel:+18887205888" className="btn btn-primary call-btn">
