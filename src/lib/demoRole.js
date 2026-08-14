@@ -1,5 +1,15 @@
-// AN-DEMO role model (feature/role-and-links) — presentation-only, no auth,
-// no account, no password. Two roles: 'visitor' (default) and 'client'.
+// AN-DEMO role model (feature/role-and-links, feature/admin-role) —
+// presentation-only, no auth, no account, no password. Three roles: 'visitor'
+// (default), 'client', and 'admin' (a superset of client — see ADMIN below).
+//
+// *** SECURITY NOTE — READ BEFORE REUSING ANY OF THIS ***
+// A `?role=admin` URL parameter that reveals an admin interface is NOT
+// access control. Anyone can type the param and see the admin surface —
+// there is no server-side check, no session, no permission of any kind
+// behind it. This is fine for a demo/prototype whose purpose is to LOOK
+// like a real product to a viewer clicking around, but it would be a
+// serious security vulnerability if this pattern (or this code) ever
+// shipped to a real product. Do not mistake this for a permission system.
 //
 // Source of truth, in order: (1) the real URL query param ?role=, (2)
 // sessionStorage key "an-demo-role", (3) default 'visitor'.
@@ -10,13 +20,20 @@
 // only ever see a query string placed after the hash (e.g. #/facility?x=1),
 // never the browser's real query string before the # (e.g. /?role=client).
 // The query param is deliberately kept in the real query string BECAUSE it
-// needs to survive a full page navigation to the static /quote/ and
-// /portal/ files, which have no access to React Router state at all — only
-// the real URL crosses that boundary.
+// needs to survive a full page navigation to the static /quote/, /portal/,
+// and /admin/ files, which have no access to React Router state at all —
+// only the real URL crosses that boundary.
+//
+// ADMIN is a superset of CLIENT, not a parallel branch: an admin is a
+// logged-in user who additionally has staff access, so `isAdmin` implies
+// `isClient` (see DemoRoleContext.jsx) rather than the two being modeled as
+// separate, mutually-exclusive tiers. This keeps exactly one client-surface
+// layout to maintain instead of two near-identical ones.
 export const ROLE_KEY = 'an-demo-role';
 export const VISITOR = 'visitor';
 export const CLIENT = 'client';
-const VALID = { [VISITOR]: true, [CLIENT]: true };
+export const ADMIN = 'admin';
+const VALID = { [VISITOR]: true, [CLIENT]: true, [ADMIN]: true };
 
 export function readRoleFromLocation() {
   const params = new URLSearchParams(window.location.search);
@@ -68,4 +85,8 @@ export function quoteUrl(role) {
 // default (dashboard).
 export function portalUrl(role, view) {
   return view ? `${BASE}portal/?role=${role}&view=${view}` : `${BASE}portal/?role=${role}`;
+}
+
+export function adminUrl(role) {
+  return `${BASE}admin/?role=${role}`;
 }

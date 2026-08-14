@@ -3,7 +3,7 @@ import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import logoWhite from '../assets/images/logo-white.png';
 import { SERVICE_KEYS, pageKeyFromPathname } from '../lib/pages.js';
 import { useDemoRole } from '../contexts/DemoRoleContext.jsx';
-import { quoteUrl, portalUrl } from '../lib/demoRole.js';
+import { quoteUrl, portalUrl, adminUrl } from '../lib/demoRole.js';
 import { useExclusiveDropdown } from '../hooks/useExclusiveDropdown.js';
 
 const SERVICE_LINKS = [
@@ -74,7 +74,7 @@ export default function Header() {
   const navigate = useNavigate();
   const currentKey = pageKeyFromPathname(location.pathname);
   const onServiceView = SERVICE_KEYS.includes(currentKey);
-  const { role, isClient, setRole } = useDemoRole();
+  const { role, isClient, isAdmin, setRole } = useDemoRole();
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
@@ -299,6 +299,18 @@ export default function Header() {
                   {link.label}
                 </a>
               ))}
+              {isAdmin && (
+                <>
+                  <div className="menu-divider" role="separator" />
+                  {/* Staff-only — rendered only when role=admin, not merely hidden by
+                      CSS, so there is nothing admin-shaped left in the DOM for a
+                      client-role viewer to find. */}
+                  <a href={adminUrl(role)} role="menuitem" className="menu-item-staff">
+                    Admin
+                    <span className="menu-item-staff-tag mono-chip">Staff</span>
+                  </a>
+                </>
+              )}
               <div className="menu-divider" role="separator" />
               <button type="button" className="menu-item-muted" role="menuitem" onClick={onLogoutClick}>
                 Logout
@@ -417,6 +429,15 @@ export default function Header() {
                   {link.label}
                 </a>
               ))}
+              {isAdmin && (
+                <>
+                  <div className="menu-divider mobile-menu-divider" role="separator" />
+                  <a href={adminUrl(role)} className="menu-item-staff mobile-menu-item-staff">
+                    Admin
+                    <span className="menu-item-staff-tag mono-chip">Staff</span>
+                  </a>
+                </>
+              )}
               <div className="menu-divider mobile-menu-divider" role="separator" />
               <button type="button" className="mobile-nav-sublist-logout" onClick={onLogoutClick}>
                 Logout

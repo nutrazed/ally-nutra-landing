@@ -153,6 +153,13 @@ p{font-size:15px;line-height:1.7;color:hsl(var(--muted-foreground));}
 .menu-divider{height:1px;background:hsl(var(--border));margin:6px 4px;}
 .nav-dropdown-panel .menu-item-muted{display:block;width:100%;text-align:left;background:none;border:none;font-family:inherit;color:hsl(var(--muted-foreground));font-size:14px;font-weight:500;padding:12px 18px;border-radius:var(--radius-sm);cursor:pointer;transition:background .15s,color .15s;}
 .nav-dropdown-panel .menu-item-muted:hover{background:hsl(var(--muted));color:hsl(var(--foreground));}
+/* Staff-only admin entry — same base look as a normal item (not muted, not
+   amber — amber stays reserved for the primary action) but paired with a
+   small mono "Staff" tag so it never reads as a regular client destination. */
+.nav-dropdown-panel a.menu-item-staff{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.menu-item-staff-tag{font-size:9.5px;font-weight:600;color:hsl(var(--muted-foreground));background:hsl(var(--muted));padding:2px 6px;border-radius:3px;letter-spacing:0.08em;}
+.mobile-menu-item-staff{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 24px 13px 40px;font-size:14px;color:hsl(0 0% 100% / .85);border-bottom:1px solid hsl(0 0% 100% / .06);}
+.mobile-menu-item-staff .menu-item-staff-tag{background:hsl(0 0% 100% / .12);color:hsl(0 0% 100% / .6);}
 
 .call-btn{display:inline-flex;align-items:center;gap:8px;background:hsl(var(--ally-orange));color:hsl(var(--ally-navy));padding:10px 18px;border-radius:var(--radius-md);font-weight:700;font-size:13.5px;flex-shrink:0;}
 .call-btn:hover{background:hsl(var(--ally-orange)/.85);}
@@ -1106,7 +1113,7 @@ html.no-js .stat-live{display:none;}
   background:none;border:none;color:hsl(0 0% 100% / .55);
   cursor:pointer;padding:3px 6px;border-radius:4px;
 }
-.demo-switch button[aria-pressed="true"]{color:#fff;background:hsl(0 0% 100% / .14);}
+.demo-switch button[aria-checked="true"]{color:#fff;background:hsl(0 0% 100% / .14);}
 .demo-switch button:hover{color:#fff;}
 .demo-switch button:focus-visible{outline:2px solid hsl(var(--ally-orange));outline-offset:1px;}
 .demo-switch-sep{color:hsl(0 0% 100% / .25);}

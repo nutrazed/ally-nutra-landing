@@ -257,7 +257,7 @@
           </div>
           <div class="sect">
             <button class="mi" role="menuitem" data-go="dashboard"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Dashboard</button>
-            <button class="mi" role="menuitem"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Admin</button>
+            <button class="mi" role="menuitem" id="acctAdminItem" data-staff-only="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Admin</button>
             <button class="mi" role="menuitem"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Workspace</button>
           </div>
           <div class="div"></div>
@@ -808,6 +808,31 @@ whoBtn.addEventListener('click', e=>{ e.stopPropagation(); acct.classList.contai
 document.addEventListener('click', e=>{ if(!acct.contains(e.target)) closeAcct(); });
 document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeAcct(); });
 document.getElementById('logout').addEventListener('click', closeAcct);
+
+// ── staff-only Admin item — role-gated (feature/admin-role) ───────────
+// Removed from the DOM entirely for any role but admin, not just hidden
+// with CSS, so a client-role viewer has nothing admin-shaped to find.
+// The actual gating waits for DOMContentLoaded (not run inline here)
+// because window.ANDemo comes from a deferred <script src> that may not
+// have executed yet at this point in parsing; re-applied on every role
+// change via the an-role-change event the shared script dispatches.
+(function(){
+  const adminItem = document.getElementById('acctAdminItem');
+  if(!adminItem) return;
+  const anchor = adminItem.nextElementSibling; // Workspace button — re-insertion point
+  const parent = adminItem.parentNode;
+
+  function apply(){
+    const role = window.ANDemo ? window.ANDemo.getRole() : 'visitor';
+    const inDom = document.getElementById('acctAdminItem') != null;
+    if(role === 'admin' && !inDom) parent.insertBefore(adminItem, anchor);
+    else if(role !== 'admin' && inDom) parent.removeChild(adminItem);
+  }
+
+  document.addEventListener('DOMContentLoaded', apply);
+  document.addEventListener('an-role-change', apply);
+  if(document.readyState !== 'loading') apply();
+})();
 </script>
 </body>
 </html>
