@@ -1003,7 +1003,7 @@
       <div class="ml-auto flex items-center gap-3 pl-4 shrink-0">
         <div class="tools-tab" id="toolstab" style="display:none"><button class="tools-toggle" id="toolsbtn" type="button" aria-haspopup="true" aria-expanded="false"><svg class="tools-ic" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg><span>Tools</span><svg class="tools-chev" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/></svg></button><div class="tools-panel" id="toolspanel"></div></div>
         <!-- 40px square hit target (was w-8/32px), centred by the parent's items-center. -->
-        <button class="relative w-10 h-10 rounded-full hover:bg-white/10 grid place-items-center text-white/85" aria-label="Notifications">
+        <button class="relative w-10 h-10 rounded-full hover:bg-white/10 grid place-items-center text-white/85" aria-label="Notifications" data-popup-menu="notifications">
           <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.4-1.4A2 2 0 0118 14.2V11a6 6 0 10-12 0v3.2a2 2 0 01-.6 1.4L4 17h5m6 0v1a3 3 0 11-6 0v-1"/></svg>
           <span class="absolute top-1 right-1 cnt" style="line-height:15px">3</span>
         </button>
@@ -1036,20 +1036,20 @@
             </div>
 
             <div class="acct-sec"><span class="tm-grp">Available <span class="tm-count">3</span></span></div>
-            <a class="tm-row"><span class="tm-av" style="background:linear-gradient(135deg,#3b7a4e,#245537)">MR</span><span class="tm-i"><span class="tm-n">Maya Reyes</span><span class="tm-r">Sales Specialist</span></span><span class="tm-dot tm-on" title="Available"></span></a>
-            <a class="tm-row"><span class="tm-av" style="background:linear-gradient(135deg,#6b4fa0,#43305f)">AC</span><span class="tm-i"><span class="tm-n">Aditya Acharya</span><span class="tm-r">Engineer</span></span><span class="tm-dot tm-on" title="Available"></span></a>
-            <a class="tm-row"><span class="tm-av" style="background:linear-gradient(135deg,#2E5D9E,#1E3A5F)">JH</span><span class="tm-i"><span class="tm-n">John Hornbuckle</span><span class="tm-r">Sales Rep</span></span><span class="tm-dot tm-on" title="Available"></span></a>
+            <a class="tm-row" data-popup-modal="team-member-detail" data-tm-name="Maya Reyes" data-tm-role="Sales Specialist" data-tm-status="Available"><span class="tm-av" style="background:linear-gradient(135deg,#3b7a4e,#245537)">MR</span><span class="tm-i"><span class="tm-n">Maya Reyes</span><span class="tm-r">Sales Specialist</span></span><span class="tm-dot tm-on" title="Available"></span></a>
+            <a class="tm-row" data-popup-modal="team-member-detail" data-tm-name="Aditya Acharya" data-tm-role="Engineer" data-tm-status="Available"><span class="tm-av" style="background:linear-gradient(135deg,#6b4fa0,#43305f)">AC</span><span class="tm-i"><span class="tm-n">Aditya Acharya</span><span class="tm-r">Engineer</span></span><span class="tm-dot tm-on" title="Available"></span></a>
+            <a class="tm-row" data-popup-modal="team-member-detail" data-tm-name="John Hornbuckle" data-tm-role="Sales Rep" data-tm-status="Available"><span class="tm-av" style="background:linear-gradient(135deg,#2E5D9E,#1E3A5F)">JH</span><span class="tm-i"><span class="tm-n">John Hornbuckle</span><span class="tm-r">Sales Rep</span></span><span class="tm-dot tm-on" title="Available"></span></a>
 
             <div class="acct-sec"><span class="tm-grp">Away <span class="tm-count">1</span></span></div>
-            <a class="tm-row"><span class="tm-av" style="background:linear-gradient(135deg,#a08246,#5f4a25)">WH</span><span class="tm-i"><span class="tm-n">Wen Hongquan</span><span class="tm-r">Engineer</span></span><span class="tm-dot tm-away" title="Away"></span></a>
+            <a class="tm-row" data-popup-modal="team-member-detail" data-tm-name="Wen Hongquan" data-tm-role="Engineer" data-tm-status="Away"><span class="tm-av" style="background:linear-gradient(135deg,#a08246,#5f4a25)">WH</span><span class="tm-i"><span class="tm-n">Wen Hongquan</span><span class="tm-r">Engineer</span></span><span class="tm-dot tm-away" title="Away"></span></a>
 
             <div class="acct-sec"><span class="tm-grp">Offline <span class="tm-count">2</span></span></div>
-            <a class="tm-row tm-off"><span class="tm-av" style="background:#8a9099">JP</span><span class="tm-i"><span class="tm-n">Joshua Preche</span><span class="tm-r">Sales Rep</span></span><span class="tm-dot tm-gone" title="Offline"></span></a>
-            <a class="tm-row tm-off"><span class="tm-av" style="background:#8a9099">XL</span><span class="tm-i"><span class="tm-n">Xing Liu</span><span class="tm-r">Ops</span></span><span class="tm-dot tm-gone" title="Offline"></span></a>
+            <a class="tm-row tm-off" data-popup-modal="team-member-detail" data-tm-name="Joshua Preche" data-tm-role="Sales Rep" data-tm-status="Offline"><span class="tm-av" style="background:#8a9099">JP</span><span class="tm-i"><span class="tm-n">Joshua Preche</span><span class="tm-r">Sales Rep</span></span><span class="tm-dot tm-gone" title="Offline"></span></a>
+            <a class="tm-row tm-off" data-popup-modal="team-member-detail" data-tm-name="Xing Liu" data-tm-role="Ops" data-tm-status="Offline"><span class="tm-av" style="background:#8a9099">XL</span><span class="tm-i"><span class="tm-n">Xing Liu</span><span class="tm-r">Ops</span></span><span class="tm-dot tm-gone" title="Offline"></span></a>
 
             <div class="acct-foot">
-              <a class="acct-act">Settings</a>
-              <a class="acct-act acct-act-danger">Log out</a>
+              <a class="acct-act" aria-disabled="true" tabindex="-1" style="cursor:not-allowed;opacity:.55" title="No dedicated personal-settings page exists in this admin package yet">Settings <span class="oem-chip oem-chip-planned" style="margin-left:4px;vertical-align:middle">Not built</span></a>
+              <a class="acct-act acct-act-danger" href="../?role=visitor">Log out</a>
             </div>
           </div>
         </div>
@@ -1099,7 +1099,7 @@
   </div>
 </div>
 <div class="p-3 border-t border-sidebar-border flex items-center gap-2">
-  <a class="sb-back flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-sm text-sm font-medium text-sidebar-foreground/85 hover:bg-sidebar-accent hover:text-white transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>Back to Site</a>
+  <a class="sb-back flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-sm text-sm font-medium text-sidebar-foreground/85 hover:bg-sidebar-accent hover:text-white transition-colors" href="../?role=admin" data-an-role-href="../?role={role}"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>Back to Site</a>
   <button id="sb-collapse" type="button" aria-label="Hide sidebar" title="Hide sidebar" class="shrink-0 w-9 h-9 grid place-items-center rounded-sm text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-white transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7M18 19l-7-7 7-7"/></svg></button>
 </div>
   </aside>
@@ -1181,7 +1181,7 @@
                 <div class="dash-funnel-row"><span class="dash-funnel-label">Waitlisted</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:1%;background:hsl(214,50%,80%)"></div></div><span class="dash-funnel-val">24</span></div>
                 <div class="dash-funnel-row"><span class="dash-funnel-label">Qualified</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:1%;background:hsl(214,50%,84%)"></div></div><span class="dash-funnel-val">12</span></div>
               </div>
-              <div class="report-card-ft"><button type="button" class="dash-link">View pipeline →</button></div>
+              <div class="report-card-ft"><button type="button" class="dash-link" onclick="show('lead-pipeline')">View pipeline →</button></div>
             </div>
             <div class="dash-card">
               <div class="dash-card-hd"><span class="report-card-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 2h8a2 2 0 012 2v16a2 2 0 01-2 2H8a2 2 0 01-2-2V4a2 2 0 012-2z"/></svg></span><h2 class="dash-card-title">Leads by Service Type</h2></div>
@@ -1370,7 +1370,7 @@
               <div class="dash-row" style="cursor:default"><span class="tag-pill tag-pill-call">Call</span><span class="dash-row-body"><span class="dash-row-title">Callback: Maurizio A.</span><span class="dash-row-sub">Pending · medium priority</span></span></div>
               <div class="dash-row" style="cursor:default"><span class="tag-pill tag-pill-call">Call</span><span class="dash-row-body"><span class="dash-row-title">Callback: Robb Albert</span><span class="dash-row-sub">Pending · medium priority</span></span></div>
             </div>
-            <div class="report-card-ft"><button type="button" class="dash-link">View all 24 →</button></div>
+            <div class="report-card-ft"><button type="button" class="dash-link" onclick="show('task-board')">View all 24 →</button></div>
           </div>
           <div class="dash-card dash-placeholder">
             <div class="dash-card-hd"><h2 class="dash-card-title">My SMS Schedule</h2></div>
@@ -1502,7 +1502,7 @@
               <div class="dash-card-hd"><span class="report-card-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span><h2 class="dash-card-title">Leads Over Time</h2></div>
               <p class="dash-card-sub" style="padding:0 12px">Monthly, all-time</p>
               <div class="chart-box h-lg"><canvas data-chart='{"type":"line","data":{"labels":["Dec","Jan","Feb","Mar","Apr","May","Jun","Jul"],"datasets":[{"label":"Leads","data":[6,29,136,561,1018,1048,1035,778],"borderColor":"#1E3A5F","backgroundColor":"rgba(30,58,95,0.10)","fill":true,"tension":0.3,"pointRadius":0,"borderWidth":2.25}]},"options":{"responsive":true,"maintainAspectRatio":false,"plugins":{"legend":{"display":false},"tooltip":{"enabled":true}},"scales":{"x":{"grid":{"display":false},"ticks":{"font":{"size":10}}},"y":{"display":false}}}}'></canvas></div>
-              <div class="report-card-ft"><button type="button" class="dash-link">View pipeline →</button></div>
+              <div class="report-card-ft"><button type="button" class="dash-link" onclick="show('lead-pipeline')">View pipeline →</button></div>
             </div>
             <div class="dash-card dash-card-compact">
               <div class="dash-card-hd"><span class="report-card-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v10a2 2 0 01-2 2H9m0-14v14m0 0H5a2 2 0 01-2-2v-4"/></svg></span><h2 class="dash-card-title">Open Leads</h2></div>
@@ -2313,7 +2313,7 @@
               <div class="gauge-box h-md"><canvas data-chart='{"type":"doughnut","data":{"datasets":[{"data":[91.8,8.2],"backgroundColor":["#B23B3B","#F1ECE2"],"borderWidth":0}]},"options":{"responsive":true,"maintainAspectRatio":false,"rotation":-90,"circumference":180,"cutout":"78%","plugins":{"legend":{"display":false},"tooltip":{"enabled":false}}}}'></canvas><span class="gauge-value">56/61</span></div>
               <p class="dash-kpi-foot" style="padding:0 12px 12px">all-time, unheard</p>
               </div>
-              <div class="report-card-ft"><button type="button" class="dash-link">Review queue →</button></div>
+              <div class="report-card-ft"><button type="button" class="dash-link" onclick="show('voice-logs')">Review queue →</button></div>
             </div>
             <div class="dash-card dash-placeholder">
               <div class="dash-card-hd"><h2 class="dash-card-title">Not Yet Tracked</h2></div>
@@ -2449,13 +2449,13 @@
                 <div class="dash-row" style="cursor:default"><span class="dash-row-body"><span class="dash-row-title">Ingredientsonline</span><span class="dash-row-sub">1 purchase order</span></span><span class="dash-row-meta">$6.2K</span></div>
                 <div class="dash-row" style="cursor:default"><span class="dash-row-body"><span class="dash-row-title">AlphaMed Bottles Inc.</span><span class="dash-row-sub">4 purchase orders</span></span><span class="dash-row-meta">$4.2K</span></div>
               </div>
-              <div class="report-card-ft"><button type="button" class="dash-link">View suppliers →</button></div>
+              <div class="report-card-ft"><button type="button" class="dash-link" onclick="show('finance-suppliers')">View suppliers →</button></div>
             </div>
             <div class="dash-card">
               <div class="dash-card-hd"><span class="report-card-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 2h8a2 2 0 012 2v16a2 2 0 01-2 2H8a2 2 0 01-2-2V4a2 2 0 012-2zM8 6h8M8 10h.01M12 10h.01"/></svg></span><h2 class="dash-card-title">PO Status &amp; Spend</h2></div>
               <p class="dash-card-sub" style="padding:0 12px">All-time · none Confirmed/Received yet</p>
               <div class="chart-box h-md"><canvas data-chart='{"type":"bar","data":{"labels":["Draft ($49.5K, 46)","Sent ($413, 4)"],"datasets":[{"data":[49500,413],"backgroundColor":["#a7c1de","#4E7BB5"],"borderRadius":4,"barThickness":22}]},"options":{"indexAxis":"y","responsive":true,"maintainAspectRatio":false,"plugins":{"legend":{"display":false}},"scales":{"x":{"display":false},"y":{"grid":{"display":false},"ticks":{"font":{"size":9}}}}}}'></canvas></div>
-              <div class="report-card-ft"><button type="button" class="dash-link">View purchase orders →</button></div>
+              <div class="report-card-ft"><button type="button" class="dash-link" onclick="show('purchase-orders')">View purchase orders →</button></div>
             </div>
           </div>
 
@@ -3225,22 +3225,22 @@
     <main class="flex-1 overflow-auto p-6">
       <div class="mx-auto">
 
-        <button class="-ml-2 mb-4 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground px-2 py-1.5 rounded-sm hover:bg-muted">
+        <button class="-ml-2 mb-4 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground px-2 py-1.5 rounded-sm hover:bg-muted" onclick="show('support-dashboard')">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
           Back
         </button>
 
         <!-- Tabs -->
-        <div class="flex items-center gap-1 mb-4 border-b border-border">
-          <button class="inline-flex items-center gap-2 px-4 py-2 -mb-px border-b-2 border-primary text-primary text-sm font-medium">
+        <div class="flex items-center gap-1 mb-4 border-b border-border" id="vl-tabs">
+          <button class="inline-flex items-center gap-2 px-4 py-2 -mb-px border-b-2 border-primary text-primary text-sm font-medium" onclick="__vlShowTab('inbound', this)">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
             Inbound
           </button>
-          <button class="inline-flex items-center gap-2 px-4 py-2 -mb-px border-b-2 border-transparent text-muted-foreground text-sm font-medium hover:text-foreground">
+          <button class="inline-flex items-center gap-2 px-4 py-2 -mb-px border-b-2 border-transparent text-muted-foreground text-sm font-medium hover:text-foreground" onclick="__vlShowTab('outbound', this)">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/></svg>
             Outbound
           </button>
-          <button class="inline-flex items-center gap-2 px-4 py-2 -mb-px border-b-2 border-transparent text-muted-foreground text-sm font-medium hover:text-foreground">
+          <button class="inline-flex items-center gap-2 px-4 py-2 -mb-px border-b-2 border-transparent text-muted-foreground text-sm font-medium hover:text-foreground" onclick="__vlShowTab('voicemail', this)">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-14 0m7 7v4m-4 0h8M12 15a3 3 0 01-3-3V5a3 3 0 116 0v7a3 3 0 01-3 3z"/></svg>
             Voicemail
             <span class="inline-flex items-center justify-center h-4 px-1.5 rounded-full bg-primary text-primary-foreground text-[10px] font-medium">3</span>
@@ -3248,7 +3248,7 @@
         </div>
 
         <!-- Inbound tab table -->
-        <div class="border border-border overflow-hidden">
+        <div class="border border-border overflow-hidden" id="vl-panel-inbound">
           <table class="w-full text-sm">
             <thead class="bg-muted/50">
               <tr>
@@ -3349,9 +3349,13 @@
           </table>
         </div>
 
-        <!-- Voicemail preview card (for reference, shown collapsed in real UI under its own tab) -->
-        <div class="mt-6">
-          <p class="text-xs font-medium text-muted-foreground mb-2">Voicemail tab (preview)</p>
+        <!-- Outbound tab: no outbound call data exists anywhere in this demo file -->
+        <div class="border border-dashed border-border rounded-sm p-6 text-sm text-muted-foreground" id="vl-panel-outbound" style="display:none">
+          Outbound call history isn't tracked in this demo — no outbound call records exist to show. <span class="sample-tag">Sample data</span>
+        </div>
+
+        <!-- Voicemail tab -->
+        <div class="mt-6" id="vl-panel-voicemail" style="display:none">
           <div class="border border-primary/30 bg-primary/5 rounded-sm mb-2 overflow-hidden">
             <div class="flex items-center gap-4 px-4 py-3">
               <div class="w-2 flex-shrink-0"><div class="w-2 h-2 rounded-full bg-primary"></div></div>
@@ -3408,6 +3412,27 @@
     </main>
     </div>
 </section>
+<script>
+  /* Voice Logs: Inbound/Outbound/Voicemail tab strip -- was entirely unwired (whole-document
+     nav sweep, round 2). Inbound and Voicemail have real content in this file; Outbound has
+     none anywhere, so it gets an honest empty state instead of fabricated call records. */
+  window.__vlShowTab = function(tabId, clickedBtn){
+    ['inbound','outbound','voicemail'].forEach(function(id){
+      var panel = document.getElementById('vl-panel-' + id);
+      if (panel) panel.style.display = (id === tabId) ? '' : 'none';
+    });
+    var tabs = document.querySelectorAll('#vl-tabs button');
+    tabs.forEach(function(btn){
+      if (btn === clickedBtn) {
+        btn.classList.add('border-primary', 'text-primary');
+        btn.classList.remove('border-transparent', 'text-muted-foreground');
+      } else {
+        btn.classList.remove('border-primary', 'text-primary');
+        btn.classList.add('border-transparent', 'text-muted-foreground');
+      }
+    });
+  };
+</script>
 <section class="page" data-page="task-board" style="display:none">
 <div class="flex-1 flex flex-col min-w-0">
 
@@ -3837,7 +3862,7 @@
         <!-- Page header: back + client picker -->
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-4">
-            <button class="inline-flex items-center gap-1 px-3 py-1.5 rounded-sm text-sm text-muted-foreground hover:bg-muted">
+            <button class="inline-flex items-center gap-1 px-3 py-1.5 rounded-sm text-sm text-muted-foreground hover:bg-muted" onclick="show('lead-pipeline')">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
               Back
             </button>
@@ -6871,7 +6896,7 @@
                 <div class="text-right">
                   <div class="text-[10px] font-medium uppercase tracking-wide mb-0.5" style="color:hsl(var(--muted-foreground));">Flavor raws</div>
                   <div class="text-xs font-semibold" style="color:#EA580C;">Awaiting</div>
-                  <button class="text-xs font-semibold mt-1.5 hover:underline block" style="color:#16A34A;">View &rarr;</button>
+                  <button class="text-xs font-semibold mt-1.5 hover:underline block" style="color:#16A34A;" data-popup-modal="client-flavor-detail" data-client-name="Priya Natarajan" data-flavor-status="Awaiting" data-am="Marcus T." data-formula="VytalBoost Immune Complex &middot; Capsules &middot; 6 ingredients">View &rarr;</button>
                 </div>
               </div>
             </div>
@@ -6908,7 +6933,7 @@
                 </button>
                 <div class="text-right">
                   <div class="text-[10px]" style="color:hsl(var(--muted-foreground));">&mdash;</div>
-                  <button class="text-xs font-semibold mt-1.5 hover:underline block" style="color:#16A34A;">View &rarr;</button>
+                  <button class="text-xs font-semibold mt-1.5 hover:underline block" style="color:#16A34A;" data-popup-modal="client-flavor-detail" data-client-name="Marcus Reyes" data-flavor-status="None outstanding" data-am="Sarah K.">View &rarr;</button>
                 </div>
               </div>
             </div>
@@ -6939,7 +6964,7 @@
                 </button>
                 <div class="text-right">
                   <div class="text-[10px]" style="color:hsl(var(--muted-foreground));">&mdash;</div>
-                  <button class="text-xs font-semibold mt-1.5 hover:underline block" style="color:#16A34A;">View &rarr;</button>
+                  <button class="text-xs font-semibold mt-1.5 hover:underline block" style="color:#16A34A;" data-popup-modal="client-flavor-detail" data-client-name="Lena Choudhary" data-flavor-status="None outstanding">View &rarr;</button>
                 </div>
               </div>
             </div>
@@ -12147,7 +12172,7 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.5 10.5V6.75a4.5 4.5 0 119 0v3.75M3.75 21.75h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H3.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>
                   Test connection
                 </button>
-                <a class="text-xs text-muted-foreground hover:text-foreground inline-flex items-center">Docs</a>
+                <a class="text-xs text-muted-foreground hover:text-foreground inline-flex items-center" href="https://developer.paypal.com/docs" target="_blank" rel="noopener">Docs</a>
               </div>
             </div>
           </div>
@@ -12680,10 +12705,13 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
         </div>
       </div>
 
-      <!-- Type tabs -->
-      <div class="flex items-center gap-1 mb-6 border-b border-border">
-        <button class="px-4 py-2 -mb-px border-b-2 border-primary text-primary text-sm font-medium">Invoice</button>
-        <button class="px-4 py-2 -mb-px border-b-2 border-transparent text-muted-foreground text-sm font-medium hover:text-foreground">Quote</button>
+      <!-- Type tabs. Invoice/Quote share the one Template Settings + Live Preview panel
+           below in this demo (no per-type content exists to switch to) -- clicking still
+           moves the active-tab indicator, it just doesn't swap any content. Purchase Order
+           stays non-interactive; its own styling already communicates "not built." -->
+      <div class="flex items-center gap-1 mb-6 border-b border-border" id="pdftpl-tabs">
+        <button class="px-4 py-2 -mb-px border-b-2 border-primary text-primary text-sm font-medium" onclick="__pdftplSelectTab(this)">Invoice</button>
+        <button class="px-4 py-2 -mb-px border-b-2 border-transparent text-muted-foreground text-sm font-medium hover:text-foreground" onclick="__pdftplSelectTab(this)">Quote</button>
         <button class="px-4 py-2 -mb-px border-b-2 border-transparent text-muted-foreground/50 text-sm font-medium cursor-not-allowed">Purchase Order (Coming Soon)</button>
       </div>
 
@@ -12936,6 +12964,24 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
     </main>
     </div>
 </section>
+<script>
+  /* PDF Templates: Invoice/Quote tab strip was entirely unwired (whole-document nav sweep,
+     round 2). No per-type Template Settings/Live Preview content exists in this demo, so
+     this only moves the active-tab indicator -- see the comment above the tab strip. */
+  window.__pdftplSelectTab = function(clickedBtn){
+    var tabs = document.querySelectorAll('#pdftpl-tabs button:not([disabled])');
+    tabs.forEach(function(btn){
+      if (btn.classList.contains('cursor-not-allowed')) return;
+      if (btn === clickedBtn) {
+        btn.classList.add('border-primary', 'text-primary');
+        btn.classList.remove('border-transparent', 'text-muted-foreground');
+      } else {
+        btn.classList.remove('border-primary', 'text-primary');
+        btn.classList.add('border-transparent', 'text-muted-foreground');
+      }
+    });
+  };
+</script>
 <section class="page" data-page="system-rate-limits" style="display:none">
 <div class="flex-1 flex flex-col min-w-0">
 
@@ -13385,12 +13431,12 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
       <div class="space-y-6">
 
         <!-- Tabs -->
-        <div class="flex items-center gap-1 border-b border-border">
-          <button class="px-4 py-2 text-sm font-medium border-b-2 border-primary text-foreground -mb-px flex items-center gap-2">
+        <div class="flex items-center gap-1 border-b border-border" id="sysaudit-tabs">
+          <button class="px-4 py-2 text-sm font-medium border-b-2 border-primary text-foreground -mb-px flex items-center gap-2" onclick="__sysauditShowTab('activity', this)">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/></svg>
             Activity Log
           </button>
-          <button class="px-4 py-2 text-sm font-medium text-muted-foreground flex items-center gap-2">
+          <button class="px-4 py-2 text-sm font-medium text-muted-foreground flex items-center gap-2" onclick="__sysauditShowTab('analytics', this)">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
             Analytics
           </button>
@@ -13432,8 +13478,13 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
           </div>
         </div>
 
+        <!-- Analytics tab: no chart/breakdown data exists anywhere in this demo file -->
+        <div class="rounded-sm border border-dashed border-border p-6 text-sm text-muted-foreground" id="sysaudit-panel-analytics" style="display:none">
+          Audit log analytics (trends, breakdowns by action type) aren't built out in this demo — only the raw activity log below is real. <span class="sample-tag">Sample data</span>
+        </div>
+
         <!-- Filters and Table -->
-        <div class="rounded-sm border border-border bg-background">
+        <div class="rounded-sm border border-border bg-background" id="sysaudit-panel-activity">
           <div class="p-4 border-b border-border flex flex-col md:flex-row gap-4 justify-between">
             <h3 class="font-semibold">Activity Log</h3>
             <div class="flex flex-col md:flex-row gap-2">
@@ -13522,6 +13573,26 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
     </main>
     </div>
 </section>
+<script>
+  /* Audit Logs: Activity Log/Analytics tab strip was entirely unwired (whole-document
+     nav sweep, round 2). No analytics/breakdown data exists anywhere in this demo file. */
+  window.__sysauditShowTab = function(tabId, clickedBtn){
+    ['activity','analytics'].forEach(function(id){
+      var panel = document.getElementById('sysaudit-panel-' + id);
+      if (panel) panel.style.display = (id === tabId) ? '' : 'none';
+    });
+    var tabs = document.querySelectorAll('#sysaudit-tabs button');
+    tabs.forEach(function(btn){
+      if (btn === clickedBtn) {
+        btn.classList.add('border-b-2', 'border-primary', 'text-foreground');
+        btn.classList.remove('text-muted-foreground');
+      } else {
+        btn.classList.remove('border-b-2', 'border-primary', 'text-foreground');
+        btn.classList.add('text-muted-foreground');
+      }
+    });
+  };
+</script>
 <section class="page" data-page="system-error-logs" style="display:none">
 <div class="flex-1 flex flex-col min-w-0">
 
@@ -13538,12 +13609,12 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
       <div class="space-y-6">
 
         <!-- Tabs -->
-        <div class="flex items-center gap-1 border-b border-border">
-          <button class="px-4 py-2 text-sm font-medium border-b-2 border-primary text-foreground -mb-px flex items-center gap-2">
+        <div class="flex items-center gap-1 border-b border-border" id="syserr-tabs">
+          <button class="px-4 py-2 text-sm font-medium border-b-2 border-primary text-foreground -mb-px flex items-center gap-2" onclick="__syserrShowTab('all', this)">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/></svg>
             All Errors
           </button>
-          <button class="px-4 py-2 text-sm font-medium text-muted-foreground flex items-center gap-2">
+          <button class="px-4 py-2 text-sm font-medium text-muted-foreground flex items-center gap-2" onclick="__syserrShowTab('grouped', this)">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6.429 9.75L2.25 12l4.179 2.25m0-4.5l5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0l4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0l-5.571 3-5.571-3"/></svg>
             Grouped
           </button>
@@ -13577,8 +13648,13 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
           </div>
         </div>
 
+        <!-- Grouped tab: no grouped/aggregated view exists anywhere in this demo file -->
+        <div class="rounded-sm border border-dashed border-border p-6 text-sm text-muted-foreground" id="syserr-panel-grouped" style="display:none">
+          Grouping errors by type/message isn't built out in this demo — only the flat error list below is real. <span class="sample-tag">Sample data</span>
+        </div>
+
         <!-- Filters and table -->
-        <div class="rounded-sm border border-border bg-background">
+        <div class="rounded-sm border border-border bg-background" id="syserr-panel-all">
           <div class="p-4 border-b border-border flex flex-col md:flex-row gap-4 justify-between">
             <h3 class="font-semibold">Error Log</h3>
             <div class="flex flex-col md:flex-row gap-2">
@@ -13667,6 +13743,26 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
     </main>
     </div>
 </section>
+<script>
+  /* Error Logs: All Errors/Grouped tab strip was entirely unwired (whole-document nav
+     sweep, round 2). No grouped/aggregated view exists anywhere in this demo file. */
+  window.__syserrShowTab = function(tabId, clickedBtn){
+    ['all','grouped'].forEach(function(id){
+      var panel = document.getElementById('syserr-panel-' + id);
+      if (panel) panel.style.display = (id === tabId) ? '' : 'none';
+    });
+    var tabs = document.querySelectorAll('#syserr-tabs button');
+    tabs.forEach(function(btn){
+      if (btn === clickedBtn) {
+        btn.classList.add('border-b-2', 'border-primary', 'text-foreground');
+        btn.classList.remove('text-muted-foreground');
+      } else {
+        btn.classList.remove('border-b-2', 'border-primary', 'text-foreground');
+        btn.classList.add('text-muted-foreground');
+      }
+    });
+  };
+</script>
 <!-- New page: Dead Letters — faithful port of ally-os apps/crm/src/pages/DeadLetters.tsx
      (FEAT-004 phase 3, done, PR #68). SHIPPED badge. Sample data only; the real page reads
      platform.list_dead_letter_events and writes via platform.replay_dead_letter_event,
@@ -14037,18 +14133,22 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
 
         <!-- Tabs -->
         <div>
-          <div class="flex items-center gap-1 border-b border-border mb-4">
-            <button class="px-4 py-2 text-sm font-medium border-b-2 border-primary text-foreground -mb-px flex items-center gap-2">
+          <div class="flex items-center gap-1 border-b border-border mb-4" id="sysbk-tabs">
+            <button class="px-4 py-2 text-sm font-medium border-b-2 border-primary text-foreground -mb-px flex items-center gap-2" onclick="__sysbkShowTab('history', this)">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375"/></svg>
               Backup History
             </button>
-            <button class="px-4 py-2 text-sm font-medium text-muted-foreground flex items-center gap-2">
+            <button class="px-4 py-2 text-sm font-medium text-muted-foreground flex items-center gap-2" onclick="__sysbkShowTab('restore', this)">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
               Restore History
             </button>
           </div>
 
-          <div class="rounded-sm border border-border bg-background">
+          <div class="rounded-sm border border-dashed border-border p-6 text-sm text-muted-foreground" id="sysbk-panel-restore" style="display:none">
+            No restores have been run in this demo, so there's no restore history to show. <span class="sample-tag">Sample data</span>
+          </div>
+
+          <div class="rounded-sm border border-border bg-background" id="sysbk-panel-history">
             <div class="p-4 border-b border-border">
               <h3 class="font-semibold">Backup History</h3>
               <p class="text-sm text-muted-foreground">All database backups are automatically deleted after 30 days</p>
@@ -14167,6 +14267,27 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
     </main>
     </div>
 </section>
+<script>
+  /* Database Backups: Backup History/Restore History tab strip was entirely unwired
+     (whole-document nav sweep, round 2). No restore has ever run in this demo, so
+     Restore History gets an honest empty state rather than fabricated restore rows. */
+  window.__sysbkShowTab = function(tabId, clickedBtn){
+    ['history','restore'].forEach(function(id){
+      var panel = document.getElementById('sysbk-panel-' + id);
+      if (panel) panel.style.display = (id === tabId) ? '' : 'none';
+    });
+    var tabs = document.querySelectorAll('#sysbk-tabs button');
+    tabs.forEach(function(btn){
+      if (btn === clickedBtn) {
+        btn.classList.add('border-b-2', 'border-primary', 'text-foreground');
+        btn.classList.remove('text-muted-foreground');
+      } else {
+        btn.classList.remove('border-b-2', 'border-primary', 'text-foreground');
+        btn.classList.add('text-muted-foreground');
+      }
+    });
+  };
+</script>
 <section class="page" data-page="system-monitoring-docs" style="display:none">
 <div class="flex-1 flex flex-col min-w-0">
 
@@ -14686,6 +14807,7 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
         </div>
 
         <!-- New Batch card -->
+        <div id="pbup-list-view">
         <div class="rounded-md border border-border bg-card">
           <div class="p-5 pb-3">
             <h3 class="flex items-center gap-2 font-semibold">
@@ -14767,7 +14889,7 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
                 </div>
                 <div class="text-xs text-muted-foreground">2 hours ago</div>
               </div>
-              <button class="text-sm text-muted-foreground hover:text-foreground px-2 py-1">Open</button>
+              <button class="text-sm text-muted-foreground hover:text-foreground px-2 py-1" onclick="__showBatchDetail(this)" data-batch-filename="kanion_pricelist_q3.jpg" data-batch-status="committed" data-batch-status-class="bg-green-500/20 text-green-500 border-green-500/30" data-batch-uploaded="2 hours ago" data-batch-has-findings="true">Open</button>
             </div>
             <div class="py-2.5 flex items-center justify-between">
               <div>
@@ -14777,7 +14899,7 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
                 </div>
                 <div class="text-xs text-muted-foreground">Yesterday</div>
               </div>
-              <button class="text-sm text-muted-foreground hover:text-foreground px-2 py-1">Open</button>
+              <button class="text-sm text-muted-foreground hover:text-foreground px-2 py-1" onclick="__showBatchDetail(this)" data-batch-filename="sinocare_ascorbic_acid_sheet.pdf" data-batch-status="submitted" data-batch-status-class="bg-blue-500/20 text-blue-500 border-blue-500/30" data-batch-uploaded="Yesterday" data-batch-has-findings="false">Open</button>
             </div>
             <div class="py-2.5 flex items-center justify-between">
               <div>
@@ -14787,43 +14909,43 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
                 </div>
                 <div class="text-xs text-muted-foreground">3 days ago</div>
               </div>
-              <button class="text-sm text-muted-foreground hover:text-foreground px-2 py-1">Open</button>
+              <button class="text-sm text-muted-foreground hover:text-foreground px-2 py-1" onclick="__showBatchDetail(this)" data-batch-filename="image upload" data-batch-status="draft" data-batch-status-class="bg-slate-500/20 text-slate-500 border-slate-500/30" data-batch-uploaded="3 days ago" data-batch-has-findings="false">Open</button>
             </div>
           </div>
         </div>
+        </div>
 
         <!-- Example: batch in review (navigated to /admin/bulk-update-prices/:batchId) -->
-        <div class="pt-4">
-          <div class="flex items-center gap-2 mb-3">
-            <div class="h-px flex-1 bg-border"></div>
-            <span class="text-xs text-muted-foreground uppercase tracking-wide">Example — batch under review</span>
-            <div class="h-px flex-1 bg-border"></div>
-          </div>
-
+        <div class="pt-4" id="pbup-detail-view" style="display:none">
           <div class="rounded-md border border-border bg-card p-4 space-y-4">
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-3">
-                <button class="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1">
+                <button class="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1" onclick="__hideBatchDetail()">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
                   Back
                 </button>
                 <div>
                   <h4 class="font-bold">Review Price Batch</h4>
-                  <p class="text-xs text-muted-foreground font-mono">a1b8f3d2-91cc-4e07-8b3a-6f2e9c5d1a44</p>
+                  <p class="text-xs text-muted-foreground font-mono" id="pbup-detail-filename">kanion_pricelist_q3.jpg</p>
                 </div>
               </div>
               <div class="flex items-center gap-2">
-                <span class="text-xs px-2 py-0.5 rounded-sm border bg-blue-500/20 text-blue-500 border-blue-500/30">SUBMITTED</span>
-                <span class="text-sm text-muted-foreground">11 / 12 included</span>
+                <span class="text-xs px-2 py-0.5 rounded-sm border" id="pbup-detail-status">committed</span>
+                <span class="text-sm text-muted-foreground" id="pbup-detail-uploaded">2 hours ago</span>
               </div>
             </div>
+            <span class="sample-tag">Sample data</span>
 
+            <div id="pbup-no-findings" style="display:none" class="rounded-sm border border-dashed border-border p-4 text-sm text-muted-foreground">
+              A full extracted line-item review isn't available for this batch in the demo — only one batch ("kanion_pricelist_q3.jpg") has sample rows behind it.
+            </div>
+
+            <div id="pbup-findings-body" class="space-y-4">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm border border-border rounded-sm p-4">
               <div><div class="text-xs text-muted-foreground">Source type</div><div class="font-medium">IMAGE</div></div>
               <div><div class="text-xs text-muted-foreground">Language</div><div class="font-medium">mixed</div></div>
               <div><div class="text-xs text-muted-foreground">Default currency</div><div class="font-medium">CNY</div></div>
               <div><div class="text-xs text-muted-foreground">AI overall confidence</div><div class="font-medium">88%</div></div>
-              <div><div class="text-xs text-muted-foreground">Filename</div><div class="font-medium truncate">kanion_pricelist_q3.jpg</div></div>
             </div>
 
             <!-- Review table -->
@@ -14946,12 +15068,46 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
                 Commit 11 changes
               </button>
             </div>
+            </div>
           </div>
         </div>
       </div>
     </main>
     </div>
 </section>
+<script>
+  /* Bulk Update Prices: "Open" on a recent batch shows the (single, shared) review
+     detail below in place of the upload form + batch list; "Back" reverses it. Mirrors
+     the __showSequenceBuilder/__hideSequenceBuilder toggle used by Email Sequences.
+     Round 2: parameterized from data-batch-* on the clicked row, only using values
+     already shown on that row (filename/status/uploaded-time). The extracted
+     line-item review table only has real content for one batch
+     (kanion_pricelist_q3.jpg) in this demo file; other rows show #pbup-no-findings
+     instead of fabricating extracted rows for files that were never actually parsed. */
+  window.__showBatchDetail = function(trigger){
+    if (trigger) {
+      var d = trigger.dataset;
+      document.getElementById('pbup-detail-filename').textContent = d.batchFilename || '';
+      document.getElementById('pbup-detail-uploaded').textContent = d.batchUploaded || '';
+      var status = document.getElementById('pbup-detail-status');
+      status.textContent = d.batchStatus || '';
+      status.className = 'text-xs px-2 py-0.5 rounded-sm border ' + (d.batchStatusClass || '');
+      var hasFindings = d.batchHasFindings === 'true';
+      document.getElementById('pbup-findings-body').style.display = hasFindings ? '' : 'none';
+      document.getElementById('pbup-no-findings').style.display = hasFindings ? 'none' : '';
+    }
+    var list = document.getElementById('pbup-list-view');
+    var detail = document.getElementById('pbup-detail-view');
+    if (list) list.style.display = 'none';
+    if (detail) detail.style.display = '';
+  };
+  window.__hideBatchDetail = function(){
+    var list = document.getElementById('pbup-list-view');
+    var detail = document.getElementById('pbup-detail-view');
+    if (detail) detail.style.display = 'none';
+    if (list) list.style.display = '';
+  };
+</script>
 <section class="page" data-page="pricing-supplier-rfqs" style="display:none">
 <div class="flex-1 flex flex-col min-w-0">
 
@@ -15155,7 +15311,7 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
               <td class="px-4 py-3 text-muted-foreground" title="Jul 8, 2026, 11:20 AM">1 week ago</td>
               <td class="px-4 py-3"><span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-sm text-xs border bg-green-500/20 text-green-600 border-green-500/30"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>approved</span></td>
               <td class="px-4 py-3 text-right">
-                <button class="inline-flex items-center h-8 px-2.5 rounded-sm text-xs text-muted-foreground hover:bg-muted"><svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>View</button>
+                <button class="inline-flex items-center h-8 px-2.5 rounded-sm text-xs text-muted-foreground hover:bg-muted" data-popup-modal="material-review-detail" data-material-ingredient="Nicotinamide Mononucleotide (NMN)" data-material-submitted-by="System" data-material-source="Admin Quote" data-material-date="Jul 8, 2026, 11:20 AM" data-material-status="approved"><svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>View</button>
               </td>
             </tr>
             <tr>
@@ -15220,7 +15376,7 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
         </div>
 
         <!-- Past reviews -->
-        <div>
+        <div id="plr-list-view">
           <h3 class="font-semibold mb-3 flex items-center gap-2">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
             Recent Reviews
@@ -15235,7 +15391,7 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
           </div>
 
           <div class="rounded-md border border-border bg-card divide-y divide-border">
-            <button class="w-full flex items-center justify-between gap-3 px-4 py-3 text-left hover:bg-muted/50">
+            <button class="w-full flex items-center justify-between gap-3 px-4 py-3 text-left hover:bg-muted/50" onclick="__showReviewDetail(this)" data-review-title="PeakForm Pre-Workout — Watermelon" data-review-sub="Peak Form Nutrition · Powder · 7/16/2026" data-review-pass="18" data-review-fail="2" data-review-review="3" data-review-badge="Needs Review" data-review-badge-class="bg-yellow-500/15 text-yellow-600 border-yellow-500/30" data-review-has-findings="true">
               <div class="min-w-0">
                 <div class="font-medium text-sm truncate">PeakForm Pre-Workout — Watermelon</div>
                 <div class="text-xs text-muted-foreground truncate">Peak Form Nutrition · Powder · 7/16/2026</div>
@@ -15248,7 +15404,7 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
                 </span>
               </div>
             </button>
-            <button class="w-full flex items-center justify-between gap-3 px-4 py-3 text-left hover:bg-muted/50">
+            <button class="w-full flex items-center justify-between gap-3 px-4 py-3 text-left hover:bg-muted/50" onclick="__showReviewDetail(this)" data-review-title="Vytal Labs Daily Multi — Capsule" data-review-sub="Vytal Labs LLC · Capsule · 7/12/2026" data-review-pass="23" data-review-fail="0" data-review-review="0" data-review-badge="Pass" data-review-badge-class="bg-green-500/15 text-green-600 border-green-500/30" data-review-has-findings="false">
               <div class="min-w-0">
                 <div class="font-medium text-sm truncate">Vytal Labs Daily Multi — Capsule</div>
                 <div class="text-xs text-muted-foreground truncate">Vytal Labs LLC · Capsule · 7/12/2026</div>
@@ -15262,7 +15418,7 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
                 </span>
               </div>
             </button>
-            <button class="w-full flex items-center justify-between gap-3 px-4 py-3 text-left hover:bg-muted/50">
+            <button class="w-full flex items-center justify-between gap-3 px-4 py-3 text-left hover:bg-muted/50" onclick="__showReviewDetail(this)" data-review-title="FitFuel Collagen Peptides — Stick Pack" data-review-sub="FitFuel Nutraceuticals · Stick Pack · 7/9/2026" data-review-pass="15" data-review-fail="4" data-review-review="1" data-review-badge="Fail" data-review-badge-class="bg-red-500/15 text-red-600 border-red-500/30" data-review-has-findings="false">
               <div class="min-w-0">
                 <div class="font-medium text-sm truncate">FitFuel Collagen Peptides — Stick Pack</div>
                 <div class="text-xs text-muted-foreground truncate">FitFuel Nutraceuticals · Stick Pack · 7/9/2026</div>
@@ -15286,16 +15442,10 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
         </p>
 
         <!-- Example detail view -->
-        <div class="pt-4">
-          <div class="flex items-center gap-2 mb-3">
-            <div class="h-px flex-1 bg-border"></div>
-            <span class="text-xs text-muted-foreground uppercase tracking-wide">Example — review detail</span>
-            <div class="h-px flex-1 bg-border"></div>
-          </div>
-
+        <div class="pt-4" id="plr-detail-view" style="display:none">
           <div class="space-y-4">
             <div class="flex items-center justify-between gap-2">
-              <button class="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1.5">
+              <button class="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1.5" onclick="__hideReviewDetail()">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
                 Back to reviews
               </button>
@@ -15309,30 +15459,27 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
               <div class="flex items-start justify-between gap-4 flex-wrap">
                 <div>
                   <div class="flex items-center gap-2 mb-1">
-                    <h2 class="text-lg font-semibold">PeakForm Pre-Workout — Watermelon</h2>
-                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-sm text-xs border bg-yellow-500/15 text-yellow-600 border-yellow-500/30">
-                      <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <h2 class="text-lg font-semibold" id="plr-detail-title">PeakForm Pre-Workout — Watermelon</h2>
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-sm text-xs border" id="plr-detail-badge">
                       Needs Review
                     </span>
                   </div>
-                  <p class="text-sm text-muted-foreground">Peak Form Nutrition · Powder · claude-sonnet-4-6</p>
+                  <p class="text-sm text-muted-foreground" id="plr-detail-sub">Peak Form Nutrition · Powder · 7/16/2026</p>
                 </div>
-                <div class="flex gap-2 text-xs">
+                <div class="flex gap-2 text-xs" id="plr-detail-counts">
                   <button class="px-2 py-1 rounded-sm font-medium bg-green-500/15 text-green-600">18 pass</button>
                   <button class="px-2 py-1 rounded-sm font-medium bg-red-500/15 text-red-600">2 fail</button>
                   <button class="px-2 py-1 rounded-sm font-medium bg-yellow-500/15 text-yellow-600 ring-2 ring-offset-1 ring-yellow-500">3 review</button>
-                  <button class="px-2 py-1 rounded-sm font-medium bg-muted text-muted-foreground">1 n/a</button>
                 </div>
               </div>
-              <div class="mt-4 p-3 rounded-sm bg-muted/50 text-sm flex gap-2">
-                <svg class="w-4 h-4 text-ally-orange shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 10l-5.714 2.143L13 19l-2.286-6.857L5 10l5.714-2.143L13 1z"/></svg>
-                <p class="text-muted-foreground leading-relaxed">
-                  Overall the label is close to compliant. Two failures: the Supplement Facts panel is missing the required "% Daily Value not established" footnote for beta-alanine, and the front-of-pack claim "clinically proven" lacks a disclaimer. Three items need human judgment on font sizing that AI can't measure precisely from this image resolution.
-                </p>
-              </div>
+              <span class="sample-tag" style="margin-top:12px">Sample data</span>
             </div>
 
-            <div class="rounded-md border border-border bg-card p-5">
+            <div id="plr-no-findings" style="display:none" class="rounded-md border border-dashed border-border bg-card p-5 text-sm text-muted-foreground">
+              Detailed line-item findings aren't available for this record in the demo — only one review ("PeakForm Pre-Workout — Watermelon") has full sample findings behind it. <span class="sample-tag">Sample data</span>
+            </div>
+
+            <div class="rounded-md border border-border bg-card p-5" id="plr-findings-body">
               <div class="mb-3">
                 <h3 class="font-semibold text-ally-navy">2. Supplement Facts Panel</h3>
                 <p class="text-xs text-muted-foreground">21 CFR 101.36</p>
@@ -15392,7 +15539,7 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
               </div>
             </div>
 
-            <div class="sticky bottom-0 bg-background/95 backdrop-blur py-3 border-t border-border flex justify-end gap-2">
+            <div class="sticky bottom-0 bg-background/95 backdrop-blur py-3 border-t border-border flex justify-end gap-2" id="plr-findings-footer">
               <button class="h-9 px-4 rounded-sm border border-border text-sm hover:bg-muted">Cancel</button>
               <button class="inline-flex items-center gap-1.5 h-9 px-4 rounded-sm bg-ally-navy text-white text-sm font-medium hover:opacity-90">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -15405,6 +15552,46 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
     </main>
     </div>
 </section>
+<script>
+  /* Label Reviews: clicking a past review shows the (single, shared) review detail below
+     in place of the review list; "Back to reviews" reverses it. Same toggle pattern as
+     Bulk Update Prices' __showBatchDetail/__hideBatchDetail.
+     Round 2: parameterized from data-review-* on the clicked row (title/sub/pass/fail/
+     review/badge/badge-class), mirroring the client-flavor-detail modal's approach --
+     only values already shown on that row. The itemized findings body only has real
+     content for one review (PeakForm) in this demo file; other rows show
+     #plr-no-findings instead of fabricating findings for records that were never
+     actually reviewed in the source. */
+  window.__showReviewDetail = function(trigger){
+    if (trigger) {
+      var d = trigger.dataset;
+      document.getElementById('plr-detail-title').textContent = d.reviewTitle || '';
+      document.getElementById('plr-detail-sub').textContent = d.reviewSub || '';
+      var badge = document.getElementById('plr-detail-badge');
+      badge.textContent = d.reviewBadge || '';
+      badge.className = 'inline-flex items-center gap-1 px-2 py-0.5 rounded-sm text-xs border ' + (d.reviewBadgeClass || '');
+      var counts = document.getElementById('plr-detail-counts');
+      counts.innerHTML =
+        '<button class="px-2 py-1 rounded-sm font-medium bg-green-500/15 text-green-600">' + (d.reviewPass || '0') + ' pass</button>' +
+        '<button class="px-2 py-1 rounded-sm font-medium bg-red-500/15 text-red-600">' + (d.reviewFail || '0') + ' fail</button>' +
+        '<button class="px-2 py-1 rounded-sm font-medium bg-yellow-500/15 text-yellow-600">' + (d.reviewReview || '0') + ' review</button>';
+      var hasFindings = d.reviewHasFindings === 'true';
+      document.getElementById('plr-findings-body').style.display = hasFindings ? '' : 'none';
+      document.getElementById('plr-findings-footer').style.display = hasFindings ? '' : 'none';
+      document.getElementById('plr-no-findings').style.display = hasFindings ? 'none' : '';
+    }
+    var list = document.getElementById('plr-list-view');
+    var detail = document.getElementById('plr-detail-view');
+    if (list) list.style.display = 'none';
+    if (detail) detail.style.display = '';
+  };
+  window.__hideReviewDetail = function(){
+    var list = document.getElementById('plr-list-view');
+    var detail = document.getElementById('plr-detail-view');
+    if (detail) detail.style.display = 'none';
+    if (list) list.style.display = '';
+  };
+</script>
 <section class="page" data-page="workspace-tasks" style="display:none">
 <div class="flex-1 flex flex-col min-w-0">
 
@@ -16617,7 +16804,15 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
       if (isOpen) { acctPanel.classList.remove('open'); acctBtn.setAttribute('aria-expanded','false'); }
       else { acctPanel.classList.add('open'); acctBtn.setAttribute('aria-expanded','true'); }
     });
-    acctPanel.addEventListener('click', e => e.stopPropagation());
+    acctPanel.addEventListener('click', e => {
+      // Round 2 (whole-document nav sweep): team-member rows now carry data-popup-modal,
+      // which opens via a document-level delegated listener -- stopping propagation
+      // unconditionally here silently blocked that click from ever reaching it. Let
+      // popup-shaped triggers bubble through; everything else in the panel still can't
+      // accidentally close it via the document-level "click anywhere closes" listener below.
+      if (e.target.closest('[data-popup-modal],[data-popup-menu],[data-popup-confirm]')) return;
+      e.stopPropagation();
+    });
     document.addEventListener('click', () => { acctPanel.classList.remove('open'); acctBtn.setAttribute('aria-expanded','false'); });
     document.addEventListener('keydown', e => { if (e.key === 'Escape'){ acctPanel.classList.remove('open'); acctBtn.setAttribute('aria-expanded','false'); } });
   }
@@ -17337,6 +17532,31 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
     return VIEW_AS_ROLES.map(function(r){
       return { label: (r === current ? '✓ ' : '') + ROLE_LABELS[r], onClick: function(){ setViewRole(r); } };
     });
+  };
+
+  /* Top bar: notification bell -> row-menu popover (rich mode), same visual family as
+     .acctpanel/.tools-panel. Was previously unwired (whole-document nav sweep, round 2) --
+     no notification feed exists anywhere in this demo file, so this is 3 representative
+     sample entries, clearly tagged, rather than a live feed. */
+  POPUP_MENUS['notifications'] = function(trigger){
+    const rows = [
+      { title: 'New lead: Britin Lindsey', sub: 'Submitted a quote request 12 minutes ago', icon: 'M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v10a2 2 0 01-2 2H9m0-14v14m0 0H5a2 2 0 01-2-2v-4' },
+      { title: 'Price batch ready for review', sub: 'kanion_pricelist_q3.jpg finished parsing', icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' },
+      { title: 'Quote reprice flagged', sub: 'Q-2026-0714 — Ashwagandha Extract up 32%', icon: 'M12 9v4M12 17h.01M10.3 3.9l-8 14A2 2 0 004 21h16a2 2 0 001.7-3l-8-14a2 2 0 00-3.4 0z' },
+    ];
+    const html = '<div class="p-3 border-b border-border">'
+        + '<div class="font-medium text-sm">Notifications</div>'
+      + '</div>'
+      + '<ul class="max-h-[320px] overflow-y-auto m-0 p-0">'
+      + rows.map(function(r){
+          return '<li class="p-3 border-b border-border flex items-start gap-2.5">'
+            + '<svg class="w-4 h-4 mt-0.5 shrink-0 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="' + r.icon + '"/></svg>'
+            + '<div class="min-w-0"><div class="font-medium text-sm truncate">' + r.title + '</div><div class="text-xs text-muted-foreground mt-0.5">' + r.sub + '</div></div>'
+          + '</li>';
+        }).join('')
+      + '</ul>'
+      + '<div class="p-2"><span class="sample-tag">Sample data</span></div>';
+    return { html: html, width: 300 };
   };
 
   POPUP_CONFIRMS['delete'] = function(trigger){
@@ -18156,6 +18376,72 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
   };
 
   /* ---- Invoices: row "eye" -> detail modal; "Mark Paid" -> form modal ---- */
+  /* Account menu: team-availability row -> modal, parameterized from data-tm-* on the
+     trigger, mirroring that row. Unlike the read-only, deliberately non-interactive
+     dashboard "who's available" widget (style="cursor:default" there), these account-menu
+     rows keep the base .tm-row cursor:pointer -- a real, unwired dead end (whole-document
+     nav sweep, round 2), not the same confirmed non-issue. */
+  POPUP_MODALS['team-member-detail'] = function(trigger){
+    const name = trigger.getAttribute('data-tm-name') || 'this teammate';
+    const role = trigger.getAttribute('data-tm-role');
+    const status = trigger.getAttribute('data-tm-status');
+    return {
+      title: name,
+      size: 'modal-sm',
+      bodyHTML:
+        '<div class="modal-detail-grid" style="grid-template-columns:1fr">'
+          + (role ? '<div><div class="k">Role</div><div class="v">' + role + '</div></div>' : '')
+          + (status ? '<div><div class="k">Status</div><div class="v">' + status + '</div></div>' : '')
+        + '</div>'
+        + '<span class="sample-tag">Sample data</span>',
+      actionsHTML: '<button type="button" class="modal-btn" data-modal-close>Close</button>'
+    };
+  };
+  /* CRM > Clients: row's "View →" (flavor raws sourcing status) -> modal, parameterized
+     from data-client-name/-flavor-status/-am/-formula on the trigger, mirroring that row.
+     Was previously unwired (nav dead-end sweep). */
+  POPUP_MODALS['client-flavor-detail'] = function(trigger){
+    const name = trigger.getAttribute('data-client-name') || 'this client';
+    const status = trigger.getAttribute('data-flavor-status') || 'None outstanding';
+    const am = trigger.getAttribute('data-am');
+    const formula = trigger.getAttribute('data-formula');
+    return {
+      title: 'Flavor Sourcing — ' + name,
+      size: 'modal-sm',
+      bodyHTML:
+        '<div class="modal-detail-grid" style="grid-template-columns:1fr">'
+          + '<div><div class="k">Flavor raws</div><div class="v">' + status + '</div></div>'
+          + (am ? '<div><div class="k">Account manager</div><div class="v">' + am + '</div></div>' : '')
+          + (formula ? '<div><div class="k">Formula</div><div class="v">' + formula + '</div></div>' : '')
+        + '</div>'
+        + '<span class="sample-tag">Sample data</span>',
+      actionsHTML: '<button type="button" class="modal-btn" data-modal-close>Close</button>'
+    };
+  };
+  /* Material Reviews: an already-decided (approved) row's "View" -> modal, parameterized
+     from data-material-* on the trigger, mirroring that row. Was previously unwired
+     (whole-document nav sweep, round 2 -- small icon+label button, same shape as the
+     client-flavor-detail "View" buttons fixed in round 1). */
+  POPUP_MODALS['material-review-detail'] = function(trigger){
+    const ingredient = trigger.getAttribute('data-material-ingredient') || 'this submission';
+    const submittedBy = trigger.getAttribute('data-material-submitted-by');
+    const source = trigger.getAttribute('data-material-source');
+    const date = trigger.getAttribute('data-material-date');
+    const status = trigger.getAttribute('data-material-status') || '';
+    return {
+      title: ingredient,
+      size: 'modal-sm',
+      bodyHTML:
+        '<div class="modal-detail-grid" style="grid-template-columns:1fr">'
+          + '<div><div class="k">Status</div><div class="v">' + status + '</div></div>'
+          + (submittedBy ? '<div><div class="k">Submitted by</div><div class="v">' + submittedBy + '</div></div>' : '')
+          + (source ? '<div><div class="k">Source</div><div class="v">' + source + '</div></div>' : '')
+          + (date ? '<div><div class="k">Date</div><div class="v">' + date + '</div></div>' : '')
+        + '</div>'
+        + '<span class="sample-tag">Sample data</span>',
+      actionsHTML: '<button type="button" class="modal-btn" data-modal-close>Close</button>'
+    };
+  };
   /* Batch 30: parameterized from data-invoice-number/-client/-amount-due on each row's
      "View details" trigger, mirroring that row. Status/Issued/Due/Order Ref aren't shown
      in the overdue widget row, so they stay fixed representative sample content. */
