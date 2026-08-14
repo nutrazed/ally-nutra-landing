@@ -1,12 +1,29 @@
+import foilLaminatePhoto from '../assets/images/products/variety-foil-laminate.jpg';
+import kraftPaperPhoto from '../assets/images/products/variety-kraft-paper.jpg';
+import zipLockPhoto from '../assets/images/products/variety-zip-lock.jpg';
+
 // Back-face explanations and varieties-popup content for the four "What we make" cards.
 //
 // Every variety value here traces to a specific tier/source in the Phase 0 audit
 // (ally-nutra @ main, commit 1d1b8f5ada2655441f21cbf0e52b9518a3e45955, read-only —
 // see the PR description for the full table). Nothing here was invented:
 //   - visual: 'rung1' | 'rung2' | 'rung3' — which sourcing-ladder rung this variety's
-//     visual actually used, exactly as audited. No entry claims rung1 (no photograph
-//     in the company repo distinguishes one variety from another — see PR body).
-//   - render: which VarietyVisual shape to draw for rung2 entries (undefined for rung3).
+//     visual actually used, exactly as audited.
+//   - render: which VarietyVisual shape to draw for rung2 entries (undefined for
+//     rung1/rung3).
+//   - photo: which real photograph to show for rung1 entries (undefined otherwise).
+//
+// rung1 (real photograph) additions (polish/logo-and-product-photos): after an
+// extensive Unsplash/Pexels search, only foil-laminate, kraft-paper, and the
+// zip-lock closure had an honest, unbranded, genuinely-photographed (not
+// CGI-mockup) candidate. Every other variety here — including all four capsule
+// shells, matte/glossy/clear film, and the spout-cap closure — kept its existing
+// rung2 SVG diagram rather than being blanked to a rung3 "no image" row: unlike
+// capsule sizes (genuinely unresolved, no source at any tier), these already have
+// a legitimate, tier-2-sourced illustrative diagram, and dropping that to nothing
+// would be a pure regression, not an upgrade. See the PR description for the full
+// list of what was searched and why each was rejected (branding, CGI-render tells,
+// drug-paraphernalia-adjacent staging, or simply not found).
 
 export const CAPSULE_VARIETIES = {
   format: 'Capsules',
@@ -75,8 +92,9 @@ export const SACHET_VARIETIES = {
       name: 'Foil laminate',
       spec: 'MAX BARRIER',
       note: 'Best for moisture- or light-sensitive formulas — the most protective option.',
-      visual: 'rung2',
-      render: { kind: 'material-swatch', variant: 'foil-laminate' },
+      visual: 'rung1',
+      photo: foilLaminatePhoto,
+      photoAlt: 'A crinkled silver foil zip-seal pouch on a plain background',
       source: 'src/components/quote/quoteOptions.ts:119 (tier 2), wired to sachets via src/components/quote/steps/PackagingStep.tsx:186-206',
     },
     {
@@ -84,8 +102,9 @@ export const SACHET_VARIETIES = {
       name: 'Kraft paper',
       spec: 'RECYCLABLE LOOK',
       note: 'The natural-paper look brands reach for when sustainability is part of the story.',
-      visual: 'rung2',
-      render: { kind: 'material-swatch', variant: 'kraft-paper' },
+      visual: 'rung1',
+      photo: kraftPaperPhoto,
+      photoAlt: 'A brown kraft-paper box-bottom pouch with a zip-seal top, on a plain background',
       source: 'quoteOptions.ts:120 (tier 2)',
     },
     {
@@ -169,8 +188,9 @@ export const POUCH_VARIETIES = {
       name: 'Zip-lock',
       spec: 'RESEALABLE',
       note: 'The default for anything a customer will dip into more than once.',
-      visual: 'rung2',
-      render: { kind: 'pouch-closure', variant: 'zip-lock' },
+      visual: 'rung1',
+      photo: zipLockPhoto,
+      photoAlt: 'A hand holding a small resealable pouch, showing its zip-lock seal at the top',
       source: 'quoteOptions.ts:142 (tier 2)',
     },
     {

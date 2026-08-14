@@ -1057,6 +1057,9 @@ html.no-js .stat-live{display:none;}
 .variety-cell{border:1px solid hsl(var(--border));border-radius:var(--radius-md);padding:16px;display:flex;flex-direction:column;gap:8px;background:hsl(var(--muted)/.4);}
 .variety-visual{background:#fff;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;padding:6px;min-height:72px;}
 .variety-visual-none{display:flex;align-items:center;justify-content:center;width:100%;min-height:60px;border:1px dashed hsl(var(--border));border-radius:var(--radius-sm);}
+/* rung1 (real photo) varieties — same filter as .card-front-photo img, so a
+   variety photo and a card-front photo read as the same treatment at any size. */
+.variety-photo{width:100%;height:64px;object-fit:contain;filter:saturate(.68) contrast(1.05) brightness(1.02);}
 .variety-name{font-family:var(--font-slab);font-weight:500;font-size:14.5px;color:hsl(var(--ally-navy));}
 .variety-spec{color:hsl(var(--ally-navy)/.55);}
 .variety-note{font-size:12px;line-height:1.5;color:hsl(var(--muted-foreground));margin:0;}
