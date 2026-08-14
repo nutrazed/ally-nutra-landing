@@ -169,7 +169,7 @@
   #tb-handle{ display:none; position:fixed; top:0; width:36px; height:14px; padding:0; border:0; border-bottom-left-radius:6px; border-bottom-right-radius:6px; background:#1E3A5F; color:#fff; cursor:pointer; z-index:5; align-items:center; justify-content:center; }
   #tb-handle:hover, #tb-handle:focus-visible{ background:#2E5D9E; }
   #tb-handle.tb-handle-visible{ display:flex; }
-  .navitem{ position:relative; display:inline-flex; align-items:center; gap:6px; height:46px; padding:0 8px; color:#C3D0DF; cursor:pointer; font-size:12px; border:0; background:none; transition:color .14s, background .14s; }
+  .navitem{ position:relative; display:inline-flex; align-items:center; gap:6px; height:46px; padding:0 8px; color:#C3D0DF; cursor:pointer; font-size:12px; border:0; background:none; transition:color .14s, background .14s; white-space:nowrap; }
   .navitem:hover{ color:#fff; background:rgba(255,255,255,0.05); }
   .navitem.current{ color:#fff; }
   @keyframes pop{ from{ opacity:0; transform:translateY(-4px); } to{ opacity:1; transform:none; } }
@@ -534,6 +534,15 @@
   .viewas-btn:hover{ background:rgba(255,255,255,.08); color:#fff; }
   .viewas-btn.current{ background:#F0A829; color:#1E3A5F; }
   @media (max-width:1330px){ .viewas-lbl{ display:none; } }
+
+  /* Sidebar-footer variant (fix/admin-viewing-as-sidebar) -- label stacked above a
+     full-width pill instead of the top-nav's single-line inline layout. The plain
+     .viewas-lbl hide-under-1330px rule above no longer applies here (sidebar width
+     doesn't track viewport width the way the top nav did); this override wins on
+     specificity regardless of viewport, so the label always shows in this context. */
+  .viewas--sidebar{ display:flex; flex-direction:column; align-items:stretch; gap:6px; height:auto; padding:0; border-radius:0; background:none; border:0; }
+  .viewas--sidebar .viewas-lbl{ display:block; padding-left:2px; }
+  .viewas--sidebar .viewas-btn{ width:100%; justify-content:space-between; height:36px; padding:0 12px; }
 
   /* Today timeline — merged callbacks+appointments, chronological spine, amber marks the urgent/now point */
   .dash-timeline{ padding:2px 0; }
@@ -985,20 +994,11 @@
           <img src="../logo-white.png" alt="Ally Nutra" style="height:28px;width:auto;display:block">
         </a>
       </div>
-      <!-- Batch: moved from the right cluster (fix/admin-header) -- this scopes the whole
-           page, not the account, so it reads left-to-right as "Ally Nutra Admin, viewing as
-           Super Admin" beside the identity it modifies, not crowded in with notifications
-           and the account block. Kept its amber pill styling -- still conspicuous, since it
-           changes what the entire page shows. -->
-      <div class="flex items-center pr-4 mr-2 border-r border-white/10 shrink-0">
-        <div class="viewas" id="viewas" role="group" aria-label="View dashboard as">
-          <span class="viewas-lbl">Viewing as</span>
-          <button type="button" class="viewas-btn current" id="viewasTrigger" data-popup-menu="view-as" aria-haspopup="true" aria-expanded="false">
-            <span id="viewasCurrent">Super Admin</span>
-            <svg width="11" height="11" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/></svg>
-          </button>
-        </div>
-      </div>
+      <!-- Batch: the "Viewing as" pill previously lived here (fix/admin-header), placed
+           beside the logo on the theory that it scopes the whole page. In practice this top
+           row already carries 11 nav items with no horizontal room for a wide pill (see
+           fix/admin-viewing-as-sidebar) -- moved to the side-nav footer instead, where it has
+           its own row and doesn't compete with the nav or the notification bell. -->
       <nav class="flex items-stretch flex-nowrap min-w-0" id="groupnav" aria-label="Main navigation"></nav>
       <div class="ml-auto flex items-center gap-3 pl-4 shrink-0">
         <div class="tools-tab" id="toolstab" style="display:none"><button class="tools-toggle" id="toolsbtn" type="button" aria-haspopup="true" aria-expanded="false"><svg class="tools-ic" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg><span>Tools</span><svg class="tools-chev" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/></svg></button><div class="tools-panel" id="toolspanel"></div></div>
@@ -1081,6 +1081,22 @@
   </div>
   <div class="text-[10px] text-muted-foreground leading-snug mt-1.5 pt-1.5 border-t border-border">Badges reflect ally-os backing. Unbadged pages are internal/utility surfaces — no ally-os capability mapping. Unspecced means not built in ally-os specifically — some (e.g. rate limits, bot protection, backups) are fully shipped in ally-nutra today and simply deferred to a later ally-os phase, not unbuilt everywhere.</div>
   <div class="text-[10px] text-muted-foreground leading-snug mt-1.5 pt-1.5 border-t border-border">"Employee" in the Viewing-as switcher is a tier standing for 8 operational app_role values (sales, account executive, closer, purchaser, lab technician, CEO, COO, CMO) — not itself a real role in production.</div>
+</div>
+<!-- Viewing-as switcher (fix/admin-viewing-as-sidebar) -- moved out of the top nav, which had
+     no room for it alongside 11 nav items. #sb-modules above is the sidebar's only flex:1/
+     overflow-y:auto region, so everything after it (this block, Back to Site, collapse) stays
+     put at the bottom without needing position:sticky -- same pattern the sidebar already
+     used for truth-legend and the Back-to-Site row. The dropdown it opens (openRowMenu) is
+     already viewport-clamped and flips upward when it won't fit below -- exactly what a
+     trigger this close to the bottom of the viewport needs, with no code change required. -->
+<div class="p-3 border-t border-sidebar-border">
+  <div class="viewas viewas--sidebar" id="viewas" role="group" aria-label="View dashboard as">
+    <span class="viewas-lbl">Viewing as</span>
+    <button type="button" class="viewas-btn current" id="viewasTrigger" data-popup-menu="view-as" aria-haspopup="true" aria-expanded="false">
+      <span id="viewasCurrent">Super Admin</span>
+      <svg width="11" height="11" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/></svg>
+    </button>
+  </div>
 </div>
 <div class="p-3 border-t border-sidebar-border flex items-center gap-2">
   <a class="sb-back flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-sm text-sm font-medium text-sidebar-foreground/85 hover:bg-sidebar-accent hover:text-white transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>Back to Site</a>
