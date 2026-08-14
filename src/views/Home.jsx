@@ -10,12 +10,15 @@ import heroMachineWebm from '../assets/videos/hero-machine.webm';
 import heroMachineMp4 from '../assets/videos/hero-machine.mp4';
 import heroMachinePoster from '../assets/videos/hero-machine-poster.jpg';
 
-// Ally Nutra-owned format images (feature/product-cards-flip) — copied read-only from
-// the company repo (Ally-Nutra-LLC-New/ally-nutra, commit
-// 1d1b8f5ada2655441f21cbf0e52b9518a3e45955), where they're already the live images on
-// ally-nutra@main's own homepage (CapabilitiesSection.tsx). Replaces the four Unsplash
-// stock photos that were here before. See IMAGE-CREDITS.md for full provenance.
-import productCapsules from '../assets/images/products/product-capsules.png';
+// Format card images (polish/logo-and-product-photos). Capsules is now a real,
+// free-licensed photograph (see IMAGE-CREDITS.md) — replaces the Ally Nutra-owned
+// CGI render that was here before, per the "real photography, not renders" pass.
+// Sachets/stick-packs/pouches stay Ally Nutra-owned renders (copied read-only from
+// the company repo, Ally-Nutra-LLC-New/ally-nutra, commit
+// 1d1b8f5ada2655441f21cbf0e52b9518a3e45955) — extensive searching found no honest,
+// unbranded, non-render free-stock photo for any of these three shapes; see the PR
+// description for what was tried. Left as-is rather than shipped blank.
+import productCapsules from '../assets/images/products/product-capsules.jpg';
 import productSachets from '../assets/images/products/product-sachets.png';
 import productStickPacks from '../assets/images/products/product-stick-packs.jpg';
 import productPouches from '../assets/images/products/product-pouches.jpg';
@@ -195,7 +198,7 @@ function HeroMech() {
 const PRODUCTS = [
   {
     img: productCapsules,
-    alt: 'A red-and-white two-piece capsule, Ally Nutra brand render',
+    alt: 'A small group of two-piece capsules scattered on a plain background',
     format: 'Format 01 · Capsules',
     title: 'Capsules',
     desc: 'Two-piece, liquid-fill, vegan HPMC or bovine gelatin.',

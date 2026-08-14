@@ -97,6 +97,8 @@ export default function VarietiesPopup({ data, triggerRef, onClose }) {
                   <div className="variety-visual-none" aria-hidden="true">
                     <span className="mono-chip">{v.spec}</span>
                   </div>
+                ) : v.visual === 'rung1' ? (
+                  <img className="variety-photo" src={v.photo} alt={v.photoAlt} loading="lazy" />
                 ) : (
                   <VarietyVisual render={v.render} />
                 )}
