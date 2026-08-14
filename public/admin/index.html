@@ -985,14 +985,12 @@
           <img src="../logo-white.png" alt="Ally Nutra" style="height:28px;width:auto;display:block">
         </a>
       </div>
-      <nav class="flex items-stretch flex-nowrap min-w-0" id="groupnav" aria-label="Main navigation"></nav>
-      <div class="ml-auto flex items-center gap-2 pl-4 shrink-0">
-        <div class="tools-tab" id="toolstab" style="display:none"><button class="tools-toggle" id="toolsbtn" type="button" aria-haspopup="true" aria-expanded="false"><svg class="tools-ic" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg><span>Tools</span><svg class="tools-chev" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/></svg></button><div class="tools-panel" id="toolspanel"></div></div>
-        <button class="relative w-8 h-8 rounded-full hover:bg-white/10 grid place-items-center text-white/85" aria-label="Notifications">
-          <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.4-1.4A2 2 0 0118 14.2V11a6 6 0 10-12 0v3.2a2 2 0 01-.6 1.4L4 17h5m6 0v1a3 3 0 11-6 0v-1"/></svg>
-          <span class="absolute -top-0.5 -right-0.5 cnt" style="line-height:15px">3</span>
-        </button>
-        <span class="w-px h-6 bg-white/12 mx-0.5"></span>
+      <!-- Batch: moved from the right cluster (fix/admin-header) -- this scopes the whole
+           page, not the account, so it reads left-to-right as "Ally Nutra Admin, viewing as
+           Super Admin" beside the identity it modifies, not crowded in with notifications
+           and the account block. Kept its amber pill styling -- still conspicuous, since it
+           changes what the entire page shows. -->
+      <div class="flex items-center pr-4 mr-2 border-r border-white/10 shrink-0">
         <div class="viewas" id="viewas" role="group" aria-label="View dashboard as">
           <span class="viewas-lbl">Viewing as</span>
           <button type="button" class="viewas-btn current" id="viewasTrigger" data-popup-menu="view-as" aria-haspopup="true" aria-expanded="false">
@@ -1000,8 +998,21 @@
             <svg width="11" height="11" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/></svg>
           </button>
         </div>
-        <span class="w-px h-6 bg-white/12 mx-0.5"></span>
+      </div>
+      <nav class="flex items-stretch flex-nowrap min-w-0" id="groupnav" aria-label="Main navigation"></nav>
+      <div class="ml-auto flex items-center gap-3 pl-4 shrink-0">
+        <div class="tools-tab" id="toolstab" style="display:none"><button class="tools-toggle" id="toolsbtn" type="button" aria-haspopup="true" aria-expanded="false"><svg class="tools-ic" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg><span>Tools</span><svg class="tools-chev" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/></svg></button><div class="tools-panel" id="toolspanel"></div></div>
+        <!-- 40px square hit target (was w-8/32px), centred by the parent's items-center. -->
+        <button class="relative w-10 h-10 rounded-full hover:bg-white/10 grid place-items-center text-white/85" aria-label="Notifications">
+          <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.4-1.4A2 2 0 0118 14.2V11a6 6 0 10-12 0v3.2a2 2 0 01-.6 1.4L4 17h5m6 0v1a3 3 0 11-6 0v-1"/></svg>
+          <span class="absolute top-1 right-1 cnt" style="line-height:15px">3</span>
+        </button>
         <div class="relative" id="acctwrap">
+        <!-- topacct-role removed (fix/admin-header) -- setViewRole() in the script below
+             set viewasCurrent/topacctRole/acctSelfRole from the same `role` argument in one
+             call, so this was a verbatim echo of the switcher's value, not a distinct fact.
+             It was also what squeezed the notification bell. acctSelfRole (inside the
+             dropdown below, a different, uncrowded context) is left as-is. -->
         <button class="topacct" id="acctbtn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Account menu">
           <span class="relative shrink-0">
             <span class="w-7 h-7 rounded-full grid place-items-center text-white text-[11px] font-semibold" style="background:linear-gradient(135deg,#2E5D9E,#1E3A5F);box-shadow:inset 0 0 0 1px rgba(255,255,255,.16)">JD</span>
@@ -1009,7 +1020,6 @@
           </span>
           <span class="topacct-meta">
             <span class="topacct-name">Jordan Doe</span>
-            <span class="topacct-role" id="topacctRole">Super Admin</span>
           </span>
           <svg class="topacct-chev" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/></svg>
         </button>
