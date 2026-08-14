@@ -10,18 +10,21 @@ import heroMachineWebm from '../assets/videos/hero-machine.webm';
 import heroMachineMp4 from '../assets/videos/hero-machine.mp4';
 import heroMachinePoster from '../assets/videos/hero-machine-poster.jpg';
 
-// Format card images (polish/logo-and-product-photos). Capsules is now a real,
-// free-licensed photograph (see IMAGE-CREDITS.md) — replaces the Ally Nutra-owned
-// CGI render that was here before, per the "real photography, not renders" pass.
-// Sachets/stick-packs/pouches stay Ally Nutra-owned renders (copied read-only from
+// Format card images. All four are Ally Nutra-owned renders (copied read-only from
 // the company repo, Ally-Nutra-LLC-New/ally-nutra, commit
-// 1d1b8f5ada2655441f21cbf0e52b9518a3e45955) — extensive searching found no honest,
-// unbranded, non-render free-stock photo for any of these three shapes; see the PR
-// description for what was tried. Left as-is rather than shipped blank.
-import productCapsules from '../assets/images/products/product-capsules.jpg';
+// 1d1b8f5ada2655441f21cbf0e52b9518a3e45955) again, restored after a real-photo trial
+// for Capsules (polish/logo-and-product-photos) didn't hold up: its photographed
+// warm-grey studio background isn't pure white, so the card's soft-light overlay
+// treats it differently from the panel's own near-white background and it reads as
+// a visible box — and one photograph next to three renders broke the row's visual
+// consistency anyway. `products/product-capsules.jpg` (the real photo) stays in the
+// repo, credited in IMAGE-CREDITS.md, marked unused — available if all four are ever
+// replaced together rather than one at a time. Sachets/stick-packs/pouches never had
+// an honest free-stock replacement candidate to begin with (see PR description).
+import productCapsules from '../assets/images/products/product-capsules.png';
 import productSachets from '../assets/images/products/product-sachets.png';
 import productStickPacks from '../assets/images/products/product-stick-packs.jpg';
-import productPouches from '../assets/images/products/product-pouches.jpg';
+import productPouches from '../assets/images/products/product-pouches.png';
 
 // Facility photo strip (proof bar, §5). Reused from the images already committed to
 // the repo — none sourced new for this strip. facility-01/02 remain unused after
@@ -198,7 +201,7 @@ function HeroMech() {
 const PRODUCTS = [
   {
     img: productCapsules,
-    alt: 'A small group of two-piece capsules scattered on a plain background',
+    alt: 'A red-and-white two-piece capsule, Ally Nutra brand render',
     format: 'Format 01 · Capsules',
     title: 'Capsules',
     desc: 'Two-piece, liquid-fill, vegan HPMC or bovine gelatin.',
@@ -227,7 +230,7 @@ const PRODUCTS = [
     spec: '2g–15g FILL · MOQ FROM 10,000',
     explanation: 'A narrow, single-serve tube — like a sachet, but slimmer and easier to tear open on the go. Common for energy powders, electrolytes, and focus or sleep blends aimed at direct-to-consumer brands. Shares the same material options as sachets.',
     varietiesLabel: 'See stick pack options',
-    imageScale: 2.3,
+    imageScale: 1,
   },
   {
     img: productPouches,
