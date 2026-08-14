@@ -403,13 +403,15 @@
   .dash-kpi-alert-amber{ background:linear-gradient(180deg,rgba(240,168,41,.06),rgba(240,168,41,.01) 60%); border-color:rgba(240,168,41,.22); }
   .report-row.cols-5{ grid-template-columns:repeat(5,1fr); }
   @media (max-width:1400px){ .report-row.cols-5{ grid-template-columns:repeat(2,1fr); } }
-  .ops-stage-flow{ display:flex; align-items:flex-start; gap:2px; overflow-x:auto; padding:10px 4px 4px; }
-  .ops-stage-node{ display:flex; flex-direction:column; align-items:center; gap:6px; flex:1; min-width:70px; position:relative; }
-  .ops-stage-node:not(:last-child)::after{ content:""; position:absolute; top:13px; left:50%; width:100%; height:2px; background:#EDE7DC; z-index:0; }
-  .ops-stage-dot{ width:26px; height:26px; border-radius:9999px; display:grid; place-items:center; background:#F1ECE2; color:#9A9F9A; font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600; position:relative; z-index:1; border:2px solid #fff; box-shadow:0 0 0 1px #EDE7DC; }
-  .ops-stage-dot.has-count{ background:#1E3A5F; color:#fff; box-shadow:0 0 0 1px #1E3A5F; }
-  .ops-stage-label{ font-size:9.5px; color:#6B7075; text-align:center; line-height:1.25; max-width:78px; }
-  .ops-stage-branch{ margin:12px 4px 2px; padding-top:10px; border-top:1px dashed #EDE7DC; display:flex; align-items:center; gap:8px; }
+  /* Pipeline Stage Flow (DAG rebuild) — ported directly from the real, server-rendered
+     SVG on allynutra.com/work-with-us (view-source, not reconstructed from a
+     description): same node/edge geometry, same colors, same travelling-pulse
+     animation mechanism. Only the class names are namespaced (ops- instead of lp-)
+     to avoid colliding with anything else in this file. */
+  @keyframes opsPipeFlow{ from{ stroke-dashoffset:274; } to{ stroke-dashoffset:0; } }
+  .ops-pipe-flow{ fill:none; stroke:#3b82f6; stroke-width:2.2; stroke-linecap:round; stroke-dasharray:14 260; opacity:.8; animation:opsPipeFlow 2.4s linear infinite; }
+  @media (prefers-reduced-motion: reduce){ .ops-pipe-flow{ animation:none; opacity:0; } }
+  .ops-pipe-scroll{ overflow-x:auto; padding-bottom:4px; }
   .ops-role-stub{ padding:14px 16px; font-size:12px; color:#9A9F9A; font-style:italic; }
 
   /* ============ HubSpot-style report grid: shared section/card chrome ============ */
@@ -1678,26 +1680,132 @@
 
           <div class="report-row">
             <div class="dash-card">
-              <div class="dash-card-hd"><h2 class="dash-card-title">Pipeline Stage Flow</h2><span class="text-[11px] text-muted-foreground" style="margin-left:auto">12 stages · sample snapshot</span></div>
-              <div class="ops-stage-flow">
-                <div class="ops-stage-node"><span class="ops-stage-dot">0</span><span class="ops-stage-label">Lead/Quote</span></div>
-                <div class="ops-stage-node"><span class="ops-stage-dot">0</span><span class="ops-stage-label">PO Pending</span></div>
-                <div class="ops-stage-node"><span class="ops-stage-dot">0</span><span class="ops-stage-label">Sample/Flav</span></div>
-                <div class="ops-stage-node"><span class="ops-stage-dot has-count">7</span><span class="ops-stage-label">Formula Locked</span></div>
-                <div class="ops-stage-node"><span class="ops-stage-dot has-count">1</span><span class="ops-stage-label">Procurement</span></div>
-                <div class="ops-stage-node"><span class="ops-stage-dot">0</span><span class="ops-stage-label">Receiving</span></div>
-                <div class="ops-stage-node"><span class="ops-stage-dot has-count">3</span><span class="ops-stage-label">Raw QC</span></div>
-                <div class="ops-stage-node"><span class="ops-stage-dot">0</span><span class="ops-stage-label">Production</span></div>
-                <div class="ops-stage-node"><span class="ops-stage-dot has-count">1</span><span class="ops-stage-label">Final QC</span></div>
-                <div class="ops-stage-node"><span class="ops-stage-dot">0</span><span class="ops-stage-label">Pkg/Labeling</span></div>
-                <div class="ops-stage-node"><span class="ops-stage-dot">0</span><span class="ops-stage-label">Shipping</span></div>
-                <div class="ops-stage-node"><span class="ops-stage-dot">0</span><span class="ops-stage-label">Complete</span></div>
+              <div class="dash-card-hd"><h2 class="dash-card-title">Pipeline Stage Flow</h2><span class="text-[11px] text-muted-foreground" style="margin-left:auto;font-family:'JetBrains Mono',monospace">Example order &middot; stage 9 of 12</span></div>
+              <!-- Ported from the real, server-rendered SVG on allynutra.com/work-with-us
+                   (view-source, not reconstructed): same node/edge geometry, same colors,
+                   same travelling-pulse mechanism (.ops-pipe-flow, defined above). Designer
+                   Workspace is a drawn off-sequence side node (dashed border, star badge, no
+                   stage number) rather than a footnote, since a flex row can't draw a branch
+                   but an SVG DAG can. -->
+              <div class="ops-pipe-scroll">
+                <svg viewBox="0 0 1384 172" width="1384" height="172" role="img" aria-label="Production pipeline: stages one through eight complete, Final QC in progress, packaging, shipping and completion still ahead." style="width:100%;min-width:860px;height:auto;display:block">
+                  <defs>
+                    <marker id="opsPipeArrow" markerWidth="7" markerHeight="7" refX="5.5" refY="3" orient="auto" markerUnits="strokeWidth">
+                      <path d="M0,0 L6,3 L0,6 Z" fill="#d4d4d8"></path>
+                    </marker>
+                  </defs>
+                  <g aria-hidden="true">
+                    <path d="M104,86 C115.5,86 115.5,86 127,86" fill="none" stroke="#d4d4d8" stroke-width="1.6" marker-end="url(#opsPipeArrow)"></path>
+                    <path class="ops-pipe-flow" d="M104,86 C115.5,86 115.5,86 127,86" style="animation-delay: 0s"></path>
+                    <path d="M232,86 C243.5,86 243.5,86 255,86" fill="none" stroke="#d4d4d8" stroke-width="1.6" marker-end="url(#opsPipeArrow)"></path>
+                    <path class="ops-pipe-flow" d="M232,86 C243.5,86 243.5,86 255,86" style="animation-delay: 0.35s"></path>
+                    <path d="M360,86 C371.5,86 371.5,86 383,86" fill="none" stroke="#d4d4d8" stroke-width="1.6" marker-end="url(#opsPipeArrow)"></path>
+                    <path class="ops-pipe-flow" d="M360,86 C371.5,86 371.5,86 383,86" style="animation-delay: 0.7s"></path>
+                    <path d="M488,86 C499.5,86 499.5,22 511,22" fill="none" stroke="#d4d4d8" stroke-width="1.6" marker-end="url(#opsPipeArrow)"></path>
+                    <path class="ops-pipe-flow" d="M488,86 C499.5,86 499.5,22 511,22" style="animation-delay: 1.05s"></path>
+                    <path d="M488,86 C499.5,86 499.5,150 511,150" fill="none" stroke="#d4d4d8" stroke-width="1.6" marker-end="url(#opsPipeArrow)"></path>
+                    <path class="ops-pipe-flow" d="M488,86 C499.5,86 499.5,150 511,150" style="animation-delay: 1.4s"></path>
+                    <path d="M616,22 C627.5,22 627.5,22 639,22" fill="none" stroke="#d4d4d8" stroke-width="1.6" marker-end="url(#opsPipeArrow)"></path>
+                    <path class="ops-pipe-flow" d="M616,22 C627.5,22 627.5,22 639,22" style="animation-delay: 1.75s"></path>
+                    <path d="M744,22 C755.5,22 755.5,86 767,86" fill="none" stroke="#d4d4d8" stroke-width="1.6" marker-end="url(#opsPipeArrow)"></path>
+                    <path class="ops-pipe-flow" d="M744,22 C755.5,22 755.5,86 767,86" style="animation-delay: 2.1s"></path>
+                    <path d="M616,150 C691.5,150 691.5,86 767,86" fill="none" stroke="#d4d4d8" stroke-width="1.6" marker-end="url(#opsPipeArrow)"></path>
+                    <path class="ops-pipe-flow" d="M616,150 C691.5,150 691.5,86 767,86" style="animation-delay: 2.45s"></path>
+                    <path d="M872,86 C883.5,86 883.5,86 895,86" fill="none" stroke="#d4d4d8" stroke-width="1.6" marker-end="url(#opsPipeArrow)"></path>
+                    <path class="ops-pipe-flow" d="M872,86 C883.5,86 883.5,86 895,86" style="animation-delay: 2.8s"></path>
+                    <path d="M1000,86 C1011.5,86 1011.5,22 1023,22" fill="none" stroke="#d4d4d8" stroke-width="1.6" marker-end="url(#opsPipeArrow)"></path>
+                    <path class="ops-pipe-flow" d="M1000,86 C1011.5,86 1011.5,22 1023,22" style="animation-delay: 3.15s"></path>
+                    <path d="M1000,86 C1011.5,86 1011.5,150 1023,150" fill="none" stroke="#d4d4d8" stroke-width="1.6" marker-end="url(#opsPipeArrow)"></path>
+                    <path class="ops-pipe-flow" d="M1000,86 C1011.5,86 1011.5,150 1023,150" style="animation-delay: 3.5s"></path>
+                    <path d="M1128,22 C1139.5,22 1139.5,86 1151,86" fill="none" stroke="#d4d4d8" stroke-width="1.6" marker-end="url(#opsPipeArrow)"></path>
+                    <path class="ops-pipe-flow" d="M1128,22 C1139.5,22 1139.5,86 1151,86" style="animation-delay: 3.85s"></path>
+                    <path d="M1128,150 C1139.5,150 1139.5,86 1151,86" fill="none" stroke="#d4d4d8" stroke-width="1.6" marker-end="url(#opsPipeArrow)"></path>
+                    <path class="ops-pipe-flow" d="M1128,150 C1139.5,150 1139.5,86 1151,86" style="animation-delay: 4.2s"></path>
+                    <path d="M1256,86 C1267.5,86 1267.5,86 1279,86" fill="none" stroke="#d4d4d8" stroke-width="1.6" marker-end="url(#opsPipeArrow)"></path>
+                    <path class="ops-pipe-flow" d="M1256,86 C1267.5,86 1267.5,86 1279,86" style="animation-delay: 4.55s"></path>
+                  </g>
+                  <g role="group" aria-label="Lead / Quote — completed">
+                    <rect x="0" y="64" width="104" height="44" rx="8" fill="#eef3f9" stroke="#1e3a5f" stroke-width="1"></rect>
+                    <circle cx="17" cy="86" r="8.5" fill="#1e3a5f" stroke="#1e3a5f" stroke-width="1"></circle>
+                    <path d="M13.4,86 l2.6,2.6 l4.6,-5" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <text x="31" y="89.4" font-size="10" font-weight="700" fill="#18181b">Lead / Quote</text>
+                  </g>
+                  <g role="group" aria-label="PO Pending — completed">
+                    <rect x="128" y="64" width="104" height="44" rx="8" fill="#eef3f9" stroke="#1e3a5f" stroke-width="1"></rect>
+                    <circle cx="145" cy="86" r="8.5" fill="#1e3a5f" stroke="#1e3a5f" stroke-width="1"></circle>
+                    <path d="M141.4,86 l2.6,2.6 l4.6,-5" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <text x="159" y="89.4" font-size="10" font-weight="700" fill="#18181b">PO Pending</text>
+                  </g>
+                  <g role="group" aria-label="Sample / Flav — completed">
+                    <rect x="256" y="64" width="104" height="44" rx="8" fill="#eef3f9" stroke="#1e3a5f" stroke-width="1"></rect>
+                    <circle cx="273" cy="86" r="8.5" fill="#1e3a5f" stroke="#1e3a5f" stroke-width="1"></circle>
+                    <path d="M269.4,86 l2.6,2.6 l4.6,-5" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <text x="287" y="89.4" font-size="10" font-weight="700" fill="#18181b">Sample / Flav</text>
+                  </g>
+                  <g role="group" aria-label="Formula Locked — completed">
+                    <rect x="384" y="64" width="104" height="44" rx="8" fill="#eef3f9" stroke="#1e3a5f" stroke-width="1"></rect>
+                    <circle cx="401" cy="86" r="8.5" fill="#1e3a5f" stroke="#1e3a5f" stroke-width="1"></circle>
+                    <path d="M397.4,86 l2.6,2.6 l4.6,-5" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <text x="415" y="84" font-size="10" font-weight="700" fill="#18181b">Formula</text><text x="415" y="95.5" font-size="10" font-weight="700" fill="#18181b">Locked</text>
+                  </g>
+                  <g role="group" aria-label="Procurement — completed">
+                    <rect x="512" y="0" width="104" height="44" rx="8" fill="#eef3f9" stroke="#1e3a5f" stroke-width="1"></rect>
+                    <circle cx="529" cy="22" r="8.5" fill="#1e3a5f" stroke="#1e3a5f" stroke-width="1"></circle>
+                    <path d="M525.4,22 l2.6,2.6 l4.6,-5" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <text x="543" y="25.4" font-size="10" font-weight="700" fill="#18181b">Procurement</text>
+                  </g>
+                  <g role="group" aria-label="Designer Workspace — off-sequence branch">
+                    <rect x="512" y="128" width="104" height="44" rx="8" fill="#eef3f9" stroke="#1e3a5f" stroke-width="1" stroke-dasharray="4 3"></rect>
+                    <circle cx="529" cy="150" r="8.5" fill="#1e3a5f" stroke="#1e3a5f" stroke-width="1"></circle>
+                    <text x="529" y="153.4" text-anchor="middle" font-size="10" fill="#ffffff">★</text>
+                    <text x="543" y="148" font-size="10" font-weight="700" fill="#18181b">Designer</text>
+                    <text x="543" y="159.5" font-size="10" font-weight="700" fill="#18181b">Workspace</text>
+                  </g>
+                  <g role="group" aria-label="Receiving — completed">
+                    <rect x="640" y="0" width="104" height="44" rx="8" fill="#eef3f9" stroke="#1e3a5f" stroke-width="1"></rect>
+                    <circle cx="657" cy="22" r="8.5" fill="#1e3a5f" stroke="#1e3a5f" stroke-width="1"></circle>
+                    <path d="M653.4,22 l2.6,2.6 l4.6,-5" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <text x="671" y="25.4" font-size="10" font-weight="700" fill="#18181b">Receiving</text>
+                  </g>
+                  <g role="group" aria-label="Raw QC — completed">
+                    <rect x="768" y="64" width="104" height="44" rx="8" fill="#eef3f9" stroke="#1e3a5f" stroke-width="1"></rect>
+                    <circle cx="785" cy="86" r="8.5" fill="#1e3a5f" stroke="#1e3a5f" stroke-width="1"></circle>
+                    <path d="M781.4,86 l2.6,2.6 l4.6,-5" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <text x="799" y="89.4" font-size="10" font-weight="700" fill="#18181b">Raw QC</text>
+                  </g>
+                  <g role="group" aria-label="Production — completed">
+                    <rect x="896" y="64" width="104" height="44" rx="8" fill="#eef3f9" stroke="#1e3a5f" stroke-width="1"></rect>
+                    <circle cx="913" cy="86" r="8.5" fill="#1e3a5f" stroke="#1e3a5f" stroke-width="1"></circle>
+                    <path d="M909.4,86 l2.6,2.6 l4.6,-5" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <text x="927" y="89.4" font-size="10" font-weight="700" fill="#18181b">Production</text>
+                  </g>
+                  <g role="group" aria-label="Final QC — current, stage 9 of 12">
+                    <rect x="1024" y="0" width="104" height="44" rx="8" fill="#eef3f9" stroke="#1e3a5f" stroke-width="1"></rect>
+                    <circle cx="1041" cy="22" r="8.5" fill="#1e3a5f" stroke="#1e3a5f" stroke-width="1"></circle>
+                    <text x="1041" y="25.1" text-anchor="middle" font-size="9" font-weight="700" fill="#ffffff">9</text>
+                    <text x="1055" y="25.4" font-size="10" font-weight="700" fill="#18181b">Final QC</text>
+                  </g>
+                  <g role="group" aria-label="Pkg / Labeling — pending">
+                    <rect x="1024" y="128" width="104" height="44" rx="8" fill="#ffffff" stroke="#e4e4e7" stroke-width="1"></rect>
+                    <circle cx="1041" cy="150" r="8.5" fill="#f4f4f5" stroke="#d4d4d8" stroke-width="1"></circle>
+                    <text x="1041" y="153.1" text-anchor="middle" font-size="9" font-weight="700" fill="#71717a">10</text>
+                    <text x="1055" y="148" font-size="10" font-weight="700" fill="#71717a">Pkg /</text><text x="1055" y="159.5" font-size="10" font-weight="700" fill="#71717a">Labeling</text>
+                  </g>
+                  <g role="group" aria-label="Shipping — pending">
+                    <rect x="1152" y="64" width="104" height="44" rx="8" fill="#ffffff" stroke="#e4e4e7" stroke-width="1"></rect>
+                    <circle cx="1169" cy="86" r="8.5" fill="#f4f4f5" stroke="#d4d4d8" stroke-width="1"></circle>
+                    <text x="1169" y="89.1" text-anchor="middle" font-size="9" font-weight="700" fill="#71717a">11</text>
+                    <text x="1183" y="89.4" font-size="10" font-weight="700" fill="#71717a">Shipping</text>
+                  </g>
+                  <g role="group" aria-label="Complete — pending">
+                    <rect x="1280" y="64" width="104" height="44" rx="8" fill="#ffffff" stroke="#e4e4e7" stroke-width="1"></rect>
+                    <circle cx="1297" cy="86" r="8.5" fill="#f4f4f5" stroke="#d4d4d8" stroke-width="1"></circle>
+                    <text x="1297" y="89.1" text-anchor="middle" font-size="9" font-weight="700" fill="#71717a">12</text>
+                    <text x="1311" y="89.4" font-size="10" font-weight="700" fill="#71717a">Complete</text>
+                  </g>
+                </svg>
               </div>
-              <div class="ops-stage-branch">
-                <svg class="w-3.5 h-3.5 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 3a2 2 0 100 4 2 2 0 000-4zM6 9v6m0 0a2 2 0 100 4 2 2 0 000-4zm0-8a4 4 0 004 4h4a2 2 0 012 2m0 0a2 2 0 100 4 2 2 0 000-4zm0 0v-2"/></svg>
-                <span class="ops-stage-dot" style="width:24px;height:24px;font-size:10px">0</span>
-                <span class="ops-stage-label" style="max-width:none;text-align:left">Designer Workspace <span class="text-muted-foreground">(branch — not sequential)</span></span>
-              </div>
+              <span class="sample-tag">Sample data</span>
             </div>
           </div>
 
