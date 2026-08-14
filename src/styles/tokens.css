@@ -3,6 +3,13 @@
   --primary: 214 52% 24%;
   --ally-light-navy: 215 55% 40%;  /* #2E5D9E */
   --ally-orange: 38 87% 55%;       /* #F0A829 */
+  --ally-orange-ink: 39 79% 34%;   /* #9A6B12 — text-on-light variant of --ally-orange.
+                                       Brand amber measures 1.98:1 contrast against
+                                       --background, failing WCAG AA (4.5:1) for text; this
+                                       darker, same-hue variant measures 4.56:1 and passes.
+                                       Documentation fix only — was already load-bearing in
+                                       src/styles/global.css (line 342) and on both static
+                                       pages before being added here; not a new colour. */
   --foreground: 240 6% 10%;        /* #18181B */
   --muted-foreground: 240 4% 46%;  /* #71717A */
   --muted: 240 5% 96%;             /* #F4F4F5 */
