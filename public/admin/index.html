@@ -1181,7 +1181,7 @@
                 <div class="dash-funnel-row"><span class="dash-funnel-label">Waitlisted</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:1%;background:hsl(214,50%,80%)"></div></div><span class="dash-funnel-val">24</span></div>
                 <div class="dash-funnel-row"><span class="dash-funnel-label">Qualified</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:1%;background:hsl(214,50%,84%)"></div></div><span class="dash-funnel-val">12</span></div>
               </div>
-              <div class="report-card-ft"><button type="button" class="dash-link">View pipeline →</button></div>
+              <div class="report-card-ft"><button type="button" class="dash-link" onclick="show('lead-pipeline')">View pipeline →</button></div>
             </div>
             <div class="dash-card">
               <div class="dash-card-hd"><span class="report-card-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 2h8a2 2 0 012 2v16a2 2 0 01-2 2H8a2 2 0 01-2-2V4a2 2 0 012-2z"/></svg></span><h2 class="dash-card-title">Leads by Service Type</h2></div>
@@ -1370,7 +1370,7 @@
               <div class="dash-row" style="cursor:default"><span class="tag-pill tag-pill-call">Call</span><span class="dash-row-body"><span class="dash-row-title">Callback: Maurizio A.</span><span class="dash-row-sub">Pending · medium priority</span></span></div>
               <div class="dash-row" style="cursor:default"><span class="tag-pill tag-pill-call">Call</span><span class="dash-row-body"><span class="dash-row-title">Callback: Robb Albert</span><span class="dash-row-sub">Pending · medium priority</span></span></div>
             </div>
-            <div class="report-card-ft"><button type="button" class="dash-link">View all 24 →</button></div>
+            <div class="report-card-ft"><button type="button" class="dash-link" onclick="show('task-board')">View all 24 →</button></div>
           </div>
           <div class="dash-card dash-placeholder">
             <div class="dash-card-hd"><h2 class="dash-card-title">My SMS Schedule</h2></div>
@@ -1502,7 +1502,7 @@
               <div class="dash-card-hd"><span class="report-card-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span><h2 class="dash-card-title">Leads Over Time</h2></div>
               <p class="dash-card-sub" style="padding:0 12px">Monthly, all-time</p>
               <div class="chart-box h-lg"><canvas data-chart='{"type":"line","data":{"labels":["Dec","Jan","Feb","Mar","Apr","May","Jun","Jul"],"datasets":[{"label":"Leads","data":[6,29,136,561,1018,1048,1035,778],"borderColor":"#1E3A5F","backgroundColor":"rgba(30,58,95,0.10)","fill":true,"tension":0.3,"pointRadius":0,"borderWidth":2.25}]},"options":{"responsive":true,"maintainAspectRatio":false,"plugins":{"legend":{"display":false},"tooltip":{"enabled":true}},"scales":{"x":{"grid":{"display":false},"ticks":{"font":{"size":10}}},"y":{"display":false}}}}'></canvas></div>
-              <div class="report-card-ft"><button type="button" class="dash-link">View pipeline →</button></div>
+              <div class="report-card-ft"><button type="button" class="dash-link" onclick="show('lead-pipeline')">View pipeline →</button></div>
             </div>
             <div class="dash-card dash-card-compact">
               <div class="dash-card-hd"><span class="report-card-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v10a2 2 0 01-2 2H9m0-14v14m0 0H5a2 2 0 01-2-2v-4"/></svg></span><h2 class="dash-card-title">Open Leads</h2></div>
@@ -2313,7 +2313,7 @@
               <div class="gauge-box h-md"><canvas data-chart='{"type":"doughnut","data":{"datasets":[{"data":[91.8,8.2],"backgroundColor":["#B23B3B","#F1ECE2"],"borderWidth":0}]},"options":{"responsive":true,"maintainAspectRatio":false,"rotation":-90,"circumference":180,"cutout":"78%","plugins":{"legend":{"display":false},"tooltip":{"enabled":false}}}}'></canvas><span class="gauge-value">56/61</span></div>
               <p class="dash-kpi-foot" style="padding:0 12px 12px">all-time, unheard</p>
               </div>
-              <div class="report-card-ft"><button type="button" class="dash-link">Review queue →</button></div>
+              <div class="report-card-ft"><button type="button" class="dash-link" onclick="show('voice-logs')">Review queue →</button></div>
             </div>
             <div class="dash-card dash-placeholder">
               <div class="dash-card-hd"><h2 class="dash-card-title">Not Yet Tracked</h2></div>
@@ -2449,13 +2449,13 @@
                 <div class="dash-row" style="cursor:default"><span class="dash-row-body"><span class="dash-row-title">Ingredientsonline</span><span class="dash-row-sub">1 purchase order</span></span><span class="dash-row-meta">$6.2K</span></div>
                 <div class="dash-row" style="cursor:default"><span class="dash-row-body"><span class="dash-row-title">AlphaMed Bottles Inc.</span><span class="dash-row-sub">4 purchase orders</span></span><span class="dash-row-meta">$4.2K</span></div>
               </div>
-              <div class="report-card-ft"><button type="button" class="dash-link">View suppliers →</button></div>
+              <div class="report-card-ft"><button type="button" class="dash-link" onclick="show('finance-suppliers')">View suppliers →</button></div>
             </div>
             <div class="dash-card">
               <div class="dash-card-hd"><span class="report-card-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 2h8a2 2 0 012 2v16a2 2 0 01-2 2H8a2 2 0 01-2-2V4a2 2 0 012-2zM8 6h8M8 10h.01M12 10h.01"/></svg></span><h2 class="dash-card-title">PO Status &amp; Spend</h2></div>
               <p class="dash-card-sub" style="padding:0 12px">All-time · none Confirmed/Received yet</p>
               <div class="chart-box h-md"><canvas data-chart='{"type":"bar","data":{"labels":["Draft ($49.5K, 46)","Sent ($413, 4)"],"datasets":[{"data":[49500,413],"backgroundColor":["#a7c1de","#4E7BB5"],"borderRadius":4,"barThickness":22}]},"options":{"indexAxis":"y","responsive":true,"maintainAspectRatio":false,"plugins":{"legend":{"display":false}},"scales":{"x":{"display":false},"y":{"grid":{"display":false},"ticks":{"font":{"size":9}}}}}}'></canvas></div>
-              <div class="report-card-ft"><button type="button" class="dash-link">View purchase orders →</button></div>
+              <div class="report-card-ft"><button type="button" class="dash-link" onclick="show('purchase-orders')">View purchase orders →</button></div>
             </div>
           </div>
 
@@ -3225,7 +3225,7 @@
     <main class="flex-1 overflow-auto p-6">
       <div class="mx-auto">
 
-        <button class="-ml-2 mb-4 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground px-2 py-1.5 rounded-sm hover:bg-muted">
+        <button class="-ml-2 mb-4 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground px-2 py-1.5 rounded-sm hover:bg-muted" onclick="show('support-dashboard')">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
           Back
         </button>
@@ -3837,7 +3837,7 @@
         <!-- Page header: back + client picker -->
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-4">
-            <button class="inline-flex items-center gap-1 px-3 py-1.5 rounded-sm text-sm text-muted-foreground hover:bg-muted">
+            <button class="inline-flex items-center gap-1 px-3 py-1.5 rounded-sm text-sm text-muted-foreground hover:bg-muted" onclick="show('lead-pipeline')">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
               Back
             </button>
@@ -6871,7 +6871,7 @@
                 <div class="text-right">
                   <div class="text-[10px] font-medium uppercase tracking-wide mb-0.5" style="color:hsl(var(--muted-foreground));">Flavor raws</div>
                   <div class="text-xs font-semibold" style="color:#EA580C;">Awaiting</div>
-                  <button class="text-xs font-semibold mt-1.5 hover:underline block" style="color:#16A34A;">View &rarr;</button>
+                  <button class="text-xs font-semibold mt-1.5 hover:underline block" style="color:#16A34A;" data-popup-modal="client-flavor-detail" data-client-name="Priya Natarajan" data-flavor-status="Awaiting" data-am="Marcus T." data-formula="VytalBoost Immune Complex &middot; Capsules &middot; 6 ingredients">View &rarr;</button>
                 </div>
               </div>
             </div>
@@ -6908,7 +6908,7 @@
                 </button>
                 <div class="text-right">
                   <div class="text-[10px]" style="color:hsl(var(--muted-foreground));">&mdash;</div>
-                  <button class="text-xs font-semibold mt-1.5 hover:underline block" style="color:#16A34A;">View &rarr;</button>
+                  <button class="text-xs font-semibold mt-1.5 hover:underline block" style="color:#16A34A;" data-popup-modal="client-flavor-detail" data-client-name="Marcus Reyes" data-flavor-status="None outstanding" data-am="Sarah K.">View &rarr;</button>
                 </div>
               </div>
             </div>
@@ -6939,7 +6939,7 @@
                 </button>
                 <div class="text-right">
                   <div class="text-[10px]" style="color:hsl(var(--muted-foreground));">&mdash;</div>
-                  <button class="text-xs font-semibold mt-1.5 hover:underline block" style="color:#16A34A;">View &rarr;</button>
+                  <button class="text-xs font-semibold mt-1.5 hover:underline block" style="color:#16A34A;" data-popup-modal="client-flavor-detail" data-client-name="Lena Choudhary" data-flavor-status="None outstanding">View &rarr;</button>
                 </div>
               </div>
             </div>
@@ -12147,7 +12147,7 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.5 10.5V6.75a4.5 4.5 0 119 0v3.75M3.75 21.75h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H3.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>
                   Test connection
                 </button>
-                <a class="text-xs text-muted-foreground hover:text-foreground inline-flex items-center">Docs</a>
+                <a class="text-xs text-muted-foreground hover:text-foreground inline-flex items-center" href="https://developer.paypal.com/docs" target="_blank" rel="noopener">Docs</a>
               </div>
             </div>
           </div>
@@ -14686,6 +14686,7 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
         </div>
 
         <!-- New Batch card -->
+        <div id="pbup-list-view">
         <div class="rounded-md border border-border bg-card">
           <div class="p-5 pb-3">
             <h3 class="flex items-center gap-2 font-semibold">
@@ -14767,7 +14768,7 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
                 </div>
                 <div class="text-xs text-muted-foreground">2 hours ago</div>
               </div>
-              <button class="text-sm text-muted-foreground hover:text-foreground px-2 py-1">Open</button>
+              <button class="text-sm text-muted-foreground hover:text-foreground px-2 py-1" onclick="__showBatchDetail()">Open</button>
             </div>
             <div class="py-2.5 flex items-center justify-between">
               <div>
@@ -14777,7 +14778,7 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
                 </div>
                 <div class="text-xs text-muted-foreground">Yesterday</div>
               </div>
-              <button class="text-sm text-muted-foreground hover:text-foreground px-2 py-1">Open</button>
+              <button class="text-sm text-muted-foreground hover:text-foreground px-2 py-1" onclick="__showBatchDetail()">Open</button>
             </div>
             <div class="py-2.5 flex items-center justify-between">
               <div>
@@ -14787,13 +14788,14 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
                 </div>
                 <div class="text-xs text-muted-foreground">3 days ago</div>
               </div>
-              <button class="text-sm text-muted-foreground hover:text-foreground px-2 py-1">Open</button>
+              <button class="text-sm text-muted-foreground hover:text-foreground px-2 py-1" onclick="__showBatchDetail()">Open</button>
             </div>
           </div>
         </div>
+        </div>
 
         <!-- Example: batch in review (navigated to /admin/bulk-update-prices/:batchId) -->
-        <div class="pt-4">
+        <div class="pt-4" id="pbup-detail-view" style="display:none">
           <div class="flex items-center gap-2 mb-3">
             <div class="h-px flex-1 bg-border"></div>
             <span class="text-xs text-muted-foreground uppercase tracking-wide">Example — batch under review</span>
@@ -14803,7 +14805,7 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
           <div class="rounded-md border border-border bg-card p-4 space-y-4">
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-3">
-                <button class="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1">
+                <button class="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1" onclick="__hideBatchDetail()">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
                   Back
                 </button>
@@ -14952,6 +14954,23 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
     </main>
     </div>
 </section>
+<script>
+  /* Bulk Update Prices: "Open" on a recent batch shows the (single, shared) review
+     detail below in place of the upload form + batch list; "Back" reverses it. Mirrors
+     the __showSequenceBuilder/__hideSequenceBuilder toggle used by Email Sequences. */
+  window.__showBatchDetail = function(){
+    var list = document.getElementById('pbup-list-view');
+    var detail = document.getElementById('pbup-detail-view');
+    if (list) list.style.display = 'none';
+    if (detail) detail.style.display = '';
+  };
+  window.__hideBatchDetail = function(){
+    var list = document.getElementById('pbup-list-view');
+    var detail = document.getElementById('pbup-detail-view');
+    if (detail) detail.style.display = 'none';
+    if (list) list.style.display = '';
+  };
+</script>
 <section class="page" data-page="pricing-supplier-rfqs" style="display:none">
 <div class="flex-1 flex flex-col min-w-0">
 
@@ -15220,7 +15239,7 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
         </div>
 
         <!-- Past reviews -->
-        <div>
+        <div id="plr-list-view">
           <h3 class="font-semibold mb-3 flex items-center gap-2">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
             Recent Reviews
@@ -15235,7 +15254,7 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
           </div>
 
           <div class="rounded-md border border-border bg-card divide-y divide-border">
-            <button class="w-full flex items-center justify-between gap-3 px-4 py-3 text-left hover:bg-muted/50">
+            <button class="w-full flex items-center justify-between gap-3 px-4 py-3 text-left hover:bg-muted/50" onclick="__showReviewDetail()">
               <div class="min-w-0">
                 <div class="font-medium text-sm truncate">PeakForm Pre-Workout — Watermelon</div>
                 <div class="text-xs text-muted-foreground truncate">Peak Form Nutrition · Powder · 7/16/2026</div>
@@ -15248,7 +15267,7 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
                 </span>
               </div>
             </button>
-            <button class="w-full flex items-center justify-between gap-3 px-4 py-3 text-left hover:bg-muted/50">
+            <button class="w-full flex items-center justify-between gap-3 px-4 py-3 text-left hover:bg-muted/50" onclick="__showReviewDetail()">
               <div class="min-w-0">
                 <div class="font-medium text-sm truncate">Vytal Labs Daily Multi — Capsule</div>
                 <div class="text-xs text-muted-foreground truncate">Vytal Labs LLC · Capsule · 7/12/2026</div>
@@ -15262,7 +15281,7 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
                 </span>
               </div>
             </button>
-            <button class="w-full flex items-center justify-between gap-3 px-4 py-3 text-left hover:bg-muted/50">
+            <button class="w-full flex items-center justify-between gap-3 px-4 py-3 text-left hover:bg-muted/50" onclick="__showReviewDetail()">
               <div class="min-w-0">
                 <div class="font-medium text-sm truncate">FitFuel Collagen Peptides — Stick Pack</div>
                 <div class="text-xs text-muted-foreground truncate">FitFuel Nutraceuticals · Stick Pack · 7/9/2026</div>
@@ -15286,7 +15305,7 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
         </p>
 
         <!-- Example detail view -->
-        <div class="pt-4">
+        <div class="pt-4" id="plr-detail-view" style="display:none">
           <div class="flex items-center gap-2 mb-3">
             <div class="h-px flex-1 bg-border"></div>
             <span class="text-xs text-muted-foreground uppercase tracking-wide">Example — review detail</span>
@@ -15295,7 +15314,7 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
 
           <div class="space-y-4">
             <div class="flex items-center justify-between gap-2">
-              <button class="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1.5">
+              <button class="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1.5" onclick="__hideReviewDetail()">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
                 Back to reviews
               </button>
@@ -15405,6 +15424,23 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
     </main>
     </div>
 </section>
+<script>
+  /* Label Reviews: clicking a past review shows the (single, shared) review detail below
+     in place of the review list; "Back to reviews" reverses it. Same toggle pattern as
+     Bulk Update Prices' __showBatchDetail/__hideBatchDetail. */
+  window.__showReviewDetail = function(){
+    var list = document.getElementById('plr-list-view');
+    var detail = document.getElementById('plr-detail-view');
+    if (list) list.style.display = 'none';
+    if (detail) detail.style.display = '';
+  };
+  window.__hideReviewDetail = function(){
+    var list = document.getElementById('plr-list-view');
+    var detail = document.getElementById('plr-detail-view');
+    if (detail) detail.style.display = 'none';
+    if (list) list.style.display = '';
+  };
+</script>
 <section class="page" data-page="workspace-tasks" style="display:none">
 <div class="flex-1 flex flex-col min-w-0">
 
@@ -18156,6 +18192,27 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
   };
 
   /* ---- Invoices: row "eye" -> detail modal; "Mark Paid" -> form modal ---- */
+  /* CRM > Clients: row's "View →" (flavor raws sourcing status) -> modal, parameterized
+     from data-client-name/-flavor-status/-am/-formula on the trigger, mirroring that row.
+     Was previously unwired (nav dead-end sweep). */
+  POPUP_MODALS['client-flavor-detail'] = function(trigger){
+    const name = trigger.getAttribute('data-client-name') || 'this client';
+    const status = trigger.getAttribute('data-flavor-status') || 'None outstanding';
+    const am = trigger.getAttribute('data-am');
+    const formula = trigger.getAttribute('data-formula');
+    return {
+      title: 'Flavor Sourcing — ' + name,
+      size: 'modal-sm',
+      bodyHTML:
+        '<div class="modal-detail-grid" style="grid-template-columns:1fr">'
+          + '<div><div class="k">Flavor raws</div><div class="v">' + status + '</div></div>'
+          + (am ? '<div><div class="k">Account manager</div><div class="v">' + am + '</div></div>' : '')
+          + (formula ? '<div><div class="k">Formula</div><div class="v">' + formula + '</div></div>' : '')
+        + '</div>'
+        + '<span class="sample-tag">Sample data</span>',
+      actionsHTML: '<button type="button" class="modal-btn" data-modal-close>Close</button>'
+    };
+  };
   /* Batch 30: parameterized from data-invoice-number/-client/-amount-due on each row's
      "View details" trigger, mirroring that row. Status/Issued/Due/Order Ref aren't shown
      in the overdue widget row, so they stay fixed representative sample content. */
