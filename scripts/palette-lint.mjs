@@ -7,6 +7,7 @@
 // e.g. "bg-red-500", "text-yellow-600/40").
 //
 // Usage: node scripts/palette-lint.mjs [path-to-html] [--json]
+//        node scripts/palette-lint.mjs [path-to-html] --check   (CI mode, see bottom of file)
 
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -231,14 +232,17 @@ const ALLOWED_RGB = new Set([...ALLOWED_HEX].map((h) => {
     if (isExcluded(m.index)) continue;
     const inner = m[1].trim();
     if (inner.startsWith('var(')) continue; // token reference, not a literal
-    // hsl(214,52%,L%) for any L is the exact --ally-navy hue+saturation (214 52% 24%) at a
-    // varied lightness -- a sequential single-hue ramp (funnel/heatmap bars where lightness
-    // encodes magnitude), the same validated role as the navy-sequential chart-fill tints
-    // elsewhere in the extension. Allowed for any lightness; only hue+saturation are fixed.
-    if (/^214,\s*52%,\s*\d{1,3}%$/.test(inner)) continue;
+    // hsl(214.15,52%,L%) for any L -- the "navy-sequential lightness scale" (named,
+    // documented in public/admin/index.html's :root extension comment): the exact
+    // --ally-navy hue+saturation (214.15 52% 24.51% = #1E3A5F) at a data-driven lightness,
+    // used by .dash-funnel-fill and sibling funnel/heatmap widgets where lightness encodes
+    // magnitude. Not a fixed discrete palette (lightness is continuous/data-driven, unlike
+    // the fixed navy-sequential chart-fill hex tints elsewhere in the extension), so it's
+    // declared as a rule (fixed hue+saturation, any lightness) rather than enumerated.
+    if (/^214\.15,\s*52%,\s*[\d.]{1,6}%$/.test(inner)) continue;
     // Exact literal HSL form of an allowed token/extension value (used where a class="..."
     // context needed the same colour as a raw literal rather than a var() reference).
-    const ALLOWED_HSL_LITERALS = new Set(['14,93%,30%']); // --status-serious (#932605)
+    const ALLOWED_HSL_LITERALS = new Set(['13.94,93.42%,29.8%']); // --status-serious (#932605)
     if (ALLOWED_HSL_LITERALS.has(inner.replace(/\s+/g, ''))) continue;
     record('hsl(' + inner + ')', m.index);
   }
@@ -305,5 +309,61 @@ if (jsonOut) {
   console.log('');
   for (const [value, f] of sorted) {
     console.log(`${String(f.count).padStart(5)}x  ${value}`);
+  }
+}
+
+// --- CI mode (--check) ---------------------------------------------------------------
+// A raw "did the instance count rise" gate is the wrong invariant: reusing an
+// already-covered class on more elements isn't drift, and pages get added/removed
+// independent of palette compliance. What actually matters, and what this enforces:
+//   1. hex/rgb()/rgba()/hsl() literals must be exactly zero -- any appearance at all is
+//      a real regression, since every legitimate value has an allowed-token or
+//      documented-extension form already.
+//   2. every distinct Tailwind colour-utility class found in class="..." markup must have
+//      a compliant #page-container override rule -- catches new markup introducing a
+//      genuinely new (uncovered) off-palette class, without false-failing on reused ones.
+//   3. every #page-container override's own target colour must itself be an allowed hex --
+//      catches a future override rule being added with an invented/off-palette colour.
+if (args.includes('--check')) {
+  const failures = [];
+
+  if (hexEntries.length || rgbEntries.length || hslEntries.length) {
+    failures.push(`${hexEntries.length + rgbEntries.length + hslEntries.length} raw colour literal(s) found (hex/rgb/hsl must be zero) -- see the non-JSON report above.`);
+  }
+
+  const startPre = rawSrc.indexOf('<style id="an-theme-normalize">');
+  const preEnd = startPre === -1 ? -1 : rawSrc.indexOf('</style>', startPre);
+  const overrideBlock = startPre === -1 ? '' : rawSrc.slice(startPre, preEnd);
+
+  // 2. coverage: every Tailwind class found in markup has a matching override selector.
+  const uncovered = [];
+  for (const [value] of twEntries) {
+    const escaped = value.replace(/\//g, '\\/').replace(/:/g, '\\:');
+    if (!overrideBlock.includes(`#page-container .${escaped}{`) && !overrideBlock.includes(`#page-container .${escaped}:hover{`)) {
+      uncovered.push(value);
+    }
+  }
+  if (uncovered.length) {
+    failures.push(`${uncovered.length} Tailwind class(es) found in markup with no #page-container override: ${uncovered.slice(0, 10).join(', ')}${uncovered.length > 10 ? ', …' : ''}`);
+  }
+
+  // 3. every override target colour is itself allowed.
+  const targetHexRe = /#([0-9a-fA-F]{6})\b/g;
+  const badTargets = new Map();
+  let tm;
+  while ((tm = targetHexRe.exec(overrideBlock))) {
+    const h = '#' + tm[1].toLowerCase();
+    if (!ALLOWED_HEX.has(h)) badTargets.set(h, (badTargets.get(h) || 0) + 1);
+  }
+  if (badTargets.size) {
+    failures.push(`${badTargets.size} off-palette hex used as an override target: ${[...badTargets.keys()].join(', ')}`);
+  }
+
+  if (failures.length) {
+    console.error('\npalette-lint --check: FAIL');
+    failures.forEach((f) => console.error('  - ' + f));
+    process.exitCode = 1;
+  } else {
+    console.log('\npalette-lint --check: PASS (0 raw literals, full Tailwind override coverage, all override targets allowed)');
   }
 }
