@@ -21,17 +21,24 @@
 
 <style>
   :root {
-    /* AN-DESIGN-001 · Direction 1A — brand foundation (v1.0 ADOPTED) */
-    --background:40 20% 99%;        /* #FCFCFC — aligned to src/styles/tokens.css (palette
+    /* AN-DESIGN-001 · Direction 1A — brand foundation (v1.0 ADOPTED)
+       Hex is canonical (matches the adopted spec and src/styles/tokens.css's own comments).
+       Every HSL triplet below is the precise decimal conversion that round-trips exactly to
+       its documented hex value — integer-rounded H/S/L (e.g. "214 52% 24%") is 1-2 steps off
+       in at least one channel for most non-achromatic colours and was previously the actual
+       rendered value despite the hex comment claiming otherwise. When editing a value here,
+       recompute its HSL from the target hex (do not hand-round); a mismatch check is part of
+       this PR's verification script. */
+    --background:0 0% 98.82%;        /* #FCFCFC — aligned to src/styles/tokens.css (palette
                                         sweep); this file had drifted to 38 13% 98% undocumented
                                         upstream, a visible warmth shift now corrected */
-    --paper:40 14% 92%;             /* #ECEAE6 canvas */
+    --paper:40 13.64% 91.37%;             /* #ECEAE6 canvas */
     --foreground:240 6% 10%;        /* ink #18181B */
     --card:0 0% 100%;
     --card-foreground:240 6% 10%;
     --popover:0 0% 100%;
     --popover-foreground:240 6% 10%;
-    --primary:214 52% 24%;          /* navy #1E3A5F as the primary action color */
+    --primary:214.15 52% 24.51%;          /* navy #1E3A5F as the primary action color */
     --primary-foreground:0 0% 100%;
     --secondary:240 5% 96%;
     --secondary-foreground:240 6% 10%;
@@ -43,10 +50,10 @@
     --destructive-foreground:0 0% 100%;
     --border:240 6% 90%;            /* rule #E4E4E7 */
     --input:240 6% 90%;
-    --ring:38 87% 55%;              /* amber focus ring */
-    --ally-orange:38 87% 55%;       /* #F0A829 */
-    --ally-navy:214 52% 24%;        /* #1E3A5F */
-    --ally-light-navy:215 55% 40%;  /* #2E5D9E */
+    --ring:38.29 86.9% 55.1%;              /* amber focus ring */
+    --ally-orange:38.29 86.9% 55.1%;       /* #F0A829 */
+    --ally-navy:214.15 52% 24.51%;        /* #1E3A5F */
+    --ally-light-navy:214.82 54.9% 40%;  /* #2E5D9E */
     /* ====================================================================
        AN-DESIGN-001 EXTENSION (palette compliance sweep) — the 12 base
        tokens above declare no multi-series chart ramp and no ordinal
@@ -72,20 +79,20 @@
     /* Categorical chart ramp — shared across ALL categorical charts, no per-page
        palettes, fixed order, NEVER cycled (slots 2/3 sit at protan ΔE 6.9 — legend
        + direct labels are the mitigation, not a safer reordering; tested and rejected). */
-    --chart-1:215 55% 40%;           /* #2E5D9E light navy */
-    --chart-2:280 60% 60%;           /* #AD5CD6 violet */
-    --chart-3:186 84% 34%;           /* #0E8F9E teal — accepted ΔE 5.0 vs status good, by decision (see mitigation above) */
-    --chart-4:239 84% 67%;           /* #6366F1 indigo */
-    --chart-5:321 47% 55%;           /* #C2559B pink — accepted ΔE 11.8 vs status critical, by decision (see mitigation above) */
-    --chart-emphasis:38 87% 55%;    /* amber #F0A829 — single highlighted series only, ≤1 per chart; unrelated to the 5-slot ramp, unchanged */
+    --chart-1:214.82 54.9% 40%;           /* #2E5D9E light navy */
+    --chart-2:279.84 59.8% 60%;           /* #AD5CD6 violet */
+    --chart-3:186.25 83.72% 33.73%;           /* #0E8F9E teal — accepted ΔE 5.0 vs status good, by decision (see mitigation above) */
+    --chart-4:238.73 83.53% 66.67%;           /* #6366F1 indigo */
+    --chart-5:321.47 47.19% 54.71%;           /* #C2559B pink — accepted ΔE 11.8 vs status critical, by decision (see mitigation above) */
+    --chart-emphasis:38.29 86.9% 55.1%;    /* amber #F0A829 — single highlighted series only, ≤1 per chart; unrelated to the 5-slot ramp, unchanged */
     /* Status ramp (good/warning/serious/critical) — critical is `--destructive` above,
        not a 5th variable here. good and serious are corrected values (the previous
        --status-red-muted sat at protan ΔE 2.1 from --destructive, worse than this
        file's own already-broken #EA580C/#DC474C pair; the previous --status-green-muted
        sat at normal-vision ΔE 14.0 from warning, below the 15 floor sighted users need). */
-    --status-good:172 82% 31%;      /* #0E8F7E */
+    --status-good:172.09 82.17% 30.78%;      /* #0E8F7E */
     --status-warning:38 57% 42%;    /* #A87B2E — unchanged, already exactly this value */
-    --status-serious:14 93% 30%;    /* #932605 */
+    --status-serious:13.94 93.42% 29.8%;    /* #932605 */
     /* Text-safe "ink" variants: good/warning pass the >=3:1 non-text bar the status ramp
        was validated against (dots/icons/badge-backgrounds/borders), but only reach 3.33:1 /
        3.16:1 as literal TEXT against paper -- below WCAG 1.4.3's 4.5:1. serious (6.94:1) and
@@ -93,8 +100,19 @@
        parent, lightness lowered until contrast >=4.5:1 (identical method to amber-ink).
        Used only where the status colour renders as text (KPI values, badge/chip labels,
        button labels) -- dots/icons/borders/backgrounds keep the plain --status-good/-warning. */
-    --status-good-ink:172 100% 23%;    /* #007767 */
-    --status-warning-ink:40 93% 28%;   /* #8C6005 */
+    --status-good-ink:171.93 100% 23.33%;    /* #007767 */
+    --status-warning-ink:40.44 93.1% 28.43%;   /* #8C6005 */
+    /* Navy-sequential lightness scale (named, declared here — NOT just a linter allowance).
+       hue+saturation fixed at exactly --ally-navy's (214.15 52%); lightness is continuous
+       and data-driven, one step per magnitude value, used by `.dash-funnel-fill` and sibling
+       funnel/heatmap widgets (`hsl(214.15,52%,L%)` as an inline literal, since a single CSS
+       custom property can't hold a per-instance L). Distinct from the fixed discrete
+       navy-sequential HEX tints below (#173357…#86A7D3), which are for chart.js
+       `backgroundColor` arrays where each series needs one committed value, not a continuum.
+       Currently 18 distinct lightness steps / 60 instances across the file — grep
+       `hsl(214.15,52%,` to find all of them. scripts/palette-lint.mjs allows this pattern by
+       rule (fixed hue+sat, any lightness), not by enumerating every step. */
+    --navy-seq-hue-sat:214.15 52%;  /* documentation reference only — see rule above */
     --radius:0.5rem;
     --shadow-sm:0 1px 2px 0 rgb(0 0 0 / 0.05);
     --shadow-md:0 2px 8px -2px rgb(0 0 0 / 0.08),0 1px 2px -1px rgb(0 0 0 / 0.05);
@@ -1338,16 +1356,16 @@
               <div class="dash-card-hd"><span class="report-card-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v10a2 2 0 01-2 2H9m0-14v14m0 0H5a2 2 0 01-2-2v-4"/></svg></span><h2 class="dash-card-title">Leads by Stage</h2></div>
               <p class="dash-card-sub" style="padding:0 12px">All-time · count snapshot</p>
               <div class="px-4 pb-3 pt-1 space-y-1.5">
-                <div class="dash-funnel-row"><span class="dash-funnel-label">No Reply</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:100%;background:hsl(214,52%,24%)"></div></div><span class="dash-funnel-val">2,509</span></div>
-                <div class="dash-funnel-row"><span class="dash-funnel-label">Proposal</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:36%;background:hsl(214,52%,32%)"></div></div><span class="dash-funnel-val">912</span></div>
-                <div class="dash-funnel-row"><span class="dash-funnel-label">New</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:22%;background:hsl(214,52%,40%)"></div></div><span class="dash-funnel-val">552</span></div>
-                <div class="dash-funnel-row"><span class="dash-funnel-label">Not Qualified</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:10%;background:hsl(214,52%,48%)"></div></div><span class="dash-funnel-val">261</span></div>
-                <div class="dash-funnel-row"><span class="dash-funnel-label">Nurture</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:5%;background:hsl(214,52%,56%)"></div></div><span class="dash-funnel-val">114</span></div>
-                <div class="dash-funnel-row"><span class="dash-funnel-label">Contacted</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:4%;background:hsl(214,52%,64%)"></div></div><span class="dash-funnel-val">99</span></div>
-                <div class="dash-funnel-row"><span class="dash-funnel-label">Replied</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:4%;background:hsl(214,52%,68%)"></div></div><span class="dash-funnel-val">93</span></div>
-                <div class="dash-funnel-row"><span class="dash-funnel-label">Closed</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:1%;background:hsl(214,52%,76%)"></div></div><span class="dash-funnel-val">31</span></div>
-                <div class="dash-funnel-row"><span class="dash-funnel-label">Waitlisted</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:1%;background:hsl(214,52%,80%)"></div></div><span class="dash-funnel-val">24</span></div>
-                <div class="dash-funnel-row"><span class="dash-funnel-label">Qualified</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:1%;background:hsl(214,52%,84%)"></div></div><span class="dash-funnel-val">12</span></div>
+                <div class="dash-funnel-row"><span class="dash-funnel-label">No Reply</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:100%;background:hsl(214.15,52%,24%)"></div></div><span class="dash-funnel-val">2,509</span></div>
+                <div class="dash-funnel-row"><span class="dash-funnel-label">Proposal</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:36%;background:hsl(214.15,52%,32%)"></div></div><span class="dash-funnel-val">912</span></div>
+                <div class="dash-funnel-row"><span class="dash-funnel-label">New</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:22%;background:hsl(214.15,52%,40%)"></div></div><span class="dash-funnel-val">552</span></div>
+                <div class="dash-funnel-row"><span class="dash-funnel-label">Not Qualified</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:10%;background:hsl(214.15,52%,48%)"></div></div><span class="dash-funnel-val">261</span></div>
+                <div class="dash-funnel-row"><span class="dash-funnel-label">Nurture</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:5%;background:hsl(214.15,52%,56%)"></div></div><span class="dash-funnel-val">114</span></div>
+                <div class="dash-funnel-row"><span class="dash-funnel-label">Contacted</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:4%;background:hsl(214.15,52%,64%)"></div></div><span class="dash-funnel-val">99</span></div>
+                <div class="dash-funnel-row"><span class="dash-funnel-label">Replied</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:4%;background:hsl(214.15,52%,68%)"></div></div><span class="dash-funnel-val">93</span></div>
+                <div class="dash-funnel-row"><span class="dash-funnel-label">Closed</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:1%;background:hsl(214.15,52%,76%)"></div></div><span class="dash-funnel-val">31</span></div>
+                <div class="dash-funnel-row"><span class="dash-funnel-label">Waitlisted</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:1%;background:hsl(214.15,52%,80%)"></div></div><span class="dash-funnel-val">24</span></div>
+                <div class="dash-funnel-row"><span class="dash-funnel-label">Qualified</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:1%;background:hsl(214.15,52%,84%)"></div></div><span class="dash-funnel-val">12</span></div>
               </div>
               <div class="report-card-ft"><button type="button" class="dash-link" onclick="show('lead-pipeline')">View pipeline →</button></div>
             </div>
@@ -1438,11 +1456,11 @@
           <div class="dash-card">
             <div class="dash-card-hd"><h2 class="dash-card-title">Leads by Stage</h2></div>
             <div class="px-4 pb-3 pt-1 space-y-1.5">
-              <div class="dash-funnel-row"><span class="dash-funnel-label">No Reply</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:100%;background:hsl(214,52%,24%)"></div></div><span class="dash-funnel-val">2,509</span></div>
-              <div class="dash-funnel-row"><span class="dash-funnel-label">Proposal</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:36%;background:hsl(214,52%,36%)"></div></div><span class="dash-funnel-val">912</span></div>
-              <div class="dash-funnel-row"><span class="dash-funnel-label">New</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:22%;background:hsl(214,52%,48%)"></div></div><span class="dash-funnel-val">552</span></div>
-              <div class="dash-funnel-row"><span class="dash-funnel-label">Contacted</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:4%;background:hsl(214,52%,60%)"></div></div><span class="dash-funnel-val">99</span></div>
-              <div class="dash-funnel-row"><span class="dash-funnel-label">Closed</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:1%;background:hsl(214,52%,72%)"></div></div><span class="dash-funnel-val">31</span></div>
+              <div class="dash-funnel-row"><span class="dash-funnel-label">No Reply</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:100%;background:hsl(214.15,52%,24%)"></div></div><span class="dash-funnel-val">2,509</span></div>
+              <div class="dash-funnel-row"><span class="dash-funnel-label">Proposal</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:36%;background:hsl(214.15,52%,36%)"></div></div><span class="dash-funnel-val">912</span></div>
+              <div class="dash-funnel-row"><span class="dash-funnel-label">New</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:22%;background:hsl(214.15,52%,48%)"></div></div><span class="dash-funnel-val">552</span></div>
+              <div class="dash-funnel-row"><span class="dash-funnel-label">Contacted</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:4%;background:hsl(214.15,52%,60%)"></div></div><span class="dash-funnel-val">99</span></div>
+              <div class="dash-funnel-row"><span class="dash-funnel-label">Closed</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:1%;background:hsl(214.15,52%,72%)"></div></div><span class="dash-funnel-val">31</span></div>
             </div>
           </div>
           <div class="dash-card">
@@ -1570,10 +1588,10 @@
           <div class="dash-card">
             <div class="dash-card-hd"><h2 class="dash-card-title">My Pipeline</h2></div>
             <div class="px-4 pb-3 pt-1 space-y-1.5">
-              <div class="dash-funnel-row"><span class="dash-funnel-label">No Reply</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:100%;background:hsl(214,52%,24%)"></div></div><span class="dash-funnel-val">1,036</span></div>
-              <div class="dash-funnel-row"><span class="dash-funnel-label">Proposal</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:6%;background:hsl(214,52%,40%)"></div></div><span class="dash-funnel-val">57</span></div>
-              <div class="dash-funnel-row"><span class="dash-funnel-label">Not Qualified</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:5%;background:hsl(214,52%,56%)"></div></div><span class="dash-funnel-val">48</span></div>
-              <div class="dash-funnel-row"><span class="dash-funnel-label">Nurture</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:3%;background:hsl(214,52%,72%)"></div></div><span class="dash-funnel-val">28</span></div>
+              <div class="dash-funnel-row"><span class="dash-funnel-label">No Reply</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:100%;background:hsl(214.15,52%,24%)"></div></div><span class="dash-funnel-val">1,036</span></div>
+              <div class="dash-funnel-row"><span class="dash-funnel-label">Proposal</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:6%;background:hsl(214.15,52%,40%)"></div></div><span class="dash-funnel-val">57</span></div>
+              <div class="dash-funnel-row"><span class="dash-funnel-label">Not Qualified</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:5%;background:hsl(214.15,52%,56%)"></div></div><span class="dash-funnel-val">48</span></div>
+              <div class="dash-funnel-row"><span class="dash-funnel-label">Nurture</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:3%;background:hsl(214.15,52%,72%)"></div></div><span class="dash-funnel-val">28</span></div>
             </div>
           </div>
           <div class="dash-card">
@@ -1701,16 +1719,16 @@
               <div class="dash-card-hd"><span class="report-card-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v10a2 2 0 01-2 2H9m0-14v14m0 0H5a2 2 0 01-2-2v-4"/></svg></span><h2 class="dash-card-title">Pipeline by Stage</h2></div>
               <p class="dash-card-sub" style="padding:0 12px">All-time · count snapshot</p>
               <div class="px-4 pb-3 pt-1 space-y-1.5">
-                <div class="dash-funnel-row"><span class="dash-funnel-label">No Reply</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:100%;background:hsl(214,52%,24%)"></div></div><span class="dash-funnel-val">2,509</span></div>
-                <div class="dash-funnel-row"><span class="dash-funnel-label">Proposal</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:36%;background:hsl(214,52%,32%)"></div></div><span class="dash-funnel-val">912</span></div>
-                <div class="dash-funnel-row"><span class="dash-funnel-label">New</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:22%;background:hsl(214,52%,40%)"></div></div><span class="dash-funnel-val">552</span></div>
-                <div class="dash-funnel-row"><span class="dash-funnel-label">Not Qualified</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:10%;background:hsl(214,52%,48%)"></div></div><span class="dash-funnel-val">261</span></div>
-                <div class="dash-funnel-row"><span class="dash-funnel-label">Nurture</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:5%;background:hsl(214,52%,56%)"></div></div><span class="dash-funnel-val">114</span></div>
-                <div class="dash-funnel-row"><span class="dash-funnel-label">Contacted</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:4%;background:hsl(214,52%,64%)"></div></div><span class="dash-funnel-val">99</span></div>
-                <div class="dash-funnel-row"><span class="dash-funnel-label">Replied</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:4%;background:hsl(214,52%,68%)"></div></div><span class="dash-funnel-val">93</span></div>
-                <div class="dash-funnel-row"><span class="dash-funnel-label">Closed</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:1%;background:hsl(214,52%,76%)"></div></div><span class="dash-funnel-val">31</span></div>
-                <div class="dash-funnel-row"><span class="dash-funnel-label">Waitlisted</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:1%;background:hsl(214,52%,80%)"></div></div><span class="dash-funnel-val">24</span></div>
-                <div class="dash-funnel-row"><span class="dash-funnel-label">Qualified</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:1%;background:hsl(214,52%,84%)"></div></div><span class="dash-funnel-val">12</span></div>
+                <div class="dash-funnel-row"><span class="dash-funnel-label">No Reply</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:100%;background:hsl(214.15,52%,24%)"></div></div><span class="dash-funnel-val">2,509</span></div>
+                <div class="dash-funnel-row"><span class="dash-funnel-label">Proposal</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:36%;background:hsl(214.15,52%,32%)"></div></div><span class="dash-funnel-val">912</span></div>
+                <div class="dash-funnel-row"><span class="dash-funnel-label">New</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:22%;background:hsl(214.15,52%,40%)"></div></div><span class="dash-funnel-val">552</span></div>
+                <div class="dash-funnel-row"><span class="dash-funnel-label">Not Qualified</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:10%;background:hsl(214.15,52%,48%)"></div></div><span class="dash-funnel-val">261</span></div>
+                <div class="dash-funnel-row"><span class="dash-funnel-label">Nurture</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:5%;background:hsl(214.15,52%,56%)"></div></div><span class="dash-funnel-val">114</span></div>
+                <div class="dash-funnel-row"><span class="dash-funnel-label">Contacted</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:4%;background:hsl(214.15,52%,64%)"></div></div><span class="dash-funnel-val">99</span></div>
+                <div class="dash-funnel-row"><span class="dash-funnel-label">Replied</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:4%;background:hsl(214.15,52%,68%)"></div></div><span class="dash-funnel-val">93</span></div>
+                <div class="dash-funnel-row"><span class="dash-funnel-label">Closed</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:1%;background:hsl(214.15,52%,76%)"></div></div><span class="dash-funnel-val">31</span></div>
+                <div class="dash-funnel-row"><span class="dash-funnel-label">Waitlisted</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:1%;background:hsl(214.15,52%,80%)"></div></div><span class="dash-funnel-val">24</span></div>
+                <div class="dash-funnel-row"><span class="dash-funnel-label">Qualified</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:1%;background:hsl(214.15,52%,84%)"></div></div><span class="dash-funnel-val">12</span></div>
               </div>
             </div>
             <div class="dash-card">
@@ -1741,7 +1759,7 @@
             <div class="dash-card">
               <div class="dash-card-hd"><span class="report-card-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></span><h2 class="dash-card-title">BQA Pass / Fail</h2></div>
               <p class="dash-card-sub" style="padding:0 12px">All-time · of 104 scored</p>
-              <div class="chart-box h-md"><canvas data-chart='{"type":"bar","data":{"labels":["Scored"],"datasets":[{"label":"Qualified","data":[62.5],"backgroundColor":"#0E8F7E","stack":"s"},{"label":"Waitlisted","data":[26.9],"backgroundColor":"#F0A829","stack":"s"},{"label":"Borderline","data":[10.6],"backgroundColor":"#86A7D3","stack":"s"}]},"options":{"indexAxis":"y","responsive":true,"maintainAspectRatio":false,"plugins":{"legend":{"display":true,"position":"bottom","labels":{"boxWidth":8,"font":{"size":9}}}},"scales":{"x":{"stacked":true,"display":false},"y":{"stacked":true,"grid":{"display":false}}}}}'></canvas></div>
+              <div class="chart-box h-md"><canvas data-chart='{"type":"bar","data":{"labels":["Scored"],"datasets":[{"label":"Qualified","data":[62.5],"backgroundColor":"#0E8F7E","stack":"s"},{"label":"Waitlisted","data":[26.9],"backgroundColor":"#F0A829","stack":"s"},{"label":"Borderline","data":[10.6],"backgroundColor":"#86A7D3","stack":"s"}]},"options":{"indexAxis":"y","responsive":true,"maintainAspectRatio":false,"plugins":{"legend":{"display":true,"position":"bottom","labels":{"boxWidth":8,"font":{"size":9}}}},"scales":{"x":{"stacked":true,"display":false},"y":{"stacked":true,"grid":{"display":false}}}}}'></canvas></div><p class="dash-card-sub" style="padding:2px 12px 0">62.5% qualified &middot; 26.9% waitlisted &middot; 10.6% borderline</p>
             </div>
             <div class="dash-card">
               <div class="dash-card-hd"><span class="report-card-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span><h2 class="dash-card-title">Top Pages</h2></div>
@@ -2200,16 +2218,16 @@
             <div class="dash-card-hd"><span class="report-card-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v10a2 2 0 01-2 2H9m0-14v14m0 0H5a2 2 0 01-2-2v-4"/></svg></span><h2 class="dash-card-title">Pipeline by Stage</h2></div>
             <p class="dash-card-sub" style="padding:0 12px">All-time · count snapshot</p>
             <div class="px-4 pb-3 pt-1 space-y-1.5">
-              <div class="dash-funnel-row"><span class="dash-funnel-label">No Reply</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:100%;background:hsl(214,52%,24%)"></div></div><span class="dash-funnel-val">2,509</span></div>
-              <div class="dash-funnel-row"><span class="dash-funnel-label">Proposal</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:36%;background:hsl(214,52%,32%)"></div></div><span class="dash-funnel-val">912</span></div>
-              <div class="dash-funnel-row"><span class="dash-funnel-label">New</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:22%;background:hsl(214,52%,40%)"></div></div><span class="dash-funnel-val">552</span></div>
-              <div class="dash-funnel-row"><span class="dash-funnel-label">Not Qualified</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:10%;background:hsl(214,52%,48%)"></div></div><span class="dash-funnel-val">261</span></div>
-              <div class="dash-funnel-row"><span class="dash-funnel-label">Nurture</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:5%;background:hsl(214,52%,56%)"></div></div><span class="dash-funnel-val">114</span></div>
-              <div class="dash-funnel-row"><span class="dash-funnel-label">Contacted</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:4%;background:hsl(214,52%,64%)"></div></div><span class="dash-funnel-val">99</span></div>
-              <div class="dash-funnel-row"><span class="dash-funnel-label">Replied</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:4%;background:hsl(214,52%,68%)"></div></div><span class="dash-funnel-val">93</span></div>
-              <div class="dash-funnel-row"><span class="dash-funnel-label">Closed</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:1%;background:hsl(214,52%,76%)"></div></div><span class="dash-funnel-val">31</span></div>
-              <div class="dash-funnel-row"><span class="dash-funnel-label">Waitlisted</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:1%;background:hsl(214,52%,80%)"></div></div><span class="dash-funnel-val">24</span></div>
-              <div class="dash-funnel-row"><span class="dash-funnel-label">Qualified</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:1%;background:hsl(214,52%,84%)"></div></div><span class="dash-funnel-val">12</span></div>
+              <div class="dash-funnel-row"><span class="dash-funnel-label">No Reply</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:100%;background:hsl(214.15,52%,24%)"></div></div><span class="dash-funnel-val">2,509</span></div>
+              <div class="dash-funnel-row"><span class="dash-funnel-label">Proposal</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:36%;background:hsl(214.15,52%,32%)"></div></div><span class="dash-funnel-val">912</span></div>
+              <div class="dash-funnel-row"><span class="dash-funnel-label">New</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:22%;background:hsl(214.15,52%,40%)"></div></div><span class="dash-funnel-val">552</span></div>
+              <div class="dash-funnel-row"><span class="dash-funnel-label">Not Qualified</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:10%;background:hsl(214.15,52%,48%)"></div></div><span class="dash-funnel-val">261</span></div>
+              <div class="dash-funnel-row"><span class="dash-funnel-label">Nurture</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:5%;background:hsl(214.15,52%,56%)"></div></div><span class="dash-funnel-val">114</span></div>
+              <div class="dash-funnel-row"><span class="dash-funnel-label">Contacted</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:4%;background:hsl(214.15,52%,64%)"></div></div><span class="dash-funnel-val">99</span></div>
+              <div class="dash-funnel-row"><span class="dash-funnel-label">Replied</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:4%;background:hsl(214.15,52%,68%)"></div></div><span class="dash-funnel-val">93</span></div>
+              <div class="dash-funnel-row"><span class="dash-funnel-label">Closed</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:1%;background:hsl(214.15,52%,76%)"></div></div><span class="dash-funnel-val">31</span></div>
+              <div class="dash-funnel-row"><span class="dash-funnel-label">Waitlisted</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:1%;background:hsl(214.15,52%,80%)"></div></div><span class="dash-funnel-val">24</span></div>
+              <div class="dash-funnel-row"><span class="dash-funnel-label">Qualified</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:1%;background:hsl(214.15,52%,84%)"></div></div><span class="dash-funnel-val">12</span></div>
             </div>
           </div>
           <div class="dash-card">
@@ -2237,7 +2255,7 @@
           <div class="dash-card">
             <div class="dash-card-hd"><span class="report-card-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></span><h2 class="dash-card-title">BQA Pass / Fail</h2></div>
             <p class="dash-card-sub" style="padding:0 12px">All-time · of 104 scored</p>
-            <div class="chart-box h-md"><canvas data-chart='{"type":"bar","data":{"labels":["Scored"],"datasets":[{"label":"Qualified","data":[62.5],"backgroundColor":"#0E8F7E","stack":"s"},{"label":"Waitlisted","data":[26.9],"backgroundColor":"#F0A829","stack":"s"},{"label":"Borderline","data":[10.6],"backgroundColor":"#86A7D3","stack":"s"}]},"options":{"indexAxis":"y","responsive":true,"maintainAspectRatio":false,"plugins":{"legend":{"display":true,"position":"bottom","labels":{"boxWidth":8,"font":{"size":9}}}},"scales":{"x":{"stacked":true,"display":false},"y":{"stacked":true,"grid":{"display":false}}}}}'></canvas></div>
+            <div class="chart-box h-md"><canvas data-chart='{"type":"bar","data":{"labels":["Scored"],"datasets":[{"label":"Qualified","data":[62.5],"backgroundColor":"#0E8F7E","stack":"s"},{"label":"Waitlisted","data":[26.9],"backgroundColor":"#F0A829","stack":"s"},{"label":"Borderline","data":[10.6],"backgroundColor":"#86A7D3","stack":"s"}]},"options":{"indexAxis":"y","responsive":true,"maintainAspectRatio":false,"plugins":{"legend":{"display":true,"position":"bottom","labels":{"boxWidth":8,"font":{"size":9}}}},"scales":{"x":{"stacked":true,"display":false},"y":{"stacked":true,"grid":{"display":false}}}}}'></canvas></div><p class="dash-card-sub" style="padding:2px 12px 0">62.5% qualified &middot; 26.9% waitlisted &middot; 10.6% borderline</p>
           </div>
           <div class="dash-card">
             <div class="dash-card-hd"><span class="report-card-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span><h2 class="dash-card-title">Top Pages</h2></div>
@@ -2426,15 +2444,15 @@
               <div class="dash-card-hd"><span class="report-card-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v10a2 2 0 01-2 2H9m0-14v14m0 0H5a2 2 0 01-2-2v-4"/></svg></span><h2 class="dash-card-title">Abandoned-form Recovery</h2></div>
               <p class="dash-card-sub" style="padding:0 12px">All-time</p>
               <div class="px-4 pb-3 pt-1 space-y-1.5">
-                <div class="dash-funnel-row"><span class="dash-funnel-label">Signups</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:100%;background:hsl(214,52%,24%)"></div></div><span class="dash-funnel-val">1,828</span></div>
-                <div class="dash-funnel-row"><span class="dash-funnel-label">Converted</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:13%;background:hsl(214,52%,48%)"></div></div><span class="dash-funnel-val">243</span></div>
-                <div class="dash-funnel-row"><span class="dash-funnel-label">Abandoned</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:87%;background:hsl(14,93%,30%)"></div></div><span class="dash-funnel-val">1,585</span></div>
+                <div class="dash-funnel-row"><span class="dash-funnel-label">Signups</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:100%;background:hsl(214.15,52%,24%)"></div></div><span class="dash-funnel-val">1,828</span></div>
+                <div class="dash-funnel-row"><span class="dash-funnel-label">Converted</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:13%;background:hsl(214.15,52%,48%)"></div></div><span class="dash-funnel-val">243</span></div>
+                <div class="dash-funnel-row"><span class="dash-funnel-label">Abandoned</span><div class="dash-funnel-track"><div class="dash-funnel-fill" style="width:87%;background:hsl(13.94,93.42%,29.8%)"></div></div><span class="dash-funnel-val">1,585</span></div>
               </div>
             </div>
             <div class="dash-card">
               <div class="dash-card-hd"><span class="report-card-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></span><h2 class="dash-card-title">BQA Pass / Fail</h2></div>
               <p class="dash-card-sub" style="padding:0 12px">All-time · of 104 scored</p>
-              <div class="chart-box h-md"><canvas data-chart='{"type":"bar","data":{"labels":["Score mix"],"datasets":[{"label":"Qualified","data":[62.5],"backgroundColor":"#0E8F7E"},{"label":"Waitlisted","data":[26.9],"backgroundColor":"#F0A829"},{"label":"Borderline","data":[10.6],"backgroundColor":"#86A7D3"}]},"options":{"indexAxis":"y","responsive":true,"maintainAspectRatio":false,"plugins":{"legend":{"display":true,"position":"bottom","labels":{"boxWidth":8,"font":{"size":9}}}},"scales":{"x":{"stacked":true,"display":false},"y":{"stacked":true,"display":false}}}}'></canvas></div>
+              <div class="chart-box h-md"><canvas data-chart='{"type":"bar","data":{"labels":["Score mix"],"datasets":[{"label":"Qualified","data":[62.5],"backgroundColor":"#0E8F7E"},{"label":"Waitlisted","data":[26.9],"backgroundColor":"#F0A829"},{"label":"Borderline","data":[10.6],"backgroundColor":"#86A7D3"}]},"options":{"indexAxis":"y","responsive":true,"maintainAspectRatio":false,"plugins":{"legend":{"display":true,"position":"bottom","labels":{"boxWidth":8,"font":{"size":9}}}},"scales":{"x":{"stacked":true,"display":false},"y":{"stacked":true,"display":false}}}}'></canvas></div><p class="dash-card-sub" style="padding:2px 12px 0">62.5% qualified &middot; 26.9% waitlisted &middot; 10.6% borderline</p>
             </div>
             <div class="dash-card">
               <div class="dash-card-hd"><span class="report-card-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87M13 8a4 4 0 11-8 0 4 4 0 018 0zM17 8a3 3 0 010 6"/></svg></span><h2 class="dash-card-title">Top Pages</h2></div>
@@ -2842,57 +2860,57 @@
           <span class="lp-sec-sub">All stages · 312 leads</span>
         </div>
         <div class="lp-funnel">
-          <button class="lp-seg is-active" style="--seg:hsl(214,52%,84%);--w:75%">
+          <button class="lp-seg is-active" style="--seg:hsl(214.15,52%,84%);--w:75%">
             <span class="lp-seg-bar"></span>
             <span class="lp-seg-label">New</span>
             <span class="lp-seg-count">48</span>
           </button>
-          <button class="lp-seg" style="--seg:hsl(214,52%,78%);--w:95%">
+          <button class="lp-seg" style="--seg:hsl(214.15,52%,78%);--w:95%">
             <span class="lp-seg-bar"></span>
             <span class="lp-seg-label">Contacted</span>
             <span class="lp-seg-count">61</span>
           </button>
-          <button class="lp-seg" style="--seg:hsl(214,52%,72%);--w:42%">
+          <button class="lp-seg" style="--seg:hsl(214.15,52%,72%);--w:42%">
             <span class="lp-seg-bar"></span>
             <span class="lp-seg-label">Qualified</span>
             <span class="lp-seg-count">27</span>
           </button>
-          <button class="lp-seg" style="--seg:hsl(214,52%,66%);--w:25%">
+          <button class="lp-seg" style="--seg:hsl(214.15,52%,66%);--w:25%">
             <span class="lp-seg-bar"></span>
             <span class="lp-seg-label">Replied</span>
             <span class="lp-seg-count">16</span>
           </button>
-          <button class="lp-seg" style="--seg:hsl(214,52%,60%);--w:34%">
+          <button class="lp-seg" style="--seg:hsl(214.15,52%,60%);--w:34%">
             <span class="lp-seg-bar"></span>
             <span class="lp-seg-label">No reply</span>
             <span class="lp-seg-count">22</span>
           </button>
-          <button class="lp-seg" style="--seg:hsl(214,52%,54%);--w:48%">
+          <button class="lp-seg" style="--seg:hsl(214.15,52%,54%);--w:48%">
             <span class="lp-seg-bar"></span>
             <span class="lp-seg-label">Nurture</span>
             <span class="lp-seg-count">31</span>
           </button>
-          <button class="lp-seg" style="--seg:hsl(214,52%,48%);--w:28%">
+          <button class="lp-seg" style="--seg:hsl(214.15,52%,48%);--w:28%">
             <span class="lp-seg-bar"></span>
             <span class="lp-seg-label">Proposal</span>
             <span class="lp-seg-count">18</span>
           </button>
-          <button class="lp-seg" style="--seg:hsl(214,52%,42%);--w:14%">
+          <button class="lp-seg" style="--seg:hsl(214.15,52%,42%);--w:14%">
             <span class="lp-seg-bar"></span>
             <span class="lp-seg-label">Waitlisted</span>
             <span class="lp-seg-count">9</span>
           </button>
-          <button class="lp-seg" style="--seg:hsl(214,52%,36%);--w:22%">
+          <button class="lp-seg" style="--seg:hsl(214.15,52%,36%);--w:22%">
             <span class="lp-seg-bar"></span>
             <span class="lp-seg-label">Not qualified</span>
             <span class="lp-seg-count">14</span>
           </button>
-          <button class="lp-seg" style="--seg:hsl(214,52%,30%);--w:17%">
+          <button class="lp-seg" style="--seg:hsl(214.15,52%,30%);--w:17%">
             <span class="lp-seg-bar"></span>
             <span class="lp-seg-label">Won</span>
             <span class="lp-seg-count">11</span>
           </button>
-          <button class="lp-seg" style="--seg:hsl(214,52%,24%);--w:100%">
+          <button class="lp-seg" style="--seg:hsl(214.15,52%,24%);--w:100%">
             <span class="lp-seg-bar"></span>
             <span class="lp-seg-label">Closed lost</span>
             <span class="lp-seg-count">66</span>
@@ -2927,7 +2945,7 @@
               <span class="lp-avatar" style="background:linear-gradient(135deg,#2E5D9E,#1E3A5F)">PN</span>
               <span class="lp-lead-tx"><span class="lp-lead-name">Priya Natarajan <span class="lp-flame">🔥</span></span><span class="lp-lead-co">Vytal Labs LLC · Capsules</span></span>
             </div>
-            <span class="lp-stage" style="--st:hsl(214,52%,84%)">New</span>
+            <span class="lp-stage" style="--st:hsl(214.15,52%,84%)">New</span>
           </div>
           <span class="lp-meeting-chip"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:11px;height:11px"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2z"/></svg>Meeting scheduled · Today 2:00 PM</span>
           <div class="lp-card-fields">
@@ -2948,7 +2966,7 @@
               <span class="lp-avatar" style="background:#0E2A4E">MR</span>
               <span class="lp-lead-tx"><span class="lp-lead-name">Marcus Reyes</span><span class="lp-lead-co">Peak Form Nutrition · Gummies</span></span>
             </div>
-            <span class="lp-stage" style="--st:hsl(214,52%,78%)">Contacted</span>
+            <span class="lp-stage" style="--st:hsl(214.15,52%,78%)">Contacted</span>
           </div>
           <div class="lp-card-fields">
             <div class="lp-cf-row"><span class="lp-cf-ic"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h16v16H4zM22 6l-10 7L2 6"/></svg></span>Email<span class="lp-cf-val">Follow-up sent</span></div>
@@ -2968,7 +2986,7 @@
               <span class="lp-avatar" style="background:#082447">AG</span>
               <span class="lp-lead-tx"><span class="lp-lead-name">Alicia Gomez</span><span class="lp-lead-co">Verde Wellness Co. · Powders</span></span>
             </div>
-            <span class="lp-stage" style="--st:hsl(214,52%,78%)">Contacted</span>
+            <span class="lp-stage" style="--st:hsl(214.15,52%,78%)">Contacted</span>
           </div>
           <div class="lp-card-fields">
             <div class="lp-cf-row"><span class="lp-cf-ic"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h16v16H4zM22 6l-10 7L2 6"/></svg></span>Email<span class="lp-cf-val">Opened</span></div>
@@ -2988,7 +3006,7 @@
               <span class="lp-avatar" style="background:linear-gradient(135deg,#2E5D9E,#1E3A5F)">DW</span>
               <span class="lp-lead-tx"><span class="lp-lead-name">Dana Whitfield <span class="lp-flame">🔥</span></span><span class="lp-lead-co">Whitfield Health Labs · Softgels</span></span>
             </div>
-            <span class="lp-stage" style="--st:hsl(214,52%,72%)">Qualified</span>
+            <span class="lp-stage" style="--st:hsl(214.15,52%,72%)">Qualified</span>
           </div>
           <span class="lp-meeting-chip"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:11px;height:11px"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2z"/></svg>Meeting scheduled · Fri 9:00 AM</span>
           <div class="lp-card-fields">
@@ -3009,7 +3027,7 @@
               <span class="lp-avatar" style="background:#153055">GH</span>
               <span class="lp-lead-tx"><span class="lp-lead-name">Grant Holloway</span><span class="lp-lead-co">Holloway Performance · Capsules</span></span>
             </div>
-            <span class="lp-stage" style="--st:hsl(214,52%,48%)">Proposal</span>
+            <span class="lp-stage" style="--st:hsl(214.15,52%,48%)">Proposal</span>
           </div>
           <div class="lp-card-fields">
             <div class="lp-cf-row"><span class="lp-cf-ic"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h16v16H4zM22 6l-10 7L2 6"/></svg></span>Email<span class="lp-cf-val">Quote sent</span></div>
@@ -3029,7 +3047,7 @@
               <span class="lp-avatar" style="background:linear-gradient(135deg,#2E5D9E,#1E3A5F)">SM</span>
               <span class="lp-lead-tx"><span class="lp-lead-name">Sofia Marchetti</span><span class="lp-lead-co">Marchetti Botanicals · Gummies</span></span>
             </div>
-            <span class="lp-stage" style="--st:hsl(214,52%,48%)">Proposal</span>
+            <span class="lp-stage" style="--st:hsl(214.15,52%,48%)">Proposal</span>
           </div>
           <div class="lp-card-fields">
             <div class="lp-cf-row"><span class="lp-cf-ic"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h16v16H4zM22 6l-10 7L2 6"/></svg></span>Email<span class="lp-cf-val">Quote sent · 2d ago</span></div>
@@ -3049,7 +3067,7 @@
               <span class="lp-avatar" style="background:#516F98">TB</span>
               <span class="lp-lead-tx"><span class="lp-lead-name">Tariq Bello <span class="lp-won-check">✓</span></span><span class="lp-lead-co">Bello Sports Nutrition · Capsules</span></span>
             </div>
-            <span class="lp-stage" style="--st:hsl(214,52%,30%)">Won</span>
+            <span class="lp-stage" style="--st:hsl(214.15,52%,30%)">Won</span>
           </div>
           <div class="lp-card-fields">
             <div class="lp-cf-row"><span class="lp-cf-ic"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h16v16H4zM22 6l-10 7L2 6"/></svg></span>Email<span class="lp-cf-val">Closed · Jul 12</span></div>
@@ -3069,7 +3087,7 @@
               <span class="lp-avatar none">#</span>
               <span class="lp-lead-tx"><span class="lp-lead-name">Quote Visitor #4471</span><span class="lp-lead-co">Anonymous · partial submission</span></span>
             </div>
-            <span class="lp-stage" style="--st:hsl(214,52%,84%)">New</span>
+            <span class="lp-stage" style="--st:hsl(214.15,52%,84%)">New</span>
           </div>
           <div class="lp-card-fields">
             <div class="lp-cf-row"><span class="lp-cf-ic"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h16v16H4zM22 6l-10 7L2 6"/></svg></span>Email<span class="lp-cf-val">No email captured</span></div>
@@ -7122,7 +7140,7 @@
             <div class="flex-1 px-4 py-3 flex gap-4 min-w-0">
               <div class="flex-shrink-0 flex flex-col items-center gap-1.5 pt-0.5">
                 <div class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold border-2" style="border-color:#DC474C;background-color:hsl(var(--muted));color:#DC474C;">VL</div>
-                <span class="w-2 h-2 rounded-full" style="background-color:#DC474C;"></span>
+                <span class="w-2 h-2 rounded-full" style="background-color:#DC474C;" title="Priority 1"></span>
               </div>
               <div class="flex-1 min-w-0">
                 <div class="flex items-center gap-2 flex-wrap">
@@ -13537,7 +13555,7 @@ same rollup pipeline that feeds our bulk pricing system down to individual COAs.
         <div class="lg:col-span-2 rounded-md border border-border bg-card shadow-sm">
           <div class="p-6 flex flex-col space-y-1.5">
             <h3 class="text-lg font-semibold leading-none tracking-tight">Bot Attempts Over Time</h3>
-            <p class="text-sm text-muted-foreground">Last 30 days</p>
+            <p class="text-sm text-muted-foreground">Last 30 days &middot; bot attempts range 38&ndash;90% of chart scale, blocked requests 10&ndash;41%</p>
           </div>
           <div class="p-6 pt-0">
             <div class="h-[250px] flex items-end gap-1.5">

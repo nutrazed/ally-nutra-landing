@@ -1,0 +1,24 @@
+name: Palette Compliance
+
+on:
+  pull_request:
+    paths:
+      - 'public/admin/index.html'
+      - 'scripts/palette-lint.mjs'
+  push:
+    branches: [main]
+    paths:
+      - 'public/admin/index.html'
+      - 'scripts/palette-lint.mjs'
+
+jobs:
+  palette-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      # No install step: palette-lint.mjs is a zero-dependency Node script.
+      - name: Run palette-lint --check
+        run: node scripts/palette-lint.mjs public/admin/index.html --check
