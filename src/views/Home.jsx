@@ -510,11 +510,13 @@ export default function Home() {
 
       {/* 07 — PROOF: unchanged testimonials, attributions unchanged.
           Section-banding fix: moved above "How it works" (previously the reverse
-          order). This is now the light field's last section — its bottom edge
-          meets the navy how-it-works/final-CTA block, so per Fix 3 that edge's
-          padding is trimmed 88px→64px (top edge stays 88px, a within-field
-          boundary against 06). Also drops section-alt (grey) for the same
-          section-rule hairline as its neighbours. */}
+          order). Its bottom padding was trimmed 88px→64px (top edge stays 88px, a
+          within-field boundary against 06) back when this section's bottom edge
+          bordered the navy how-it-works/final-CTA block; 08/09 are light now (see
+          08's comment), so that specific rationale no longer applies, but the
+          64px value itself is left as-is here — untouched, out of this PR's
+          scope. Also drops section-alt (grey) for the same section-rule hairline
+          as its neighbours. */}
       <section className="section section-rule" style={sx('padding-bottom:64px;')}>
         <div className="container">
           <div className="section-header">
@@ -554,19 +556,19 @@ export default function Home() {
 
       {/* 08 — HOW IT WORKS: immediately before the final ask (deliberate — removes
           the last hesitation right before the click, rather than being read early
-          and forgotten). Deliberately navy + mono, no amber — amber on this page
+          and forgotten). Mono step/time labels kept, no amber — amber on this page
           marks the action, not the explanation.
-          Section-banding fix: now directly adjacent to the final CTA (09), both
-          navy — they read as one continuous navy block instead of two navy bands
-          with a grey testimonials band between them. Added the `section` class
-          for the standard symmetric 88px padding (this section previously had
-          none at all, relying only on its own internal content spacing); since
-          both edges here border navy (07 is the light→navy seam handled on 07's
-          side, not this one) or another navy section, no seam trim applies. */}
-      <section className="section section-navy how-it-works">
+          Navy-banding fix: this section and 09 were both navy, making the bottom
+          of the page 1,328px of unbroken navy (how-it-works + CTA + footer) with
+          no light section between two navy blocks and the footer. Converted to
+          light — section-rule hairline (matching 07's own top-edge treatment)
+          keeps it visually separate from its now-same-toned neighbours; the step
+          cards move from a translucent-white dark-surface treatment to the
+          standard card surface (see .how-it-works-card in global.css). */}
+      <section className="section section-rule how-it-works">
         <div className="container">
           <div className="section-header">
-            <span className="eyebrow on-dark" style={sx('justify-content:center;')}>How it works</span>
+            <span className="eyebrow" style={sx('justify-content:center;')}>How it works</span>
             <h2>Four steps. No surprises.</h2>
           </div>
           <div className="grid grid-4 how-it-works-grid">
@@ -584,21 +586,31 @@ export default function Home() {
 
       {/* 09 — FINAL CTA: both actions repeated, plus the same expectation line as the
           hero and the phone number as a fallback.
-          Section-banding fix: added the `section` class (see 08's comment — this
-          section also had zero padding before, now the standard symmetric 88px). */}
-      <section className="section section-navy" style={sx('text-align:center;')}>
+          Navy-banding fix: converted from section-navy to light (see 08's comment
+          for the full rationale — this and 08 were the two navy sections making
+          the page bottom 1,328px of unbroken navy). Every hardcoded dark-surface
+          color below is reworked for the light background: the `em` emphasis was
+          --ally-orange (1.98:1 on light, fails AA) -> --ally-orange-ink (4.56:1);
+          .btn-outline-invert (dark-surface outline) -> .btn-outline (its
+          light-surface counterpart, already defined in global.css); the three
+          white/opacity inline colors -> --muted-foreground / --ally-navy, the
+          same tokens the rest of the light-surface site uses for this role
+          (matching Contact.jsx:182's tel-link treatment). The h2 needed no
+          inline change — removing section-navy lets it fall back to the global
+          `h2{color:hsl(var(--ally-navy))}` default automatically. */}
+      <section className="section section-rule" style={sx('text-align:center;')}>
         <div className="container">
           <h2 style={sx('max-width:640px;margin:0 auto 24px;')}>
             Ready to build something your customers will{' '}
-            <em style={sx('font-style:italic;color:hsl(var(--ally-orange));')}>actually</em> reorder?
+            <em style={sx('font-style:italic;color:hsl(var(--ally-orange-ink));')}>actually</em> reorder?
           </h2>
           <div className="hero-ctas" style={sx('justify-content:center;margin-top:0;')}>
             <a href={quoteUrl(role)} className="btn btn-primary btn-lg">{isClient ? 'Start a new quote' : 'Start your quote →'}</a>
-            <a href={quoteUrl(role)} className="btn btn-outline-invert btn-lg">Not sure yet? Book a call</a>
+            <a href={quoteUrl(role)} className="btn btn-outline btn-lg">Not sure yet? Book a call</a>
           </div>
-          <p className="hero-expectation" style={sx('color:hsl(0 0% 100% / .82);margin-top:20px;')}>{EXPECTATION_LINE}</p>
-          <p style={sx('margin-top:12px;font-size:13px;color:hsl(0 0% 100% / .5);')}>
-            Prefer to talk first? <a href="tel:+18887205888" style={sx('color:hsl(0 0% 100% / .82);font-weight:600;text-decoration:underline;')}>(888) 720-5888</a>
+          <p className="hero-expectation" style={sx('color:hsl(var(--muted-foreground));margin-top:20px;')}>{EXPECTATION_LINE}</p>
+          <p style={sx('margin-top:12px;font-size:13px;color:hsl(var(--muted-foreground));')}>
+            Prefer to talk first? <a href="tel:+18887205888" style={sx('color:hsl(var(--ally-navy));font-weight:600;text-decoration:underline;')}>(888) 720-5888</a>
           </p>
         </div>
       </section>
