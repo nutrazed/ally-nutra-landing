@@ -88,7 +88,7 @@ export default function PrivateLabel() {
         </div>
       </section>
 
-      <section className="section-alt">
+      <section className="section section-alt">
         <div className="container">
           <div className="section-header">
             <span className="eyebrow" style={sx('justify-content:center;')}>Featured catalog</span>
@@ -133,7 +133,7 @@ export default function PrivateLabel() {
         </div>
       </section>
 
-      <section className="section-alt">
+      <section className="section section-alt">
         <div className="container">
           <div className="section-header">
             <span className="eyebrow" style={sx('justify-content:center;')}>Who we serve</span>
@@ -149,12 +149,12 @@ export default function PrivateLabel() {
         </div>
       </section>
 
-      <section className="section-navy">
+      <section className="section section-rule">
         <div className="container">
           <div className="section-header">
-            <span className="eyebrow on-dark" style={sx('justify-content:center;')}>Timeline</span>
+            <span className="eyebrow" style={sx('justify-content:center;')}>Timeline</span>
             <h2>From order to shelf in weeks</h2>
-            <p style={sx("color:hsl(0 0% 100% / .78);max-width:640px;margin:0 auto;")}>A proven, transparent timeline so you can plan launches, marketing campaigns, and inventory with confidence.</p>
+            <p style={sx("max-width:640px;margin:0 auto;")}>A proven, transparent timeline so you can plan launches, marketing campaigns, and inventory with confidence.</p>
           </div>
           <div className="grid grid-4">
             <div className="svc-timeline-card"><div className="svc-timeline-week">Week 1</div><div className="svc-timeline-label">Onboarding</div><h4>Quote &amp; setup</h4><p>Formula selection, label upload, and PO confirmation.</p></div>
@@ -187,7 +187,7 @@ export default function PrivateLabel() {
         </div>
       </section>
 
-      <section className="section-navy" style={sx('text-align:center;')}>
+      <section className="section section-navy" style={sx('text-align:center;')}>
         <div className="container">
           <h2 style={sx('max-width:640px;margin:0 auto 24px;')}>
             Ready to launch your <em style={sx('font-style:italic;color:hsl(var(--ally-orange));')}>brand</em>?

@@ -76,7 +76,7 @@ export default function Facility() {
         </div>
       </section>
 
-      <section className="section-alt" id="facility-areas">
+      <section className="section section-alt" id="facility-areas">
         <div className="container">
           <div className="section-header">
             <span className="eyebrow" style={sx('justify-content:center;')}>Facility areas</span>
@@ -178,29 +178,29 @@ export default function Facility() {
         </div>
       </section>
 
-      <section className="section-navy">
+      <section className="section section-rule">
         <div className="container hero-grid">
           <div>
-            <span className="eyebrow on-dark">Compliance &amp; clean rooms</span>
-            <h2 style={sx('color:#fff;margin:14px 0 16px;')}>Built to pass every audit.</h2>
+            <span className="eyebrow">Compliance &amp; clean rooms</span>
+            <h2 style={sx('margin:14px 0 16px;')}>Built to pass every audit.</h2>
             <p style={sx('margin-bottom:20px;')}>
               cGMP from the ground up — from facility design through standard operating
               procedures, batch documentation, and ongoing audits.
             </p>
             <ul style={sx('list-style:none;')}>
-              <li style={sx("padding:16px 0;border-bottom:1px solid hsl(0 0% 100% / .1);")}><h4 style={sx("color:hsl(var(--ally-orange));font-size:15px;margin-bottom:6px;")}>Validated SOPs</h4><p style={sx("font-size:13px;")}>Every process documented in current Good Manufacturing Practice SOPs, reviewed annually.</p></li>
-              <li style={sx("padding:16px 0;border-bottom:1px solid hsl(0 0% 100% / .1);")}><h4 style={sx("color:hsl(var(--ally-orange));font-size:15px;margin-bottom:6px;")}>Batch records</h4><p style={sx("font-size:13px;")}>Every batch fully documented from raw material lot to finished goods release.</p></li>
-              <li style={sx('padding:16px 0;')}><h4 style={sx("color:hsl(var(--ally-orange));font-size:15px;margin-bottom:6px;")}>Annual third-party audits</h4><p style={sx("font-size:13px;")}>FDA registration plus annual NSF and independent cGMP audits — reports available on request.</p></li>
+              <li style={sx("padding:16px 0;border-bottom:1px solid hsl(var(--border));")}><h4 style={sx("color:hsl(var(--ally-orange-ink));font-size:15px;margin-bottom:6px;")}>Validated SOPs</h4><p style={sx("font-size:13px;")}>Every process documented in current Good Manufacturing Practice SOPs, reviewed annually.</p></li>
+              <li style={sx("padding:16px 0;border-bottom:1px solid hsl(var(--border));")}><h4 style={sx("color:hsl(var(--ally-orange-ink));font-size:15px;margin-bottom:6px;")}>Batch records</h4><p style={sx("font-size:13px;")}>Every batch fully documented from raw material lot to finished goods release.</p></li>
+              <li style={sx('padding:16px 0;')}><h4 style={sx("color:hsl(var(--ally-orange-ink));font-size:15px;margin-bottom:6px;")}>Annual third-party audits</h4><p style={sx("font-size:13px;")}>FDA registration plus annual NSF and independent cGMP audits — reports available on request.</p></li>
             </ul>
           </div>
           <div>
             <div className="photo ratio-4x3" style={sx('margin-bottom:16px;')}>
               <img src={facility11} width="800" height="600" alt="Close-up profile of a worker wearing clear safety goggles" loading="lazy" onError={hideOnly} />
             </div>
-            <div style={sx("background:hsl(0 0% 100% / .04);border:1px solid hsl(var(--ally-orange)/.2);border-radius:var(--radius-lg);padding:22px;")}>
-              <div style={sx("display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid hsl(0 0% 100% / .08);font-size:13.5px;")}><span>Encapsulation suite</span><span style={sx("color:hsl(var(--ally-orange));font-weight:700;font-family:var(--font-mono);font-size:12px;")}>ISO 8</span></div>
-              <div style={sx("display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid hsl(0 0% 100% / .08);font-size:13.5px;")}><span>Powder blending</span><span style={sx("color:hsl(var(--ally-orange));font-weight:700;font-family:var(--font-mono);font-size:12px;")}>ISO 8</span></div>
-              <div style={sx("display:flex;justify-content:space-between;padding:10px 0;font-size:13.5px;")}><span>QC sampling booth</span><span style={sx("color:hsl(var(--ally-orange));font-weight:700;font-family:var(--font-mono);font-size:12px;")}>ISO 7</span></div>
+            <div style={sx("background:hsl(var(--muted));border:1px solid hsl(var(--border));border-radius:var(--radius-lg);padding:22px;")}>
+              <div style={sx("display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid hsl(var(--border));font-size:13.5px;")}><span>Encapsulation suite</span><span style={sx("color:hsl(var(--ally-orange-ink));font-weight:700;font-family:var(--font-mono);font-size:12px;")}>ISO 8</span></div>
+              <div style={sx("display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid hsl(var(--border));font-size:13.5px;")}><span>Powder blending</span><span style={sx("color:hsl(var(--ally-orange-ink));font-weight:700;font-family:var(--font-mono);font-size:12px;")}>ISO 8</span></div>
+              <div style={sx("display:flex;justify-content:space-between;padding:10px 0;font-size:13.5px;")}><span>QC sampling booth</span><span style={sx("color:hsl(var(--ally-orange-ink));font-weight:700;font-family:var(--font-mono);font-size:12px;")}>ISO 7</span></div>
             </div>
           </div>
         </div>

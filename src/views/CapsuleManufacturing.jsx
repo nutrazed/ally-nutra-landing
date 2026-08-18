@@ -69,7 +69,7 @@ export default function CapsuleManufacturing() {
         </div>
       </section>
 
-      <section className="section-alt">
+      <section className="section section-alt">
         <div className="container">
           <div className="section-header">
             <span className="eyebrow" style={sx('justify-content:center;')}>Capsule sizes</span>
@@ -106,7 +106,7 @@ export default function CapsuleManufacturing() {
         </div>
       </section>
 
-      <section className="section-alt">
+      <section className="section section-alt">
         <div className="container">
           <div className="grid grid-2">
             <div>
@@ -143,33 +143,33 @@ export default function CapsuleManufacturing() {
         </div>
       </section>
 
-      <section className="section-navy">
+      <section className="section section-rule">
         <div className="container">
           <div className="section-header">
-            <span className="eyebrow on-dark" style={sx('justify-content:center;')}>Process</span>
+            <span className="eyebrow" style={sx('justify-content:center;')}>Process</span>
             <h2>From powder to polished capsule</h2>
-            <p style={sx("color:hsl(0 0% 100% / .78);max-width:640px;margin:0 auto;")}>A four-stage encapsulation flow with full traceability at every step.</p>
+            <p style={sx("max-width:640px;margin:0 auto;")}>A four-stage encapsulation flow with full traceability at every step.</p>
           </div>
           <div className="grid grid-4">
-            <div className="card stack-center" style={sx("background:hsl(0 0% 100% / .05);border-color:hsl(0 0% 100% / .12);")}>
+            <div className="card stack-center">
               <div style={sx("width:44px;height:44px;border-radius:50%;background:hsl(var(--ally-orange));color:hsl(var(--ally-navy));display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-weight:700;margin-bottom:14px;")}>01</div>
-              <h4 style={sx("font-size:15px;color:#fff;margin-bottom:8px;")}>Blend</h4>
-              <p style={sx("font-size:13px;color:hsl(0 0% 100% / .65);")}>Active ingredients and excipients homogenized in a V-blender or ribbon mixer.</p>
+              <h4 style={sx("font-size:15px;color:hsl(var(--ally-navy));margin-bottom:8px;")}>Blend</h4>
+              <p style={sx("font-size:13px;")}>Active ingredients and excipients homogenized in a V-blender or ribbon mixer.</p>
             </div>
-            <div className="card stack-center" style={sx("background:hsl(0 0% 100% / .05);border-color:hsl(0 0% 100% / .12);")}>
+            <div className="card stack-center">
               <div style={sx("width:44px;height:44px;border-radius:50%;background:hsl(var(--ally-orange));color:hsl(var(--ally-navy));display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-weight:700;margin-bottom:14px;")}>02</div>
-              <h4 style={sx("font-size:15px;color:#fff;margin-bottom:8px;")}>Encapsulate</h4>
-              <p style={sx("font-size:13px;color:hsl(0 0% 100% / .65);")}>Precision tamp-pin filling at controlled humidity and temperature.</p>
+              <h4 style={sx("font-size:15px;color:hsl(var(--ally-navy));margin-bottom:8px;")}>Encapsulate</h4>
+              <p style={sx("font-size:13px;")}>Precision tamp-pin filling at controlled humidity and temperature.</p>
             </div>
-            <div className="card stack-center" style={sx("background:hsl(0 0% 100% / .05);border-color:hsl(0 0% 100% / .12);")}>
+            <div className="card stack-center">
               <div style={sx("width:44px;height:44px;border-radius:50%;background:hsl(var(--ally-orange));color:hsl(var(--ally-navy));display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-weight:700;margin-bottom:14px;")}>03</div>
-              <h4 style={sx("font-size:15px;color:#fff;margin-bottom:8px;")}>Polish &amp; inspect</h4>
-              <p style={sx("font-size:13px;color:hsl(0 0% 100% / .65);")}>Capsules deduster-cleaned, polished, and 100% optically inspected.</p>
+              <h4 style={sx("font-size:15px;color:hsl(var(--ally-navy));margin-bottom:8px;")}>Polish &amp; inspect</h4>
+              <p style={sx("font-size:13px;")}>Capsules deduster-cleaned, polished, and 100% optically inspected.</p>
             </div>
-            <div className="card stack-center" style={sx("background:hsl(0 0% 100% / .05);border-color:hsl(0 0% 100% / .12);")}>
+            <div className="card stack-center">
               <div style={sx("width:44px;height:44px;border-radius:50%;background:hsl(var(--ally-orange));color:hsl(var(--ally-navy));display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-weight:700;margin-bottom:14px;")}>04</div>
-              <h4 style={sx("font-size:15px;color:#fff;margin-bottom:8px;")}>Bottle &amp; pack</h4>
-              <p style={sx("font-size:13px;color:hsl(0 0% 100% / .65);")}>Counted, sealed, labeled, and master-cartoned to your spec.</p>
+              <h4 style={sx("font-size:15px;color:hsl(var(--ally-navy));margin-bottom:8px;")}>Bottle &amp; pack</h4>
+              <p style={sx("font-size:13px;")}>Counted, sealed, labeled, and master-cartoned to your spec.</p>
             </div>
           </div>
         </div>
@@ -191,7 +191,7 @@ export default function CapsuleManufacturing() {
         </div>
       </section>
 
-      <section className="section-navy" style={sx('text-align:center;')}>
+      <section className="section section-navy" style={sx('text-align:center;')}>
         <div className="container">
           <h2 style={sx('max-width:640px;margin:0 auto 24px;')}>
             Ready to <em style={sx('font-style:italic;color:hsl(var(--ally-orange));')}>manufacture</em>?

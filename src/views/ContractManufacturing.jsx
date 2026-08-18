@@ -69,7 +69,7 @@ export default function ContractManufacturing() {
         </div>
       </section>
 
-      <section className="section-alt">
+      <section className="section section-alt">
         <div className="container">
           <div className="section-header">
             <span className="eyebrow" style={sx('justify-content:center;')}>Our process</span>
@@ -86,7 +86,7 @@ export default function ContractManufacturing() {
         </div>
       </section>
 
-      <section className="section-alt">
+      <section className="section section-alt">
         <div className="container">
           <div className="section-header">
             <span className="eyebrow" style={sx('justify-content:center;')}>Inside the line</span>
@@ -128,23 +128,23 @@ export default function ContractManufacturing() {
         </div>
       </section>
 
-      <section className="section-navy">
+      <section className="section section-rule">
         <div className="container">
           <div className="section-header">
-            <span className="eyebrow on-dark" style={sx('justify-content:center;')}>Minimum order quantities</span>
+            <span className="eyebrow" style={sx('justify-content:center;')}>Minimum order quantities</span>
             <h2>MOQs that match your stage</h2>
-            <p style={sx("color:hsl(0 0% 100% / .78);max-width:640px;margin:0 auto;")}>Whether you're launching your first SKU or scaling to retail, we have a tier for you.</p>
+            <p style={sx("max-width:640px;margin:0 auto;")}>Whether you're launching your first SKU or scaling to retail, we have a tier for you.</p>
           </div>
-          <div className="svc-table on-navy" style={sx('max-width:900px;margin:0 auto;')}>
+          <div className="svc-table on-light" style={sx('max-width:900px;margin:0 auto;')}>
             <div className="svc-table-row head" style={sx('grid-template-columns:2fr 1fr 1fr 1fr;')}><div>Product type</div><div>Starter</div><div>Growth</div><div>Scale</div></div>
             <div className="svc-table-row" style={sx('grid-template-columns:2fr 1fr 1fr 1fr;')}><div className="product">Capsules</div><div>2,500 units</div><div>10,000 units</div><div>50,000+</div></div>
             <div className="svc-table-row" style={sx('grid-template-columns:2fr 1fr 1fr 1fr;')}><div className="product">Sachets</div><div>5,000 units</div><div>20,000 units</div><div>50,000+</div></div>
             <div className="svc-table-row" style={sx('grid-template-columns:2fr 1fr 1fr 1fr;')}><div className="product">Stick packs</div><div>10,000 units</div><div>25,000 units</div><div>50,000+</div></div>
             <div className="svc-table-row" style={sx('grid-template-columns:2fr 1fr 1fr 1fr;')}><div className="product">Pouches</div><div>2,000 units</div><div>10,000 units</div><div>50,000+</div></div>
           </div>
-          <p style={sx("text-align:center;color:hsl(0 0% 100% / .6);font-size:13.5px;margin-top:24px;")}>
+          <p style={sx("text-align:center;font-size:13.5px;margin-top:24px;")}>
             Looking for the full format lineup?{' '}
-            <Link to="/home" style={sx('color:hsl(var(--ally-orange));text-decoration:underline;')}>See all four formats we manufacture →</Link>
+            <Link to="/home" style={sx('color:hsl(var(--ally-orange-ink));text-decoration:underline;')}>See all four formats we manufacture →</Link>
           </p>
         </div>
       </section>
@@ -162,7 +162,7 @@ export default function ContractManufacturing() {
         </div>
       </section>
 
-      <section className="section-navy" style={sx('text-align:center;')}>
+      <section className="section section-navy" style={sx('text-align:center;')}>
         <div className="container">
           <h2 style={sx('max-width:640px;margin:0 auto 24px;')}>
             Ready to build your <em style={sx('font-style:italic;color:hsl(var(--ally-orange));')}>product</em>?

@@ -416,7 +416,7 @@ export default function About() {
         </div>
       </section>
 
-      <section className="section-alt">
+      <section className="section section-alt">
         <div className="container">
           <div className="section-header">
             <span className="eyebrow" style={sx('justify-content:center;')}>Company snapshot</span>
@@ -488,7 +488,7 @@ export default function About() {
 
       <AboutScroll />
 
-      <section className="section-alt">
+      <section className="section section-alt">
         <div className="container">
           <div className="section-header">
             <span className="eyebrow" style={sx('justify-content:center;')}>What drives us</span>
@@ -528,10 +528,10 @@ export default function About() {
         </div>
       </section>
 
-      <section className="section-navy">
+      <section className="section section-rule">
         <div className="container">
           <div className="section-header">
-            <span className="eyebrow on-dark" style={sx('justify-content:center;')}>Our journey</span>
+            <span className="eyebrow" style={sx('justify-content:center;')}>Our journey</span>
             <h2>Milestones that made us.</h2>
             <p>Every brand has a story. This is ours — the moments that shaped how we build, hire, and serve.</p>
           </div>
@@ -545,7 +545,7 @@ export default function About() {
         </div>
       </section>
 
-      <section className="section-alt">
+      <section className="section section-alt">
         <div className="container">
           <div className="section-header">
             <span className="eyebrow" style={sx('justify-content:center;')}>Leadership</span>
@@ -606,7 +606,7 @@ export default function About() {
         </div>
       </section>
 
-      <section className="section-alt" style={sx('text-align:center;')}>
+      <section className="section section-alt" style={sx('text-align:center;')}>
         <div className="container">
           <h2 style={sx('margin-bottom:16px;')}>Let's build something.</h2>
           <p style={sx("max-width:560px;margin:0 auto 24px;")}>

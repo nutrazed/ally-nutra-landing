@@ -91,7 +91,7 @@ export default function Certifications() {
         </div>
       </section>
 
-      <section className="section-alt" id="cert-grid">
+      <section className="section section-alt" id="cert-grid">
         <div className="container">
           <div className="section-header">
             <span className="eyebrow" style={sx('justify-content:center;')}>Our certifications</span>
@@ -184,40 +184,40 @@ export default function Certifications() {
         </div>
       </section>
 
-      <section className="section-navy">
+      <section className="section section-rule">
         <div className="container">
           <div className="section-header">
-            <span className="eyebrow on-dark" style={sx('justify-content:center;')}>Testing protocols</span>
+            <span className="eyebrow" style={sx('justify-content:center;')}>Testing protocols</span>
             <h2>Every batch, every test.</h2>
             <p>Identity, potency, purity, microbial, and stability — all tested by ISO-accredited third-party labs before any product leaves our facility.</p>
           </div>
           <div className="grid grid-4" style={sx('margin-bottom:40px;')}>
-            <div style={sx("background:hsl(0 0% 100% / .04);border:1px solid hsl(0 0% 100% / .1);border-radius:var(--radius-md);padding:26px;text-align:center;")}>
+            <div className="card" style={sx("padding:26px;text-align:center;")}>
               <div style={sx("width:44px;height:44px;background:hsl(var(--ally-orange)/.15);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;color:hsl(var(--ally-orange));")}>
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="6" /><circle cx="12" cy="12" r="2" /></svg>
               </div>
-              <h4 style={sx("color:#fff;font-size:15px;margin-bottom:8px;")}>Identity testing</h4>
+              <h4 style={sx("color:hsl(var(--ally-navy));font-size:15px;margin-bottom:8px;")}>Identity testing</h4>
               <p style={sx("font-size:12.5px;")}>FTIR, HPLC, and DNA verification confirm what's on the label is what's in the bottle.</p>
             </div>
-            <div style={sx("background:hsl(0 0% 100% / .04);border:1px solid hsl(0 0% 100% / .1);border-radius:var(--radius-md);padding:26px;text-align:center;")}>
+            <div className="card" style={sx("padding:26px;text-align:center;")}>
               <div style={sx("width:44px;height:44px;background:hsl(var(--ally-orange)/.15);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;color:hsl(var(--ally-orange));")}>
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 3v18h18" /><path d="M7 14l4-4 4 4 5-5" /></svg>
               </div>
-              <h4 style={sx("color:#fff;font-size:15px;margin-bottom:8px;")}>Potency testing</h4>
+              <h4 style={sx("color:hsl(var(--ally-navy));font-size:15px;margin-bottom:8px;")}>Potency testing</h4>
               <p style={sx("font-size:12.5px;")}>Quantitative analysis confirms each active ingredient hits its labeled dose.</p>
             </div>
-            <div style={sx("background:hsl(0 0% 100% / .04);border:1px solid hsl(0 0% 100% / .1);border-radius:var(--radius-md);padding:26px;text-align:center;")}>
+            <div className="card" style={sx("padding:26px;text-align:center;")}>
               <div style={sx("width:44px;height:44px;background:hsl(var(--ally-orange)/.15);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;color:hsl(var(--ally-orange));")}>
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 12l2 2 4-4" /><circle cx="12" cy="12" r="10" /></svg>
               </div>
-              <h4 style={sx("color:#fff;font-size:15px;margin-bottom:8px;")}>Purity testing</h4>
+              <h4 style={sx("color:hsl(var(--ally-navy));font-size:15px;margin-bottom:8px;")}>Purity testing</h4>
               <p style={sx("font-size:12.5px;")}>Heavy metals, pesticides, residual solvents, and contaminant screens at parts-per-billion sensitivity.</p>
             </div>
-            <div style={sx("background:hsl(0 0% 100% / .04);border:1px solid hsl(0 0% 100% / .1);border-radius:var(--radius-md);padding:26px;text-align:center;")}>
+            <div className="card" style={sx("padding:26px;text-align:center;")}>
               <div style={sx("width:44px;height:44px;background:hsl(var(--ally-orange)/.15);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;color:hsl(var(--ally-orange));")}>
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="6" cy="6" r="3" /><circle cx="18" cy="6" r="3" /><circle cx="12" cy="14" r="3" /></svg>
               </div>
-              <h4 style={sx("color:#fff;font-size:15px;margin-bottom:8px;")}>Microbial testing</h4>
+              <h4 style={sx("color:hsl(var(--ally-navy));font-size:15px;margin-bottom:8px;")}>Microbial testing</h4>
               <p style={sx("font-size:12.5px;")}>Total plate count, yeast/mold, E. coli, salmonella, and pathogen screens on every batch.</p>
             </div>
           </div>
@@ -227,7 +227,7 @@ export default function Certifications() {
         </div>
       </section>
 
-      <section className="section-alt">
+      <section className="section section-alt">
         <div className="container">
           <div className="section-header">
             <span className="eyebrow" style={sx('justify-content:center;')}>Our audit process</span>

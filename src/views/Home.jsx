@@ -285,13 +285,6 @@ const FACILITY_STRIP = [
   { img: facility06, alt: 'A warehouse aisle lined with shrink-wrapped stacks of finished goods cartons', caption: 'FINISHED GOODS', sub: 'FBA PREP · DIRECT SHIP' },
 ];
 
-const EXPLORE_LINKS = [
-  { to: '/facility', title: 'Facility', line: 'A tour of where your product is made.' },
-  { to: '/certifications', title: 'Certifications', line: 'cGMP, FDA, NSF, and more — audited annually.' },
-  { to: '/services', title: 'R&D & innovation', line: 'How we turn ingredient research into formulas.' },
-  { to: '/faq', title: 'FAQ', line: '26 questions, answered with precision.' },
-];
-
 export default function Home() {
   const { role, isClient } = useDemoRole();
   return (
@@ -610,22 +603,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 10 — EXPLORE: compact reference index, stays last. This is how
-          facility/certifications/R&D/FAQ content stays reachable after being
-          demoted off the home view. */}
-      <section className="explore-strip">
-        <div className="container">
-          <div className="explore-grid">
-            {EXPLORE_LINKS.map((l) => (
-              <Link to={l.to} className="explore-card" key={l.to}>
-                <span className="explore-card-title">{l.title}</span>
-                <span className="explore-card-line">{l.line}</span>
-                <span className="explore-card-arrow" aria-hidden="true">→</span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
     </>
   );
 }
