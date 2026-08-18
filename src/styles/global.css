@@ -398,7 +398,7 @@ html.no-js .stat-live{display:none;}
 .timeline-item:last-child{padding-bottom:0;}
 .timeline-dot{position:absolute;left:-52px;top:4px;width:14px;height:14px;border-radius:50%;background:hsl(var(--ally-orange));border:3px solid hsl(var(--ally-navy));}
 .timeline-year{font-family:var(--font-mono);font-size:12px;color:hsl(var(--ally-orange));text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;}
-.timeline-item h4{color:#fff;font-size:16px;margin-bottom:6px;}
+.timeline-item h4{color:hsl(var(--ally-navy));font-size:16px;margin-bottom:6px;}
 
 .team-card{background:hsl(var(--card));border:1px solid hsl(var(--border));border-radius:var(--radius-lg);overflow:hidden;}
 .team-avatar{width:96px;height:96px;border-radius:50%;background:hsl(var(--ally-navy));color:hsl(var(--ally-orange));font-weight:700;font-size:32px;display:flex;align-items:center;justify-content:center;font-family:var(--font-slab);margin:32px auto 0;}
@@ -786,11 +786,11 @@ html.no-js .stat-live{display:none;}
 .svc-catalog-meta{display:flex;justify-content:space-between;font-size:11.5px;color:hsl(var(--muted-foreground));border-top:1px solid hsl(var(--border));padding-top:10px;}
 .svc-catalog-meta strong{color:hsl(var(--ally-navy));}
 
-.svc-timeline-card{background:hsl(0 0% 100% / .05);border:1px solid hsl(0 0% 100% / .12);border-radius:var(--radius-md);padding:24px 20px;text-align:center;}
-.svc-timeline-week{font-family:var(--font-slab);font-size:24px;color:hsl(var(--ally-orange));font-weight:600;margin-bottom:8px;}
-.svc-timeline-label{font-family:var(--font-mono);font-size:9.5px;text-transform:uppercase;letter-spacing:0.08em;color:hsl(0 0% 100% / .5);margin-bottom:10px;}
-.svc-timeline-card h4{color:#fff;font-size:15px;margin-bottom:6px;}
-.svc-timeline-card p{font-size:12.5px;color:hsl(0 0% 100% / .65);}
+.svc-timeline-card{background:hsl(var(--card));border:1px solid hsl(var(--border));border-radius:var(--radius-md);padding:24px 20px;text-align:center;}
+.svc-timeline-week{font-family:var(--font-slab);font-size:24px;color:hsl(var(--ally-orange-ink));font-weight:600;margin-bottom:8px;}
+.svc-timeline-label{font-family:var(--font-mono);font-size:9.5px;text-transform:uppercase;letter-spacing:0.08em;color:hsl(var(--muted-foreground));margin-bottom:10px;}
+.svc-timeline-card h4{color:hsl(var(--ally-navy));font-size:15px;margin-bottom:6px;}
+.svc-timeline-card p{font-size:12.5px;color:hsl(var(--muted-foreground));}
 
 .svc-spec-list{list-style:none;}
 .svc-spec-list li{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid hsl(var(--border));font-size:13.5px;}
@@ -898,22 +898,6 @@ html.no-js .stat-live{display:none;}
 }
 @media (max-width:600px){
   .how-it-works-grid{grid-template-columns:1fr !important;}
-}
-
-/* Explore strip: compact reference index — how Facility/Certifications/R&D/FAQ stay
-   reachable after being demoted off the home view. Kept to one row on desktop. */
-.explore-strip{padding:36px 0;}
-.explore-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
-.explore-card{display:flex;flex-direction:column;gap:4px;padding:16px 18px;border:1px solid hsl(var(--border));border-radius:var(--radius-md);transition:border-color .15s;position:relative;}
-.explore-card:hover{border-color:hsl(var(--ally-orange));}
-.explore-card-title{font-family:var(--font-slab);font-weight:500;font-size:14.5px;color:hsl(var(--ally-navy));}
-.explore-card-line{font-size:12.5px;color:hsl(var(--muted-foreground));line-height:1.4;}
-.explore-card-arrow{position:absolute;top:14px;right:16px;color:hsl(var(--ally-orange));font-size:14px;}
-@media (max-width:760px){
-  .explore-grid{grid-template-columns:repeat(2,1fr);}
-}
-@media (max-width:460px){
-  .explore-grid{grid-template-columns:1fr;}
 }
 
 /* Contact form's honest fake-success state — see the handleSubmit comment in

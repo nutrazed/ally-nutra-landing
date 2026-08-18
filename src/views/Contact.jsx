@@ -41,7 +41,7 @@ export default function Contact() {
         </div>
       </section>
 
-      <section className="section-alt" id="contact-form">
+      <section className="section section-alt" id="contact-form">
         <div className="container hero-grid" style={sx('align-items:start;')}>
           {submitted ? (
             <div className="card" style={sx('padding:40px;')} role="status">
@@ -206,7 +206,7 @@ export default function Contact() {
         </div>
       </section>
 
-      <section className="section-alt">
+      <section className="section section-alt">
         <div className="container hero-grid">
           <div className="map-embed">
             <iframe
@@ -257,7 +257,7 @@ export default function Contact() {
         </div>
       </section>
 
-      <section className="section-navy" style={sx('text-align:center;')}>
+      <section className="section section-navy" style={sx('text-align:center;')}>
         <div className="container">
           <h2 style={sx('color:#fff;margin-bottom:12px;')}>Prefer to talk?</h2>
           <p style={sx("max-width:520px;margin:0 auto 24px;")}>

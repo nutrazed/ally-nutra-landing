@@ -250,7 +250,7 @@ export default function Faq() {
         </div>
       </section>
 
-      <section className="section-navy" style={sx('padding:56px 0;')}>
+      <section className="section section-navy" style={sx('padding:56px 0;')}>
         <div className="container" style={sx("display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;")}>
           <div>
             <h2 style={sx('color:#fff;margin-bottom:6px;font-size:26px;')}>Still have questions?</h2>

@@ -160,52 +160,52 @@ export default function Services() {
         </div>
       </section>
 
-      <section className="section-navy">
+      <section className="section section-rule">
         <div className="container">
           <div className="section-header left">
-            <span className="eyebrow on-dark">Additional services</span>
+            <span className="eyebrow">Additional services</span>
             <h2>Beyond the bottle.</h2>
             <p>Manufacturing is the core — but we support your brand across the full product lifecycle.</p>
           </div>
           <div className="grid grid-2">
-            <div style={sx("background:hsl(0 0% 100% / .04);border:1px solid hsl(0 0% 100% / .08);border-left:3px solid hsl(var(--ally-orange));border-radius:var(--radius-md);padding:28px;")}>
-              <div className="mono-chip" style={sx("color:hsl(var(--ally-orange)/.7);margin-bottom:10px;")}>SVC-01 · formulation</div>
-              <h3 style={sx("color:#fff;margin-bottom:10px;")}>Custom formulation R&amp;D</h3>
+            <div className="card" style={sx("border-left:3px solid hsl(var(--ally-orange));")}>
+              <div className="mono-chip" style={sx("color:hsl(var(--ally-orange-ink));margin-bottom:10px;")}>SVC-01 · formulation</div>
+              <h3 style={sx("margin-bottom:10px;")}>Custom formulation R&amp;D</h3>
               <p style={sx('margin-bottom:16px;')}>Bring us a concept or a competitor product — our PhD formulators design from scratch, optimizing for efficacy, cost, and shelf stability.</p>
-              <ul className="bullet-list" style={sx("color:hsl(0 0% 100% / .7);")}>
-                <li style={sx("color:hsl(0 0% 100% / .7);")}>Ingredient compatibility testing</li>
-                <li style={sx("color:hsl(0 0% 100% / .7);")}>Stability &amp; accelerated aging studies</li>
-                <li style={sx("color:hsl(0 0% 100% / .7);")}>Full R&amp;D documentation package</li>
+              <ul className="bullet-list">
+                <li>Ingredient compatibility testing</li>
+                <li>Stability &amp; accelerated aging studies</li>
+                <li>Full R&amp;D documentation package</li>
               </ul>
             </div>
-            <div style={sx("background:hsl(0 0% 100% / .04);border:1px solid hsl(0 0% 100% / .08);border-left:3px solid hsl(var(--ally-orange));border-radius:var(--radius-md);padding:28px;")}>
-              <div className="mono-chip" style={sx("color:hsl(var(--ally-orange)/.7);margin-bottom:10px;")}>SVC-02 · private label</div>
-              <h3 style={sx("color:#fff;margin-bottom:10px;")}>Private label launch</h3>
+            <div className="card" style={sx("border-left:3px solid hsl(var(--ally-orange));")}>
+              <div className="mono-chip" style={sx("color:hsl(var(--ally-orange-ink));margin-bottom:10px;")}>SVC-02 · private label</div>
+              <h3 style={sx("margin-bottom:10px;")}>Private label launch</h3>
               <p style={sx('margin-bottom:16px;')}>Skip the R&amp;D. Choose from our library of 200+ proven formulas, apply your brand, and go to market in as little as three weeks.</p>
-              <ul className="bullet-list" style={sx("color:hsl(0 0% 100% / .7);")}>
-                <li style={sx("color:hsl(0 0% 100% / .7);")}>200+ ready-to-brand formulas</li>
-                <li style={sx("color:hsl(0 0% 100% / .7);")}>Low MOQ — from 100 bottles per SKU</li>
-                <li style={sx("color:hsl(0 0% 100% / .7);")}>COA included on every batch</li>
+              <ul className="bullet-list">
+                <li>200+ ready-to-brand formulas</li>
+                <li>Low MOQ — from 100 bottles per SKU</li>
+                <li>COA included on every batch</li>
               </ul>
             </div>
-            <div style={sx("background:hsl(0 0% 100% / .04);border:1px solid hsl(0 0% 100% / .08);border-left:3px solid hsl(var(--ally-orange));border-radius:var(--radius-md);padding:28px;")}>
-              <div className="mono-chip" style={sx("color:hsl(var(--ally-orange)/.7);margin-bottom:10px;")}>SVC-03 · packaging</div>
-              <h3 style={sx("color:#fff;margin-bottom:10px;")}>Packaging &amp; label design</h3>
+            <div className="card" style={sx("border-left:3px solid hsl(var(--ally-orange));")}>
+              <div className="mono-chip" style={sx("color:hsl(var(--ally-orange-ink));margin-bottom:10px;")}>SVC-03 · packaging</div>
+              <h3 style={sx("margin-bottom:10px;")}>Packaging &amp; label design</h3>
               <p style={sx('margin-bottom:16px;')}>Full-service packaging from structural design through print-ready artwork — compliant, shelf-ready, and on-brand.</p>
-              <ul className="bullet-list" style={sx("color:hsl(0 0% 100% / .7);")}>
-                <li style={sx("color:hsl(0 0% 100% / .7);")}>FDA supplement facts panel generation</li>
-                <li style={sx("color:hsl(0 0% 100% / .7);")}>Print-ready artwork files</li>
-                <li style={sx("color:hsl(0 0% 100% / .7);")}>Barcode &amp; lot code setup</li>
+              <ul className="bullet-list">
+                <li>FDA supplement facts panel generation</li>
+                <li>Print-ready artwork files</li>
+                <li>Barcode &amp; lot code setup</li>
               </ul>
             </div>
-            <div style={sx("background:hsl(0 0% 100% / .04);border:1px solid hsl(0 0% 100% / .08);border-left:3px solid hsl(var(--ally-orange));border-radius:var(--radius-md);padding:28px;")}>
-              <div className="mono-chip" style={sx("color:hsl(var(--ally-orange)/.7);margin-bottom:10px;")}>SVC-04 · fulfillment</div>
-              <h3 style={sx("color:#fff;margin-bottom:10px;")}>Amazon FBA preparation</h3>
+            <div className="card" style={sx("border-left:3px solid hsl(var(--ally-orange));")}>
+              <div className="mono-chip" style={sx("color:hsl(var(--ally-orange-ink));margin-bottom:10px;")}>SVC-04 · fulfillment</div>
+              <h3 style={sx("margin-bottom:10px;")}>Amazon FBA preparation</h3>
               <p style={sx('margin-bottom:16px;')}>We prep, label, and bundle your finished product to Amazon's exact FBA specifications, so your inventory arrives ready to sell.</p>
-              <ul className="bullet-list" style={sx("color:hsl(0 0% 100% / .7);")}>
-                <li style={sx("color:hsl(0 0% 100% / .7);")}>FNSKU labeling &amp; poly-bagging</li>
-                <li style={sx("color:hsl(0 0% 100% / .7);")}>Multi-unit bundling &amp; kitting</li>
-                <li style={sx("color:hsl(0 0% 100% / .7);")}>Direct-to-FC shipping available</li>
+              <ul className="bullet-list">
+                <li>FNSKU labeling &amp; poly-bagging</li>
+                <li>Multi-unit bundling &amp; kitting</li>
+                <li>Direct-to-FC shipping available</li>
               </ul>
             </div>
           </div>
@@ -242,7 +242,7 @@ export default function Services() {
         </div>
       </section>
 
-      <section className="section-alt">
+      <section className="section section-alt">
         <div className="container">
           <div className="section-header">
             <span className="eyebrow" style={sx('justify-content:center;')}>Our process · rev A</span>
