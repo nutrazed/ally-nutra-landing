@@ -1,9 +1,16 @@
 :root{
-  --ally-navy: 214 52% 24%;        /* #1E3A5F */
-  --primary: 214 52% 24%;
+  /* --ally-navy, --primary, --ally-orange, --ring, --ally-orange-ink, --background, --paper:
+     the H/S/L below are NOT whole numbers. Whole-degree/percent HSL never round-trips exactly
+     to 8-bit RGB — the previous whole-number triplets rendered #1D395D/#F0A728/#9B6B12/#FDFDFC/
+     #EDEBE8 while their comments (and every design.md / palette-lint allowlist reference) claim
+     #1E3A5F/#F0A829/#9A6B12/#FCFCFC/#ECEAE6. Hex is canonical (same ruling as PR #18 in
+     public/admin/index.html); these decimals are the exact inverse HSL for that hex, not a
+     stylistic choice — don't "clean up" back to integers without re-deriving the target hex. */
+  --ally-navy: 214.15 52% 24.51%;        /* #1E3A5F */
+  --primary: 214.15 52% 24.51%;
   --ally-light-navy: 215 55% 40%;  /* #2E5D9E */
-  --ally-orange: 38 87% 55%;       /* #F0A829 */
-  --ally-orange-ink: 39 79% 34%;   /* #9A6B12 — text-on-light variant of --ally-orange.
+  --ally-orange: 38.29 86.9% 55.1%;       /* #F0A829 */
+  --ally-orange-ink: 39.26 79.07% 33.73%;   /* #9A6B12 — text-on-light variant of --ally-orange.
                                        Brand amber measures 1.98:1 contrast against
                                        --background, failing WCAG AA (4.5:1) for text; this
                                        darker, same-hue variant measures 4.56:1 and passes.
@@ -18,9 +25,9 @@
   --input: 240 6% 90%;
   --destructive: 358 68% 57%;      /* #DC474C */
   --card: 0 0% 100%;               /* #FFFFFF */
-  --background: 40 20% 99%;        /* #FCFCFC */
-  --paper: 36 12% 92%;             /* #ECEAE6 warm chrome */
-  --ring: 38 87% 55%;              /* amber — the one functional accent for focus */
+  --background: 0 0% 98.82%;        /* #FCFCFC */
+  --paper: 40 13.64% 91.37%;             /* #ECEAE6 warm chrome */
+  --ring: 38.29 86.9% 55.1%;              /* amber — the one functional accent for focus */
   --radius-sm: 4px;
   --radius-md: 6px;
   --radius-lg: 8px;
