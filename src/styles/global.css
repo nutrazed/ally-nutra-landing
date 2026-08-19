@@ -102,7 +102,17 @@ p{font-size:15px;line-height:1.7;color:hsl(var(--muted-foreground));}
    between roles. A 1fr/auto/1fr grid keeps the middle (auto) track centered
    on the row regardless of how wide the flanking content actually is, as
    long as it fits its own 1fr share, which logo/actions both do. */
-.header-inner{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;height:76px;gap:24px;}
+/* fix/wordmark-nav-item: single source of truth for "a nav item's type,"
+   read once here rather than copied as separate literals into each place
+   the wordmark renders (.logo-wordmark and .nav-brand below, plus the
+   plain .main-nav>a rule itself) — that copy-without-a-shared-source is
+   exactly how .logo-wordmark drifted to Roboto Slab/19px/700 while the
+   real nav items stayed at Roboto/14px/500. font-family and
+   letter-spacing aren't listed here because neither the wordmark nor a
+   real nav item ever set them explicitly — both simply inherit
+   var(--font-sans) / the browser default 'normal' from higher up, so
+   there's nothing to keep in sync for those two. */
+.header-inner{--nav-item-font-size:14px;--nav-item-font-weight:500;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;height:76px;gap:24px;}
 /* grid-column pinned explicitly on all three header-inner children: with
    `.main-nav{display:none}` at <=1100px removing it from the grid item
    list entirely, unpinned auto-placement repacks the two remaining items
@@ -119,22 +129,15 @@ p{font-size:15px;line-height:1.7;color:hsl(var(--muted-foreground));}
    asked for explicitly in the brief (which is about the desktop nav
    cluster specifically) but kept deliberately — removing it would leave
    mobile with no way home at all. */
-.logo{display:flex;align-items:center;gap:10px;flex-shrink:0;justify-self:start;grid-column:1;}
-.logo-wordmark{font-family:var(--font-slab);font-weight:600;font-size:19px;letter-spacing:-0.01em;color:#fff;white-space:nowrap;transition:color .15s;}
-.logo.active .logo-wordmark{color:hsl(var(--ally-orange));font-weight:700;}
-/* Not hidden below any width itself (only ever hidden by the desktop-only
-   rule further down): the logo's <img alt=""> is decorative on purpose
-   (see the JSX) — this text is the link's ONLY accessible name, so
-   display:none-ing it while the link is still meant to be usable would
-   leave it with none at all. */
-.logo-img{height:46px;width:auto;display:block;}
-/* Real logo (public/lovable-uploads/ally-nutra-logo-white.png, trimmed to content, copied
-   here as logo-white.png) replaces the old CSS text wordmark + amber ::after-style
-   underline — the real mark already carries its own amber accents, so no separate
-   underline is drawn here (would render two). Constrained by height only, per the
-   "never stretch the wordmark" rule; width follows the source's own aspect ratio.
-   46px (was 36px) — the "ALLY+" cap-height is ~130px of the 627px source, so
-   clearspace ~9-10px at this size. */
+/* fix/wordmark-nav-item: "Ally Nutra" is a nav item — icon + label, amber,
+   no hover, same rhythm (gap:7px, matching .main-nav>a:not(.nav-brand)
+   below, not the 10px the old 46px image needed). Colour and the active
+   weight bump are the wordmark's only real differences from a plain item;
+   both stay here since the label is genuinely the brand, not one of the
+   nine destinations. */
+.logo{display:flex;align-items:center;gap:7px;flex-shrink:0;justify-self:start;grid-column:1;color:hsl(var(--ally-orange));}
+.logo-wordmark{font-size:var(--nav-item-font-size);font-weight:var(--nav-item-font-weight);white-space:nowrap;}
+.logo.active .logo-wordmark{font-weight:700;}
 .main-nav{display:flex;align-items:center;gap:6px;justify-self:center;grid-column:2;}
 .header-actions{display:flex;align-items:center;gap:20px;justify-self:end;grid-column:3;}
 /* nav-icon: one consistent 16px slot for every icon in NavIcons.jsx, in
@@ -154,23 +157,27 @@ p{font-size:15px;line-height:1.7;color:hsl(var(--muted-foreground));}
    with the child combinator. Only .nav-brand and the top-level MAIN_LINKS/
    trigger items are direct children of .main-nav; the panel's links are
    not, so `>` scopes correctly without needing :not() for this. */
-.main-nav>a:not(.nav-brand){position:relative;display:inline-flex;align-items:center;gap:7px;font-size:14px;font-weight:500;color:hsl(0 0% 100% / .75);padding:8px 14px;border-radius:var(--radius-sm);transition:color .15s;white-space:nowrap;}
+.main-nav>a:not(.nav-brand){position:relative;display:inline-flex;align-items:center;gap:7px;font-size:var(--nav-item-font-size);font-weight:var(--nav-item-font-weight);color:hsl(0 0% 100% / .75);padding:8px 14px;border-radius:var(--radius-sm);transition:color .15s;white-space:nowrap;}
 .main-nav>a:not(.nav-brand):hover{color:#fff;}
 .main-nav>a.active{color:hsl(var(--ally-orange));font-weight:700;}
 /* nav-brand: the wordmark, moved from its old far-left spot (was .logo,
    now mobile-only above) to sit as the FIRST item in the nav cluster
-   itself, alongside Services. Font-family/size/weight/padding/gap are
-   :not(.nav-brand)'s .main-nav>a values, read off the rendered page and
-   matched deliberately (not eyeballed) — see the PR body's computed-style
-   comparison. The two differences from a real nav item, both intentional:
-   colour is unconditionally amber (never the dimmed .75-white other items
-   rest at) so it still reads as the brand rather than a seventh nav item;
-   and it never gets :hover — see the :not(.nav-brand) exclusions above and
-   in the hover/focus treatment below. The glyph's own size/spacing is
-   untouched (.logo-img's rules, reused verbatim via .nav-brand-img). */
-.main-nav>a.nav-brand{display:inline-flex;align-items:center;gap:10px;font-size:14px;font-weight:500;color:hsl(var(--ally-orange));padding:8px 14px;white-space:nowrap;}
+   itself, alongside Services. gap/padding/font-size/font-weight are
+   :not(.nav-brand)'s .main-nav>a values exactly — the size/weight via the
+   shared --nav-item-* custom properties declared on .header-inner (see
+   above), not copied literals, so the two can't drift apart silently
+   again the way .logo-wordmark did. font-family and letter-spacing are
+   simply inherited, same as a real item. The two differences from a real
+   nav item, both intentional: colour is unconditionally amber (never the
+   dimmed .75-white other items rest at) so it still reads as the brand
+   rather than a seventh nav item; and it never gets :hover — see the
+   :not(.nav-brand) exclusions above and in the hover/focus treatment
+   below. Icon is IconCapsule (NavIcons.jsx), the same 16x16/1.5-stroke
+   glyph used for /capsule-manufacturing — not a new icon, and not the old
+   46px PNG (removed; the portal footer still uses the PNG at 46px, which
+   stays — that's a different, legitimate context). */
+.main-nav>a.nav-brand{display:inline-flex;align-items:center;gap:7px;font-size:var(--nav-item-font-size);font-weight:var(--nav-item-font-weight);color:hsl(var(--ally-orange));padding:8px 14px;white-space:nowrap;}
 .main-nav>a.nav-brand.active{font-weight:700;}
-.nav-brand-img{height:46px;width:auto;display:block;}
 @media (min-width:1101px){.logo{display:none;}}
 
 /* ---- Services dropdown (desktop) ---- */

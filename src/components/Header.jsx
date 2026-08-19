@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
-import logoWhite from '../assets/images/logo-white.png';
 import { SERVICE_KEYS, pageKeyFromPathname } from '../lib/pages.js';
 import { useDemoRole } from '../contexts/DemoRoleContext.jsx';
 import { quoteUrl, portalUrl, adminUrl } from '../lib/demoRole.js';
@@ -212,20 +211,29 @@ export default function Header() {
     <header className="site-header">
       <div className="container header-inner">
         {/* Mobile-only fallback (<=1100px) — see global.css's `.logo` comment.
-            The desktop-width brand item lives inside .main-nav below now. */}
+            The desktop-width brand item lives inside .main-nav below now.
+            fix/wordmark-nav-item: "Ally Nutra" is a nav item, not a logo
+            lockup — same IconCapsule + text pattern as every other item,
+            not the 46px PNG. Its type comes from --nav-item-font-size /
+            --nav-item-font-weight (declared once, shared with the real nav
+            items below — see global.css), not a hardcoded slab/19px/700
+            stack. */}
         <Link to="/home" className={`logo${isHome ? ' active' : ''}`}>
-          <img className="logo-img" src={logoWhite} alt="" width="783" height="627" />
+          <IconCapsule />
           <span className="logo-wordmark">Ally Nutra</span>
         </Link>
         <nav className="main-nav" aria-label="Primary">
           {/* feature/nav-restructure (wordmark relocation): first item in the
               cluster, alongside Services — not a separate header element
-              anymore at this width. Font/size/weight match a resting
-              .main-nav a exactly (read off the rendered page, see the PR
-              body); colour is unconditionally amber and it never gets
-              :hover — both enforced in global.css via :not(.nav-brand). */}
+              anymore at this width. fix/wordmark-nav-item: font-size and
+              font-weight are the same --nav-item-* custom properties
+              .main-nav>a:not(.nav-brand) uses (not copied literals — see
+              global.css), and font-family/letter-spacing are simply
+              inherited, same as every other item; colour is unconditionally
+              amber and it never gets :hover — both enforced in global.css
+              via :not(.nav-brand). */}
           <Link to="/home" className={`nav-brand${isHome ? ' active' : ''}`}>
-            <img className="nav-brand-img" src={logoWhite} alt="" width="783" height="627" />
+            <IconCapsule />
             <span>Ally Nutra</span>
           </Link>
           <div
