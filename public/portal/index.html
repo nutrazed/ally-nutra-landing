@@ -33,6 +33,16 @@
     --surface-page:#ECEAE6; --surface-paper:#F4F2ED; --surface-card:#FFFFFF;
     --surface-muted:#F4F4F5;
     --border-default:#E4E5E2; --border-hairline:#ECEEEA;
+    /* feature/portal-review-wen: --border-default (ΔR8 G5 B4 against
+       --surface-page) is correct on white but too weak for an edge that
+       itself sits on paper — .datecube's border, .track's fill, and the
+       tracker's incomplete connector all needed something with more
+       weight against #ECEAE6. rgba(30,58,95,.14) is a tint of --ally-navy
+       (not a new colour — stays inside AN-DESIGN-001), composites to
+       #CFD1D3 over #ECEAE6, a ΔR29 G25 B19 — see the PR body for the full
+       maths. Does not replace --border-default anywhere; that token is
+       untouched and still governs edges on white. */
+    --surface-edge:rgba(30,58,95,.14);
     /* radius — 6px base, 8px max */
     --radius:6px; --radius-lg:8px;
     --destructive:#DC474C;
@@ -55,7 +65,7 @@
   @media (prefers-reduced-motion:reduce){.fu{animation:none}}
   button{font-family:inherit;cursor:pointer}
   a:focus-visible,button:focus-visible,.navitem:focus-visible,.tab:focus-visible{outline:2px solid var(--ally-amber);outline-offset:1px}
-  .track{height:7px;background:#EDEBE6;border-radius:99px;overflow:hidden}
+  .track{height:7px;background:var(--surface-edge);border-radius:99px;overflow:hidden}
   .track > span{display:block;height:100%;background:var(--ally-navy);border-radius:99px}
 
   /* ── marketing header (Wen structure) ─────────────────────
@@ -163,7 +173,7 @@
   .stepper{display:flex;align-items:flex-start}
   .step{flex:1;display:flex;flex-direction:column;align-items:center}
   .step .line{display:flex;align-items:center;width:100%}
-  .step .conn{flex:1;height:1px;background:var(--border-default)}
+  .step .conn{flex:1;height:1px;background:var(--surface-edge)}
   .step .conn.done{background:var(--ally-navy)}
   .step .conn.hide{background:transparent}
   .step .dot{width:24px;height:24px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-text);font-size:10px;font-weight:500;border:1px solid var(--border-default);background:var(--surface-card);color:var(--text-muted)}
@@ -174,7 +184,7 @@
 
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
   .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-  .datecube{width:50px;flex:none;text-align:center;border:1px solid var(--border-default);border-radius:var(--radius);overflow:hidden}
+  .datecube{width:50px;flex:none;text-align:center;border:1px solid var(--surface-edge);border-radius:var(--radius);overflow:hidden}
   .datecube .m{background:var(--ally-navy);color:#fff;font-family:var(--font-text);font-size:10px;letter-spacing:.06em;padding:4px 0}
   .datecube .d{font-family:var(--font-display);font-size:20px;font-weight:600;color:var(--text-primary);padding:3px 0 4px}
 
@@ -186,9 +196,19 @@
 
   /* ── dashboard quick reorder (ported from Zed) ───────────── */
   .reorder{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-  .rocard{background:var(--surface-page);border:1px solid var(--border-default);border-radius:var(--radius-lg);padding:16px;display:flex;flex-direction:column}
+  /* feature/portal-review-wen: padding was 16px flat; the two-up cards
+     (In production, Amount due, Next call — all plain .card) measure
+     padding:20px 22px. Brought .rocard in line with that. */
+  .rocard{background:var(--surface-page);border:1px solid var(--border-default);border-radius:var(--radius-lg);padding:20px 22px;display:flex;flex-direction:column}
   .rocard .rtop{display:flex;gap:11px;align-items:flex-start}
-  .rocard .rsw{width:40px;height:50px;flex:none;border-radius:var(--radius);display:flex;align-items:flex-end;justify-content:center;padding-bottom:4px;color:#fff;font-family:var(--font-num);font-size:7px;letter-spacing:.12em}
+  /* feature/portal-review-wen: was a 9-character brand-name watermark at
+     7px, clipped by the 40px width (only the last 8 characters rendered)
+     and standing in for product photography. Removed the text (see the
+     markup below) since it couldn't fit and wasn't legible regardless;
+     the properties that only existed to bottom-centre that text go with
+     it. The swatch
+     itself — size, shape, per-product background colour — is unchanged. */
+  .rocard .rsw{width:40px;height:50px;flex:none;border-radius:var(--radius)}
   .rocard .rname{font-family:var(--font-display);font-size:14.5px;font-weight:600;color:var(--text-primary);line-height:1.2}
   .rocard .rfmt{font-size:11.5px;color:var(--text-secondary);margin-top:2px}
   .rocard .rmeta{font-family:var(--font-num);font-size:10px;letter-spacing:.03em;color:var(--text-meta);text-transform:uppercase;margin-top:11px}
@@ -317,15 +337,20 @@
               </div>
               <div class="reorder" id="reorderGrid" style="margin-top:14px"></div>
 
-              <!-- quote request tracker + AI estimate -->
-              <div class="card" style="margin-top:16px;overflow:hidden">
-                <div style="padding:18px 22px;border-bottom:1px solid var(--border-hairline);display:flex;align-items:baseline;justify-content:space-between;gap:12px">
-                  <div>
-                    <h3 style="font-family:var(--font-display);font-size:16px;font-weight:600;color:var(--text-primary)">Your quote request</h3>
-                    <div class="meta" style="margin-top:3px">QR-2087 · MARINE COLLAGEN PEPTIDES · STICK PACKS</div>
-                  </div>
-                  <span class="pill solid">FINAL QUOTE READY</span>
+              <!-- your quote request — feature/portal-review-wen: heading pulled out of the
+                   card's bordered header row (that border-bottom was another instance of the
+                   same too-weak-edge-on-paper problem) and given the identical treatment as
+                   "Quick reorder" / "In production" below. No "All orders"-style link added:
+                   there is no all-quotes view, and the FINAL QUOTE READY pill that moved up
+                   with it is status about this one request, not an invented nav symmetry. -->
+              <div style="margin-top:24px;display:flex;align-items:flex-end;justify-content:space-between;gap:12px">
+                <div>
+                  <h3 style="font-family:var(--font-display);font-size:17px;font-weight:600;color:var(--text-primary)">Your quote request</h3>
+                  <div class="meta" style="margin-top:3px">QR-2087 · MARINE COLLAGEN PEPTIDES · STICK PACKS</div>
                 </div>
+                <span class="pill solid">FINAL QUOTE READY</span>
+              </div>
+              <div class="card" style="margin-top:14px;overflow:hidden">
                 <div style="padding:24px 22px 6px">
                   <div class="stepper" id="qtracker"></div>
                 </div>
@@ -764,10 +789,10 @@ function renderReorder(){
          </div>`;
     return `<div class="rocard">
       <div class="rtop">
-        <div class="rsw" style="background:${p.hue}">ALLYNUTRA</div>
+        <div class="rsw" style="background:${p.hue}"></div>
         <div style="min-width:0"><div class="rname">${p.name}</div><div class="rfmt">${p.fmt} · ${p.variant}</div></div>
       </div>
-      <div class="rmeta">Last ordered ${p.lastOrdered} · ${p.lastQty.toLocaleString('en-US')} units</div>
+      <div class="rmeta">Last ordered ${p.lastOrdered}</div>
       <div class="rprice"><span class="est">${total} <span class="un">est.</span></span><span class="un">$${p.price.toFixed(2)}/unit</span></div>
       ${controls}
     </div>`;
