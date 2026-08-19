@@ -120,24 +120,17 @@ p{font-size:15px;line-height:1.7;color:hsl(var(--muted-foreground));}
    logo into a ~39px track and misplacing header-actions into the middle
    track instead of the right-hand one. Pinning survives any sibling being
    display:none. */
-/* MOBILE-ONLY fallback (<=1100px, where .main-nav — and the nav-integrated
-   .nav-brand inside it, below — is display:none). At that width there's no
-   "nav cluster" for a brand item to join (the drawer opens separately on
-   its own trigger), so home still needs its own always-visible link in the
-   header row; the desktop-width .logo{display:none} rule further down is
-   what hands the job to .nav-brand once the cluster exists to join. Not
-   asked for explicitly in the brief (which is about the desktop nav
-   cluster specifically) but kept deliberately — removing it would leave
-   mobile with no way home at all. */
-/* fix/wordmark-nav-item: "Ally Nutra" is a nav item — icon + label, amber,
-   no hover, same rhythm (gap:7px, matching .main-nav>a:not(.nav-brand)
-   below, not the 10px the old 46px image needed). Colour and the active
-   weight bump are the wordmark's only real differences from a plain item;
-   both stay here since the label is genuinely the brand, not one of the
-   nine destinations. */
-.logo{display:flex;align-items:center;gap:7px;flex-shrink:0;justify-self:start;grid-column:1;color:hsl(var(--ally-orange));}
-.logo-wordmark{font-size:var(--nav-item-font-size);font-weight:var(--nav-item-font-weight);white-space:nowrap;}
-.logo.active .logo-wordmark{font-weight:700;}
+/* fix/portal-nav-parity round 2: the logo image and the "Ally Nutra" nav
+   item are two separate things — reverted from the previous round, which
+   fused them into one icon+text nav-cluster item and dropped the image
+   entirely. The logo now lives in its own spot on the left, at every
+   width (not a <=1100px-only fallback any more — the desktop-only
+   .logo{display:none} rule that used to hand this job to .nav-brand is
+   gone), and "Ally Nutra" stays as its own item inside .main-nav below,
+   unchanged from before. No hover: it's the home affordance, not a nav
+   item. */
+.logo{display:flex;align-items:center;flex-shrink:0;justify-self:start;grid-column:1;}
+.logo-img{height:46px;width:auto;display:block;}
 .main-nav{display:flex;align-items:center;gap:6px;justify-self:center;grid-column:2;}
 .header-actions{display:flex;align-items:center;gap:20px;justify-self:end;grid-column:3;}
 /* nav-icon: one consistent 16px slot for every icon in NavIcons.jsx, in
@@ -160,25 +153,23 @@ p{font-size:15px;line-height:1.7;color:hsl(var(--muted-foreground));}
 .main-nav>a:not(.nav-brand){position:relative;display:inline-flex;align-items:center;gap:7px;font-size:var(--nav-item-font-size);font-weight:var(--nav-item-font-weight);color:hsl(0 0% 100% / .75);padding:8px 14px;border-radius:var(--radius-sm);transition:color .15s;white-space:nowrap;}
 .main-nav>a:not(.nav-brand):hover{color:#fff;}
 .main-nav>a.active{color:hsl(var(--ally-orange));font-weight:700;}
-/* nav-brand: the wordmark, moved from its old far-left spot (was .logo,
-   now mobile-only above) to sit as the FIRST item in the nav cluster
-   itself, alongside Services. gap/padding/font-size/font-weight are
-   :not(.nav-brand)'s .main-nav>a values exactly — the size/weight via the
-   shared --nav-item-* custom properties declared on .header-inner (see
-   above), not copied literals, so the two can't drift apart silently
-   again the way .logo-wordmark did. font-family and letter-spacing are
-   simply inherited, same as a real item. The two differences from a real
-   nav item, both intentional: colour is unconditionally amber (never the
+/* nav-brand: "Ally Nutra" as its own item in the nav cluster, alongside
+   Services — separate from the logo image, which lives in its own spot
+   on the left (see .logo above; the two are deliberately not fused into
+   one element). gap/padding/font-size/font-weight are :not(.nav-brand)'s
+   .main-nav>a values exactly — the size/weight via the shared
+   --nav-item-* custom properties declared on .header-inner above, not
+   copied literals, so the two can't drift apart silently the way
+   .logo-wordmark once did. font-family and letter-spacing are simply
+   inherited, same as a real item. The two differences from a real nav
+   item, both intentional: colour is unconditionally amber (never the
    dimmed .75-white other items rest at) so it still reads as the brand
    rather than a seventh nav item; and it never gets :hover — see the
    :not(.nav-brand) exclusions above and in the hover/focus treatment
    below. Icon is IconCapsule (NavIcons.jsx), the same 16x16/1.5-stroke
-   glyph used for /capsule-manufacturing — not a new icon, and not the old
-   46px PNG (removed; the portal footer still uses the PNG at 46px, which
-   stays — that's a different, legitimate context). */
+   glyph used for /capsule-manufacturing — not a new icon. */
 .main-nav>a.nav-brand{display:inline-flex;align-items:center;gap:7px;font-size:var(--nav-item-font-size);font-weight:var(--nav-item-font-weight);color:hsl(var(--ally-orange));padding:8px 14px;white-space:nowrap;}
 .main-nav>a.nav-brand.active{font-weight:700;}
-@media (min-width:1101px){.logo{display:none;}}
 
 /* ---- Services dropdown (desktop) ---- */
 .nav-dropdown{position:relative;}

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
+import logoWhite from '../assets/images/logo-white.png';
 import { SERVICE_KEYS, pageKeyFromPathname } from '../lib/pages.js';
 import { useDemoRole } from '../contexts/DemoRoleContext.jsx';
 import { quoteUrl, portalUrl, adminUrl } from '../lib/demoRole.js';
@@ -16,9 +17,10 @@ import {
   IconMail,
 } from './NavIcons.jsx';
 
-// feature/nav-restructure: "Home" no longer has its own nav item (the logo,
-// linking to /home, is the only way home now — see the <Link className="logo">
-// below), so every remaining item gets an icon (rule #3 of the brief).
+// feature/nav-restructure: "Home" no longer has its own nav item — the logo
+// (far left, see the <Link className="logo"> below) and the "Ally Nutra"
+// nav item both link to /home instead — so every remaining item gets an
+// icon (rule #3 of the brief).
 const SERVICE_LINKS = [
   { to: '/services', label: 'All services', icon: IconGrid },
   { to: '/contract-manufacturing', label: 'Contract manufacturing', icon: IconFactory },
@@ -210,17 +212,15 @@ export default function Header() {
   return (
     <header className="site-header">
       <div className="container header-inner">
-        {/* Mobile-only fallback (<=1100px) — see global.css's `.logo` comment.
-            The desktop-width brand item lives inside .main-nav below now.
-            fix/wordmark-nav-item: "Ally Nutra" is a nav item, not a logo
-            lockup — same IconCapsule + text pattern as every other item,
-            not the 46px PNG. Its type comes from --nav-item-font-size /
-            --nav-item-font-weight (declared once, shared with the real nav
-            items below — see global.css), not a hardcoded slab/19px/700
-            stack. */}
-        <Link to="/home" className={`logo${isHome ? ' active' : ''}`}>
-          <IconCapsule />
-          <span className="logo-wordmark">Ally Nutra</span>
+        {/* fix/portal-nav-parity round 2: the logo image and the "Ally Nutra"
+            nav item are two separate things, on purpose — the logo stays in
+            its own spot on the left at every width (not just a <=1100px
+            fallback), and "Ally Nutra" lives among the other nav items in
+            .main-nav below, same as it did before this change. Image-only,
+            no text here — the wordmark text belongs to the nav item, not
+            to this mark. */}
+        <Link to="/home" className="logo">
+          <img className="logo-img" src={logoWhite} alt="Ally Nutra" width="783" height="627" />
         </Link>
         <nav className="main-nav" aria-label="Primary">
           {/* feature/nav-restructure (wordmark relocation): first item in the

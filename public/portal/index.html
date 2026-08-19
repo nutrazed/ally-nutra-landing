@@ -81,6 +81,12 @@
      a text wordmark styled here (the rule was dead CSS). */
   header.mk{background:var(--ally-navy);border-bottom:1px solid var(--ally-navy-line);padding:14px 28px;flex:none}
   header.mk .row{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:24px}
+  /* fix/portal-nav-parity round 2: separate logo image, own spot on the
+     left — matches the marketing header, where the logo and the "Ally
+     Nutra" nav item (still first in .mknav below) are two things, not
+     one. */
+  .mk-logo{display:flex;align-items:center;flex-shrink:0}
+  .mk-logo img{height:46px;width:auto;display:block}
   .mknav{display:flex;align-items:center;gap:4px;font-size:14px}
   /* fix/wordmark-nav-item: gap matches .mknav a's 7px now, not the 10px
      the old 46px PNG needed. font-size isn't set here — it never was;
@@ -89,7 +95,7 @@
      inline width/height on the markup below, same as every other .mknav
      icon on this page. */
   .mknav .mknav-brand{display:inline-flex;align-items:center;gap:7px;font-weight:500;color:var(--ally-amber);padding:8px 10px;white-space:nowrap}
-  .mknav a{position:relative;display:inline-flex;align-items:center;gap:7px;color:rgba(255,255,255,.75);font-weight:500;text-decoration:none;cursor:pointer;padding:8px 10px;border-radius:var(--radius);transition:color .15s}
+  .mknav a{position:relative;display:inline-flex;align-items:center;gap:7px;color:rgba(255,255,255,.75);font-weight:500;text-decoration:none;cursor:pointer;padding:8px 10px;border-radius:var(--radius);transition:color .15s;white-space:nowrap;flex-shrink:0}
   .mknav a svg{width:16px;height:16px;flex:none}
   .mknav a:hover{color:#fff}
   .mknav a::after{content:'';position:absolute;left:10px;right:10px;bottom:2px;height:2px;border-radius:1px;background:var(--ally-amber);transform:scaleX(0);transform-origin:left;transition:transform .15s ease}
@@ -285,6 +291,7 @@
   <!-- marketing header (Wen structure) -->
   <header class="mk">
     <div class="row">
+      <a class="mk-logo" style="text-decoration:none" href="../?role=visitor" data-an-role-href="../?role={role}"><img src="../logo-white.png" alt="Ally Nutra" width="783" height="627"></a>
       <nav class="mknav">
         <a class="mknav-brand" style="text-decoration:none" href="../?role=visitor#/home" data-an-role-href="../?role={role}#/home"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="12" height="4" rx="2"/><line x1="8" y1="6" x2="8" y2="10"/></svg><span>Ally Nutra</span></a>
         <div class="mknav-dropdown">
