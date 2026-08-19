@@ -211,11 +211,23 @@ export default function Header() {
   return (
     <header className="site-header">
       <div className="container header-inner">
+        {/* Mobile-only fallback (<=1100px) — see global.css's `.logo` comment.
+            The desktop-width brand item lives inside .main-nav below now. */}
         <Link to="/home" className={`logo${isHome ? ' active' : ''}`}>
           <img className="logo-img" src={logoWhite} alt="" width="783" height="627" />
           <span className="logo-wordmark">Ally Nutra</span>
         </Link>
         <nav className="main-nav" aria-label="Primary">
+          {/* feature/nav-restructure (wordmark relocation): first item in the
+              cluster, alongside Services — not a separate header element
+              anymore at this width. Font/size/weight match a resting
+              .main-nav a exactly (read off the rendered page, see the PR
+              body); colour is unconditionally amber and it never gets
+              :hover — both enforced in global.css via :not(.nav-brand). */}
+          <Link to="/home" className={`nav-brand${isHome ? ' active' : ''}`}>
+            <img className="nav-brand-img" src={logoWhite} alt="" width="783" height="627" />
+            <span>Ally Nutra</span>
+          </Link>
           <div
             className={`nav-dropdown hover-open${desktopOpen ? ' is-open' : ''}`}
             id="servicesDropdown"
