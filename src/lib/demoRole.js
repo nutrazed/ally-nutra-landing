@@ -80,6 +80,10 @@ export function quoteUrl(role) {
   return `${BASE}quote/?role=${role}`;
 }
 
+export function scheduleUrl(role) {
+  return `${BASE}schedule/?role=${role}`;
+}
+
 // `view` deep-links into a specific portal tab (see the ?view= handling
 // added to public/portal/index.html); omit it to land on the portal's
 // default (dashboard).

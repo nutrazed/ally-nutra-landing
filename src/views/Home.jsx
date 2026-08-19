@@ -3,7 +3,7 @@ import { sx } from '../lib/styleString.js';
 import { hideAndTint } from '../lib/imgFallback.js';
 import ProductCardsGrid from '../components/ProductCardsGrid.jsx';
 import { useDemoRole } from '../contexts/DemoRoleContext.jsx';
-import { quoteUrl } from '../lib/demoRole.js';
+import { quoteUrl, scheduleUrl } from '../lib/demoRole.js';
 
 import homeHero from '../assets/images/home-hero.jpg';
 import heroMachineWebm from '../assets/videos/hero-machine.webm';
@@ -50,16 +50,15 @@ import facility06 from '../assets/images/facility-06.jpg';
 
 import { useEffect, useRef, useState } from 'react';
 
-// The hero/final-CTA "Book a call" button used to point at a real, live
-// Calendly link (found read-only in the company repo, src/lib/calendlyBooking.ts,
-// JOSH_CALENDLY_URL). feature/role-and-links repoints both "Book a call" buttons
-// at the new /quote/ static flow instead (see quoteUrl() usage below), since the
-// quote mockup's own booking step is meant to be the demo's booking entry point
-// now — Calendly is no longer linked from here. The quote mockup has no
-// URL-addressable state at all (confirmed: no location/hash/URLSearchParams
-// references anywhere in its script), so this currently lands on the quote
-// wizard's first step rather than jumping ahead to the booking screen — see the
-// PR description for why an anchor wasn't invented to fake that.
+// The hero/final-CTA button used to point at a real, live Calendly link
+// (found read-only in the company repo, src/lib/calendlyBooking.ts,
+// JOSH_CALENDLY_URL — since retired there in favor of iClosed, per the
+// scheduling-flow investigation this session). feature/role-and-links then
+// repointed both buttons at the /quote/ static flow instead, under the label
+// "Book a call" — a button labelled to book a call that actually opened a
+// quote form. feature/nav-restructure fixes both: they now open
+// scheduleUrl(role) (the /schedule/ prototype's own booking flow) and read
+// "Schedule a call", matching what they do.
 
 // "6 questions" = the six required fields on the real /contact form (fname, lname,
 // email, brand, service, details — src/views/Contact.jsx:79-136), not the "5
@@ -314,7 +313,7 @@ export default function Home() {
             </p>
             <div className="hero-ctas">
               <a href={quoteUrl(role)} className="btn btn-primary btn-lg">{isClient ? 'Start a new quote' : 'Start your quote →'}</a>
-              <a href={quoteUrl(role)} className="btn btn-outline-invert btn-lg">Not sure yet? Book a call</a>
+              <a href={scheduleUrl(role)} className="btn btn-outline-invert btn-lg">Not sure yet? Schedule a call</a>
             </div>
             <p className="hero-expectation">{EXPECTATION_LINE}</p>
             <div className="qual-bar">
@@ -606,7 +605,7 @@ export default function Home() {
           </h2>
           <div className="hero-ctas" style={sx('justify-content:center;margin-top:0;')}>
             <a href={quoteUrl(role)} className="btn btn-primary btn-lg">{isClient ? 'Start a new quote' : 'Start your quote →'}</a>
-            <a href={quoteUrl(role)} className="btn btn-outline btn-lg">Not sure yet? Book a call</a>
+            <a href={scheduleUrl(role)} className="btn btn-outline btn-lg">Not sure yet? Schedule a call</a>
           </div>
           <p className="hero-expectation" style={sx('color:hsl(var(--muted-foreground));margin-top:20px;')}>{EXPECTATION_LINE}</p>
           <p style={sx('margin-top:12px;font-size:13px;color:hsl(var(--muted-foreground));')}>
