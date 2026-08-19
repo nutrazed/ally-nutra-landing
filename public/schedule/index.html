@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ally Nutra — Schedule (redesigned)</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;500;600&family=Roboto:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ── AllyNutra tokens — AN-DESIGN-001 canonical hex, same vocabulary as
+   public/quote/index.html. Extension colours (good/warn + their text-safe
+   "ink" variants) come from scripts/palette-lint.mjs's ALLOWED_HEX set. */
+:root{
+  --ally-navy:#1E3A5F; --ally-navy-2:#2E5D9E;
+  --ally-amber:#F0A829; --ally-amber-deep:#9A6B12;
+  --ally-good:#0E8F7E; --ally-good-ink:#007767;
+  --ally-warn:#A87B2E; --ally-warn-ink:#8C6005;
+  --text-primary:#18181B; --text-body:#18181B; --text-secondary:#71717A; --text-meta:#71717A;
+  --surface-page:#ECEAE6; --surface-card:#FFFFFF; --surface-muted:#F4F4F5;
+  --border-default:#E4E4E7; --border-hairline:#E4E4E7;
+  --radius:6px; --radius-lg:8px;
+  --destructive:#DC474C;
+  --font-display:'Roboto Slab',Georgia,'Times New Roman',serif;
+  --font-text:'Roboto',Helvetica,Arial,sans-serif;
+  --font-num:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:var(--font-text);background:var(--surface-page);color:var(--text-body);-webkit-font-smoothing:antialiased}
+button{font-family:inherit;cursor:pointer}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--ally-amber);outline-offset:1px}
+
+/* review masthead */
+header.rev{background:var(--ally-navy);height:56px;display:flex;align-items:center}
+header.rev .in{max-width:1120px;margin:0 auto;padding:0 24px;width:100%;display:flex;align-items:center;gap:14px}
+.logo{font-family:var(--font-display);font-weight:600;color:#fff;font-size:18px}
+.logo b{color:var(--ally-amber)}
+.revtag{font-family:var(--font-num);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:rgba(255,255,255,.55)}
+.mechbtn{margin-left:auto;border:1px solid rgba(255,255,255,.3);background:transparent;color:rgba(255,255,255,.85);border-radius:999px;padding:7px 15px;font-size:12px;font-weight:600}
+.mechbtn.on{background:var(--ally-amber);border-color:var(--ally-amber);color:var(--ally-navy)}
+
+.shell{max-width:1120px;margin:26px auto 0;padding:0 24px}
+.split{display:grid;grid-template-columns:320px 1fr;border:1px solid var(--border-default);border-radius:var(--radius-lg);overflow:hidden;background:var(--surface-card);min-height:560px}
+@media(max-width:880px){.split{grid-template-columns:1fr}}
+
+/* sidebar — dark navy, so amber text/fills use the BASE amber (not the ink
+   variant): amber-ink measures 2.46:1 on navy (fails AA), base amber 5.66:1
+   (passes). This is the inverse of the light-surface rule elsewhere on this
+   page — see PR body contrast audit. */
+.side{background:var(--ally-navy);color:#fff;padding:30px 26px;display:flex;flex-direction:column}
+.side .eyebrow{font-family:var(--font-num);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ally-amber);margin-bottom:12px}
+.side h2{font-family:var(--font-display);font-weight:500;font-size:23px;line-height:1.25;margin-bottom:10px}
+/* rgba(255,255,255,.75): 7.23:1 on navy, passes */
+.side .lede{font-size:13px;color:rgba(255,255,255,.75)}
+.hostrow{display:flex;align-items:center;margin-top:20px}
+.av{width:31px;height:31px;border-radius:50%;background:#355279;color:#fff;display:grid;place-items:center;font-family:var(--font-display);font-size:12px;border:2px solid var(--ally-navy);margin-right:-7px;transition:background .2s,color .2s}
+/* navy text on amber fill: 5.66:1, passes. White-on-amber (2.03:1) was
+   rejected during the contrast pre-check for this exact reason. */
+.av.pick{background:var(--ally-amber);color:var(--ally-navy);font-weight:700}
+.av.dim{opacity:.4}
+/* rgba(255,255,255,.75): 7.23:1 on navy */
+.hostlabel{margin-left:16px;font-size:12.5px;color:rgba(255,255,255,.75)}
+.sidesum{margin-top:auto;border-top:1px solid rgba(255,255,255,.16);padding-top:15px}
+.sr{display:flex;justify-content:space-between;gap:10px;font-size:12.5px;padding:5px 0}
+/* rgba(255,255,255,.6): 5.25:1 on navy. The reference this was built from used
+   .52 (4.35:1, fails AA) — raised here. See PR body contrast audit. */
+.sr .k{color:rgba(255,255,255,.6)}
+.sr .v{font-weight:600;text-align:right;color:rgba(255,255,255,.75)}
+.sr .v.dash{color:rgba(255,255,255,.6);font-weight:400}
+/* solid amber fill + navy text (5.66:1), not a translucent tint: every alpha
+   of amber-tint composited over navy that was tried in the pre-check either
+   left amber text illegible against amber-on-navy or navy text below 4.5:1
+   until the tint became fully opaque — so this is opaque amber, not a tint. */
+.tier{display:inline-block;font-family:var(--font-num);font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;padding:2px 9px;border-radius:999px;background:var(--ally-amber);color:var(--ally-navy);font-weight:700}
+/* rgba(255,255,255,.6): 5.25:1. Reference used .44 (3.57:1, fails badly) here — raised. */
+.sidenote{margin-top:13px;font-size:11px;color:rgba(255,255,255,.6);line-height:1.5}
+
+.main{padding:32px 34px 28px;display:flex;flex-direction:column}
+.prog{display:flex;gap:5px;margin-bottom:22px}
+.prog i{height:3px;flex:1;border-radius:999px;background:var(--border-default)}
+.prog i.on{background:var(--ally-amber)}
+.qeyebrow{font-family:var(--font-num);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-meta);margin-bottom:9px}
+h3{font-family:var(--font-display);font-weight:500;font-size:22px;color:var(--ally-navy);margin-bottom:8px;line-height:1.3}
+.lede{font-size:14px;color:var(--text-secondary);margin-bottom:18px}
+
+.opts{display:flex;flex-direction:column;gap:8px}
+.orow{display:flex;align-items:flex-start;gap:11px;border:1px solid var(--border-default);border-radius:var(--radius);padding:12px 14px;background:var(--surface-card);cursor:pointer;text-align:left;font:inherit;font-size:14px;width:100%}
+.orow:hover{border-color:var(--ally-navy-2)}
+.orow.sel{border-color:var(--ally-amber);background:rgba(240,168,41,.06)}
+.rd{width:15px;height:15px;border-radius:50%;border:1.5px solid var(--border-default);flex:none;margin-top:3px}
+.orow.sel .rd{border-color:var(--ally-amber);background:var(--ally-amber);box-shadow:inset 0 0 0 3.5px var(--surface-card)}
+.od{display:block;font-size:12.5px;color:var(--text-secondary);margin-top:2px}
+.branch{border:1px solid var(--border-default);border-radius:var(--radius);overflow:hidden}
+.branch.sel{border-color:var(--ally-amber)}
+.bh{display:flex;align-items:flex-start;gap:11px;padding:12px 14px;cursor:pointer;font-size:14px}
+.chev{margin-left:auto;color:var(--text-secondary);transition:transform .15s}
+.branch.open .chev{transform:rotate(180deg)}
+.subopts{display:none;flex-direction:column;gap:7px;padding:0 14px 12px 40px}
+.branch.open .subopts{display:flex}
+.subq{font-size:12.5px;color:var(--text-secondary);margin-bottom:2px}
+.subopt{border:1px solid var(--border-default);border-radius:var(--radius);padding:10px 12px;background:var(--surface-card);cursor:pointer;font:inherit;font-size:13.5px;text-align:left}
+.subopt.sel{border-color:var(--ally-amber);background:rgba(240,168,41,.06)}
+
+.lab{display:block;font-size:12.5px;font-weight:600;color:var(--ally-navy);margin-bottom:6px}
+.fi{width:100%;border:1px solid var(--border-default);border-radius:var(--radius);padding:11px 13px;font:inherit;font-size:14.5px;background:var(--surface-card);color:var(--text-primary)}
+.fi::placeholder{color:var(--text-secondary)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+@media(max-width:600px){.grid2{grid-template-columns:1fr}}
+/* good-ink (#007767), not base good (#0E8F7E): base good on white measures
+   4.00:1 (fails AA); good-ink measures 5.48:1. Same "use the text-safe ink
+   variant on a light surface" rule as amber-ink elsewhere on this page. */
+.mechflag{font-family:var(--font-num);font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ally-good-ink);margin-left:7px}
+
+/* calendar mock — "frame-hd" swapped to card, not muted: text-secondary on
+   surface-muted measured 4.40:1 (fails AA) in the earlier quote+BQA build's
+   audit; same fix applied here pre-emptively. */
+.frame{border:1px solid var(--border-default);border-radius:var(--radius-lg);overflow:hidden;background:var(--surface-card)}
+.frame-hd{display:flex;align-items:center;gap:8px;padding:9px 13px;background:var(--surface-card);border-bottom:1px solid var(--border-default);font-family:var(--font-num);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--text-meta)}
+.frame-hd .dot{width:7px;height:7px;border-radius:50%;background:var(--ally-amber)}
+.frame-bd{padding:16px}
+.caldays{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
+.calday{border:1px solid var(--border-default);border-radius:var(--radius);padding:9px 4px;text-align:center;background:var(--surface-card);font:inherit;cursor:pointer}
+/* .04, not .07: text-secondary (.d2, "27 Aug") on the .07 tint measured
+   4.37:1 (fails AA); at .04 it measures 4.56:1 — see PR body contrast audit. */
+.calday.on{border-color:var(--ally-navy-2);background:rgba(46,93,158,.04)}
+.calday .d1{font-weight:700;font-size:12px;color:var(--ally-navy)}
+.calday .d2{font-size:10.5px;color:var(--text-secondary)}
+.slots{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:8px}
+.slot{border:1px solid var(--border-default);border-radius:var(--radius);padding:9px 4px;text-align:center;background:var(--surface-card);font:inherit;font-size:12.5px;font-weight:600;color:var(--ally-navy);cursor:pointer}
+.slot.on{border-color:var(--ally-navy-2);background:rgba(46,93,158,.04)}
+.frame-ft{font-size:10.5px;color:var(--text-meta);padding:0 16px 13px}
+
+.tick{width:50px;height:50px;border-radius:50%;background:rgba(14,143,126,.12);color:var(--ally-good-ink);display:grid;place-items:center;font-size:21px}
+.vsl{border:1px solid var(--border-default);border-radius:var(--radius-lg);background:var(--ally-navy);height:100px;display:grid;place-items:center;color:rgba(255,255,255,.6);font-size:12px;margin-top:14px}
+.whatnext{border-top:1px solid var(--border-default);padding-top:17px;margin-top:17px}
+.whatnext h5{font-family:var(--font-num);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-meta);margin-bottom:10px}
+.whatnext li{list-style:none;font-size:13.5px;padding-left:24px;position:relative;margin-bottom:9px;color:var(--text-body)}
+.whatnext li b{color:var(--ally-navy)}
+.whatnext li::before{content:'';position:absolute;left:6px;top:9px;width:6px;height:6px;border-radius:50%;background:var(--ally-amber)}
+
+.foot{margin-top:auto;padding-top:22px;display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.btn{font:inherit;font-weight:700;font-size:14px;padding:11px 22px;border-radius:var(--radius);border:1px solid transparent}
+.btn-primary{background:var(--ally-amber);color:var(--ally-navy)}
+.btn-outline{background:transparent;color:var(--ally-navy);border-color:var(--border-default)}
+.btn-sm{font-size:12.5px;padding:8px 15px}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.hint{font-family:var(--font-num);font-size:10.5px;color:var(--text-meta);margin-left:auto}
+
+/* stop screens — left-border callouts stay well within the 3:1 non-text bar
+   (good 4.00:1, warn 3.79:1 against white) and every piece of TEXT inside
+   sits on a near-white tint (alpha .06/.07), where plain ink/navy text
+   measures 10.6–16.5:1 — verified, not assumed, before building this. */
+.stopbox{border-left:3px solid var(--ally-good);background:rgba(14,143,126,.06);padding:13px 15px;border-radius:4px;font-size:13.5px;margin-top:14px}
+.stopbox.warn{border-left-color:var(--ally-warn);background:rgba(168,123,46,.07)}
+.stopbox b{color:var(--ally-navy)}
+
+.mask{position:fixed;inset:0;background:rgba(24,24,27,.55);display:none;place-items:center;z-index:60;padding:20px}
+.mask.on{display:grid}
+.modal{background:var(--surface-card);border-radius:var(--radius-lg);max-width:440px;width:100%;padding:24px}
+.modal h4{font-family:var(--font-display);font-weight:500;font-size:18px;color:var(--ally-navy);margin-bottom:9px}
+.modal p{font-size:14px;color:var(--text-secondary);margin-bottom:18px}
+
+.mechdrawer{max-width:1120px;margin:14px auto 60px;padding:0 24px;display:none}
+.mechdrawer.on{display:block}
+.mechdrawer .box{border:1px solid var(--border-default);border-radius:var(--radius-lg);background:var(--surface-card);overflow:hidden}
+.mechdrawer .hd{background:var(--surface-card);border-bottom:1px solid var(--border-default);padding:10px 18px;font-family:var(--font-num);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-meta)}
+.mechdrawer .bd{padding:16px 20px;font-family:var(--font-num);font-size:11.5px;line-height:1.85;color:var(--text-secondary)}
+.mechdrawer .bd em{font-style:normal;color:var(--ally-amber-deep)}
+.mechdrawer .bd s{color:var(--text-secondary)}
+.mechdrawer .row{padding:4px 0;border-bottom:1px dashed var(--border-default)}
+.mechdrawer .row:last-child{border-bottom:none}
+
+footer.rev{background:var(--ally-navy);border-top:1px solid rgba(255,255,255,.1);padding:14px 24px;text-align:center;font-family:var(--font-num);font-size:10.5px;letter-spacing:.06em;color:rgba(255,255,255,.65);text-transform:uppercase}
+</style>
+</head>
+<body>
+
+<header class="rev"><div class="in">
+  <div class="logo">ALLY<b>+</b></div>
+  <span class="revtag" id="tag"></span>
+  <button class="mechbtn" id="mechBtn">Show mechanism</button>
+</div></header>
+
+<div class="shell"><div class="split">
+  <div class="side" id="side"></div>
+  <div class="main" id="main"></div>
+</div></div>
+<div class="mechdrawer" id="mechDrawer"></div>
+<div class="mask" id="mask"><div class="modal" id="modal"></div></div>
+
+<footer class="rev">Static HTML prototype · mock data only · no network calls · not wired to a real submission</footer>
+
+<script>
+/* ════════════════════════════════════════════════════════════════════════
+   Redesigned /schedule. Lifts two questions (order volume, timeline) that
+   production asks INSIDE iClosed's iframe today — where nothing on our side
+   can read, store, or report on the answer — onto this page instead, and
+   adds a format GATE that today does not exist at all (any format, including
+   ones Ally Nutra does not manufacture, can book a slot in production).
+
+   Question wording for steps 2-3 is production's own /qualify rubric copy
+   (src/components/bqa/bqaQuestions.ts, header comment: "Pass 6 — FINALIZED
+   PRODUCTION WORDING"), verified directly against origin/main before this
+   file was written — nothing here is invented. The pilot/sample branch and
+   acknowledgement-modal copy come from src/components/bqa/bqaBranches.ts,
+   same verification.
+
+   Confirmed formats (step 1's four options) are exactly the four in
+   nutrazed/ally-nutra-landing's own src/views/Home.jsx:196-244 (PRODUCTS
+   array) — read directly, not assumed. Home.jsx's own comment at :190-193
+   says this list is deliberate: "Do not add tablets, powders, gummies,
+   liquids, or blister packs here — those were removed as unconfirmed
+   claims, not omitted by oversight." Tablets' status is disputed across
+   three lists in this repo (see the stop-screen flag and the PR body's OPEN
+   QUESTIONS) — this file does not resolve that, it surfaces it.
+
+   Step 5's copy (eyebrow/H1/body) and step 6's copy are the company repo's
+   own src/pages/Schedule.tsx and src/pages/ThankYouBooked.tsx, verbatim,
+   verified against origin/main @ f49d057a before writing this file.
+   ════════════════════════════════════════════════════════════════════════ */
+
+const STEPS = ['Format','Order volume','Timeline','Your details','Pick a time','Booked'];
+
+/* src/views/Home.jsx:196-244 — the four confirmed formats. */
+const FORMATS_CONFIRMED = [
+  { l:'Capsules',    d:'Two-piece shell, HPMC or gelatin' },
+  { l:'Sachets',     d:'Single-serve, foil-lined packets' },
+  { l:'Stick packs', d:'Narrow, easy-tear tubes' },
+  { l:'Pouches',     d:'Resealable, stand-up bags' },
+];
+/* Everything NOT on the confirmed four. "Tablets" carries a dispute flag —
+   see the stop screen and the PR body OPEN QUESTIONS. Order matches the task
+   brief: Gummies, Softgels, Liquids or tinctures, Tablets, Blister packs,
+   Something else. */
+const FORMATS_OTHER = [
+  { l:'Gummies' },
+  { l:'Softgels' },
+  { l:'Liquids or tinctures' },
+  { l:'Tablets', disputed:true },
+  { l:'Blister packs' },
+  { l:'Something else' },
+];
+
+/* bqaQuestions.ts q2_placeholder, "FINALIZED PRODUCTION WORDING" — verbatim.
+   Tier mapping (High/Medium) is not part of the production rubric (the
+   rubric scores points, not a High/Medium label) — it is derived here from
+   public/lp/index.html:762-766's confirmed statement that iClosed routes
+   "Josh High / Shaun Medium, with the low-ticket condition forcing Shaun."
+   The two highest-volume tiers map to High; the smallest flat tier and all
+   three branch leaves (which are explicitly the smaller-run path) map to
+   Medium — no finer threshold than that is asserted anywhere in the source
+   material, so none is invented here. */
+const Q_VOLUME = {
+  eyebrow: 'Question 02 of 03',
+  title: "What's your minimum order quantity expectation?",
+  top: [
+    { l:'20,000–50,000 units', tier:'High' },
+    { l:'5,000–20,000 units',  tier:'High' },
+    { l:'2,000–5,000 units',   tier:'Medium' },
+  ],
+  branch: {
+    trigger: '500–1,000 units',
+    subtitle: 'What kind of small run is this?',
+    leaves: [
+      { l:'Pilot — 500–1,000 units',       tier:'Medium', ack:'pilot' },
+      { l:'Sample — 5 to 10 units',        tier:'Medium', ack:'sample' },
+      { l:'No plans to scale — one-time order', tier:'Medium' },
+    ],
+  },
+};
+/* bqaQuestions.ts q4_placeholder — verbatim. */
+const Q_TIMELINE = {
+  eyebrow: 'Question 03 of 03',
+  title: 'When do you need your first production run?',
+  options: [
+    { l:'Within 3 months' },
+    { l:'3–6 months' },
+    { l:'6+ months from now' },
+    { l:'Just exploring, no timeline' },
+  ],
+};
+/* bqaBranches.ts ackContent.q2_a_pilot / q2_a_sample — verbatim. */
+const ACK_COPY = {
+  pilot: {
+    title: 'Pilot runs — minimum commitment',
+    body: 'A 500–1,000 unit pilot run starts at approximately $10,000. The final cost depends on your formulation — more or premium ingredients will increase the total.',
+  },
+  sample: {
+    title: 'Sample runs — minimum commitment',
+    body: 'A sample run is 5–10 units with a $2,000 minimum. For stick packs, each unit contains 3–6 sticks — so a 10-unit sample is 30–60 sticks total.',
+  },
+};
+const CAL_DAYS = [['Mon','25'],['Tue','26'],['Wed','27'],['Thu','28'],['Fri','29']];
+const CAL_SLOTS = ['9:00 AM','11:00 AM','1:00 PM','3:00 PM'];
+
+const S = {
+  step: 0,
+  fmt: null, fmtOther: null, fmtOtherOpen: false, stopped: false,
+  vol: null, volLeaf: null, volOpen: false, pendingAck: null,
+  time: null,
+  name: '', email: '', phone: '',
+  day: 2, slot: null,
+  mech: false,
+};
+
+function tier(){
+  if (S.volLeaf != null) return Q_VOLUME.branch.leaves[S.volLeaf].tier;
+  if (S.vol != null) return Q_VOLUME.top[S.vol].tier;
+  return null;
+}
+function volLabel(){
+  if (S.volLeaf != null) return Q_VOLUME.branch.leaves[S.volLeaf].l;
+  if (S.vol != null) return Q_VOLUME.top[S.vol].l;
+  return null;
+}
+function rep(){
+  const t = tier();
+  if (t === 'High') return 'Josh';
+  if (t === 'Medium') return 'Shaun';
+  return null;
+}
+
+function renderSide(){
+  const t = tier(), r = rep(), booked = S.step === 5;
+  const josh = r === 'Josh', shaun = r === 'Shaun';
+  const dash = v => v ? '' : ' dash';
+  return `
+    <div class="eyebrow">Talk to a specialist</div>
+    <h2>A 20-minute discovery call with our team.</h2>
+    <p class="lede">Two quick questions, then pick a slot that works for you.</p>
+    <div class="hostrow">
+      <div class="av ${josh ? 'pick' : (t ? 'dim' : '')}">JP</div>
+      <div class="av ${shaun ? 'pick' : (t ? 'dim' : '')}">SR</div>
+      <div class="hostlabel">${r ? `${r} — takes ${t}-tier calls` : 'Josh or Shaun, depending on your answers'}</div>
+    </div>
+    <div class="sidesum">
+      <div class="sr"><span class="k">Format</span><span class="v${dash(S.fmt!=null||S.fmtOther!=null)}">${S.fmtOther!=null ? FORMATS_OTHER[S.fmtOther].l : (S.fmt!=null ? FORMATS_CONFIRMED[S.fmt].l : '—')}</span></div>
+      <div class="sr"><span class="k">Order volume</span><span class="v${dash(volLabel())}">${volLabel() || '—'}</span></div>
+      <div class="sr"><span class="k">Timeline</span><span class="v${dash(S.time!=null)}">${S.time!=null ? Q_TIMELINE.options[S.time].l : '—'}</span></div>
+      <div class="sr"><span class="k">Routing tier</span><span class="v${dash(t)}">${t ? `<span class="tier">${t}</span>` : '—'}</span></div>
+      <div class="sr"><span class="k">Name</span><span class="v${dash(S.name)}">${S.name || '—'}</span></div>
+      <div class="sr"><span class="k">Phone</span><span class="v${dash(S.phone)}">${S.phone || '—'}</span></div>
+      <div class="sr"><span class="k">Time</span><span class="v dash">${booked ? 'in your invite' : '—'}</span></div>
+    </div>
+    <p class="sidenote">${booked
+      ? "The booked time is never restated by us — iClosed sends the confirmation and the calendar invite."
+      : "Today these two answers are given inside iClosed's iframe, where nothing on our side can read them. Asking here is the change."}</p>
+  `;
+}
+
+function renderStop(){
+  const f = FORMATS_OTHER[S.fmtOther];
+  return `
+    <div class="prog">${STEPS.map(()=>'<i></i>').join('')}</div>
+    <div class="qeyebrow">Before you book</div>
+    <h3>We don't make ${f.l.toLowerCase()}.</h3>
+    <p class="lede">Rather than spend your 20 minutes finding that out on the call — we manufacture capsules, sachets, stick packs and pouches, and nothing else today.</p>
+    ${f.disputed ? `<div class="stopbox warn"><b>Flagged, not decided.</b> Tablets appear in the quote flow's format list but were removed from the marketing site as an unconfirmed claim. This needs a ruling before it ships either way — the screen you're looking at assumes the marketing site is right.</div>` : ''}
+    <div class="stopbox">
+      <b>If that changes, we'll tell you.</b> Leave an email and we'll get in touch if ${f.l.toLowerCase()} comes onto our line.
+      <div style="margin-top:11px"><input class="fi" data-in="email" value="${S.email}" placeholder="you@brand.com"></div>
+      <button class="btn btn-outline btn-sm" style="margin-top:10px" data-keepposted ${S.email ? '' : 'disabled'}>Keep me posted</button>
+    </div>
+    <p class="lede" style="margin-top:16px">Making something in one of our four formats as well? <button class="btn btn-outline btn-sm" data-unstop>Go back and pick it</button></p>
+    <div class="foot">
+      <button class="btn btn-outline btn-sm" data-restart>Start over</button>
+      <span class="hint">no call booked · no slot taken</span>
+    </div>
+  `;
+}
+
+function renderMain(){
+  if (S.stopped) return renderStop();
+  const prog = `<div class="prog">${STEPS.map((_,n)=>`<i class="${n<=S.step?'on':''}"></i>`).join('')}</div>`;
+  const steps = [
+    // 0 — Format (the gate)
+    () => `${prog}
+      <div class="qeyebrow">Question 01 of 03</div>
+      <h3>What are you making?</h3>
+      <p class="lede">So we can tell you now if it's outside what we manufacture.</p>
+      <div class="opts">
+        ${FORMATS_CONFIRMED.map((o,n) => `<button class="orow${S.fmt===n?' sel':''}" data-fmt="${n}"><span class="rd"></span><span>${o.l}<span class="od">${o.d}</span></span></button>`).join('')}
+        <div class="branch${(S.fmtOtherOpen||S.fmtOther!=null)?' open':''}${S.fmtOther!=null?' sel':''}">
+          <div class="bh" data-fmtbranch><span class="rd"></span><span>Something else<span class="od">Gummies, softgels, liquids and more</span></span><span class="chev">▾</span></div>
+          <div class="subopts">
+            <div class="subq">Which one?</div>
+            ${FORMATS_OTHER.map((o,n) => `<button class="subopt${S.fmtOther===n?' sel':''}" data-fmtother="${n}">${o.l}</button>`).join('')}
+          </div>
+        </div>
+      </div>
+      <div class="foot">
+        <button class="btn btn-primary" data-next ${(S.fmt!=null||S.fmtOther!=null)?'':'disabled'}>Continue</button>
+        <span class="hint">checked before a slot is taken</span>
+      </div>`,
+
+    // 1 — Order volume
+    () => `${prog}
+      <div class="qeyebrow">${Q_VOLUME.eyebrow}</div>
+      <h3>${Q_VOLUME.title}</h3>
+      <div class="opts">
+        ${Q_VOLUME.top.map((o,n) => `<button class="orow${(S.vol===n&&S.volLeaf==null)?' sel':''}" data-vol="${n}"><span class="rd"></span><span>${o.l}</span></button>`).join('')}
+        <div class="branch${(S.volOpen||S.volLeaf!=null)?' open':''}${S.volLeaf!=null?' sel':''}">
+          <div class="bh" data-volbranch><span class="rd"></span><span>${Q_VOLUME.branch.trigger}</span><span class="chev">▾</span></div>
+          <div class="subopts">
+            <div class="subq">${Q_VOLUME.branch.subtitle}</div>
+            ${Q_VOLUME.branch.leaves.map((o,n) => `<button class="subopt${S.volLeaf===n?' sel':''}" data-volleaf="${n}">${o.l}</button>`).join('')}
+          </div>
+        </div>
+      </div>
+      <div class="foot">
+        <button class="btn btn-outline" data-back>Back</button>
+        <button class="btn btn-primary" data-next ${tier()?'':'disabled'}>Continue</button>
+        <span class="hint">this answer decides who you meet</span>
+      </div>`,
+
+    // 2 — Timeline
+    () => `${prog}
+      <div class="qeyebrow">${Q_TIMELINE.eyebrow}</div>
+      <h3>${Q_TIMELINE.title}</h3>
+      <div class="opts">
+        ${Q_TIMELINE.options.map((o,n) => `<button class="orow${S.time===n?' sel':''}" data-time="${n}"><span class="rd"></span><span>${o.l}</span></button>`).join('')}
+      </div>
+      <div class="foot">
+        <button class="btn btn-outline" data-back>Back</button>
+        <button class="btn btn-primary" data-next ${S.time!=null?'':'disabled'}>Continue</button>
+      </div>`,
+
+    // 3 — Your details
+    () => `${prog}
+      <h3>Where should we reach you?</h3>
+      <p class="lede">These three are the only details the scheduler can carry.</p>
+      <div class="grid2">
+        <div><label class="lab">Full name *</label><input class="fi" data-in="name" value="${S.name}" placeholder="Jordan Wells"></div>
+        <div><label class="lab">Business email *</label><input class="fi" data-in="email" value="${S.email}" placeholder="you@brand.com"></div>
+      </div>
+      <div style="margin-top:13px">
+        <label class="lab">Phone *<span class="mechflag">passed as iclosedPhone</span></label>
+        <input class="fi" data-in="phone" value="${S.phone}" placeholder="+1 555 000 0000">
+      </div>
+      <div class="foot">
+        <button class="btn btn-outline" data-back>Back</button>
+        <button class="btn btn-primary" data-next ${(S.name&&S.email&&S.phone)?'':'disabled'}>Choose a time</button>
+        <span class="hint">phone is dropped today — carried here</span>
+      </div>`,
+
+    // 4 — Pick a time (Schedule.tsx verbatim copy)
+    () => `${prog}
+      <div class="qeyebrow">Schedule your call</div>
+      <h3>Let's find a time to talk.</h3>
+      <p class="lede">A 20-minute discovery call with our team — pick a slot that works for you.</p>
+      <div class="frame">
+        <div class="frame-hd"><span class="dot"></span> app.iclosed.io · calendar only · prefilled name + email + phone</div>
+        <div class="frame-bd">
+          <div class="caldays">${CAL_DAYS.map((d,n) => `<button class="calday${S.day===n?' on':''}" data-day="${n}"><div class="d1">${d[0]}</div><div class="d2">${d[1]} Aug</div></button>`).join('')}</div>
+          <div class="slots">${CAL_SLOTS.map(t => `<button class="slot${S.slot===t?' on':''}" data-slot="${t}">${t}</button>`).join('')}</div>
+        </div>
+        <div class="frame-ft">The questionnaire has been lifted out. iClosed keeps the calendar, the invite and the confirmation.</div>
+      </div>
+      <div class="foot">
+        <button class="btn btn-outline" data-back>Back</button>
+        <button class="btn btn-primary" data-next ${S.slot?'':'disabled'}>Confirm booking</button>
+      </div>`,
+
+    // 5 — Booked (ThankYouBooked.tsx verbatim copy, minus the actual date/time/host)
+    () => `${prog}
+      <div style="display:flex;align-items:center;gap:15px">
+        <div class="tick">✓</div>
+        <div>
+          <h3 style="margin:0">Your call is booked</h3>
+          <p class="lede" style="margin:0">A calendar invite is on its way to your inbox with the meeting link and everything you need.</p>
+        </div>
+      </div>
+      <p style="font-size:13px;color:var(--text-secondary);margin-top:9px">Not there in a few minutes? Check spam or promotions.</p>
+      <div class="vsl">▶ autoplay VSL · falls back to muted + "Tap for sound"</div>
+      <div class="whatnext">
+        <h5>What happens next</h5>
+        <li><b>Check your inbox</b> — Your invite has the meeting link — add it to your calendar now so it is not lost.</li>
+        <li><b>Watch the video above</b> — About 90 seconds on how we work. It makes the call far more useful.</li>
+        <li><b>Bring your product idea</b> — Format, target volume, timeline — whatever you have. Rough is fine.</li>
+      </div>
+      <div class="foot"><button class="btn btn-outline btn-sm" data-restart>Run it again</button></div>`,
+  ];
+  return steps[S.step]();
+}
+
+/* Per-step reviewer annotations for the "Show mechanism" drawer — this is
+   how the redesign gets reviewed against production behaviour. */
+const MECH = [
+  [ // Format
+    '<em>New.</em> Nothing in the live flow checks the format before a call is booked — a gummies enquiry can take a 20-minute slot today.',
+    '<em>Three canonical format lists exist in this repo and disagree.</em> Home.jsx names four and says tablets/powders/gummies/liquids/blister packs were removed as unconfirmed claims; the quote flow\'s FORMATS array has five, including tablets; global.css\'s product-grid comment claims eight, matching an "8+ dosage forms" stat.',
+    '<em>Tablets is flagged, not decided</em> — surfaced for a ruling rather than silently resolved either way.',
+  ],
+  [ // Order volume
+    '<em>New.</em> Production asks this inside iClosed\'s iframe today — the answer drives High/Medium routing and nothing on our side can read it.',
+    '<em>Pilot and Sample</em> still raise their acknowledgement before the answer is recorded, exactly as /qualify does.',
+  ],
+  [ // Timeline
+    '<em>New.</em> Second question lifted out of the iframe, production wording from the /qualify rubric.',
+  ],
+  [ // Your details
+    '<em>Fix.</em> <s>Schedule.tsx reads only name and email</s> — phone is collected and passed as <em>iclosedPhone</em> here.',
+    'All three become <em>iclosedName</em>, <em>iclosedEmail</em>, <em>iclosedPhone</em> on iClosed\'s documented <em>buildIClosedBookingUrl</em> prefill.',
+  ],
+  [ // Pick a time
+    'iClosed keeps availability, timezone, the invite and the confirmation — this frame is calendar-only.',
+    'iClosed\'s postMessage vocabulary includes <em>iclosed.potential</em> and <em>iclosed.qualified</em> as well as <em>iclosed.call_scheduled</em> — all three already arrive today and only the last one is used.',
+  ],
+  [ // Booked
+    '<em>iclosed.call_scheduled</em> → GTM dataLayer, once per load → redirect to <em>/thank-you-booked</em>.',
+    '<em>iclosed-webhook</em> upserts <em>meetings</em> on <em>iclosed_call_id</em>, resolves the lead by email, sets <em>has_scheduled_call</em>.',
+    'The two answers asked on this page can now be written onto that lead row — not possible today, because they never leave iClosed.',
+  ],
+];
+
+function openAck(key){
+  const c = ACK_COPY[key];
+  document.getElementById('modal').innerHTML = `<h4>${c.title}</h4><p>${c.body}</p>
+    <div style="display:flex;gap:9px;justify-content:flex-end">
+      <button class="btn btn-outline btn-sm" data-ack="no">Cancel</button>
+      <button class="btn btn-primary btn-sm" data-ack="yes">I understand</button>
+    </div>`;
+  document.getElementById('mask').classList.add('on');
+}
+function closeAck(){ document.getElementById('mask').classList.remove('on'); }
+
+function render(){
+  document.getElementById('side').innerHTML = renderSide();
+  document.getElementById('main').innerHTML = renderMain();
+  document.getElementById('tag').textContent = S.stopped
+    ? '/schedule (redesigned) · stopped before booking'
+    : `/schedule (redesigned) · step ${S.step+1} of 6 · ${STEPS[S.step]}`;
+  const drawer = document.getElementById('mechDrawer');
+  drawer.classList.toggle('on', S.mech);
+  drawer.innerHTML = S.mech
+    ? `<div class="box"><div class="hd">What happens on this step — ${S.stopped ? 'Format gate' : STEPS[S.step]}</div>
+        <div class="bd">${(S.stopped ? MECH[0] : MECH[S.step]).map(r => `<div class="row">${r}</div>`).join('')}</div></div>`
+    : '';
+  const btn = document.getElementById('mechBtn');
+  btn.classList.toggle('on', S.mech);
+  btn.textContent = S.mech ? 'Hide mechanism' : 'Show mechanism';
+}
+
+document.addEventListener('input', e => {
+  const t = e.target;
+  if (t.dataset.in) {
+    S[t.dataset.in] = t.value;
+    const next = document.querySelector('[data-next]');
+    if (next) next.disabled = !(S.name && S.email && S.phone);
+    const kp = document.querySelector('[data-keepposted]');
+    if (kp) kp.disabled = !S.email;
+  }
+});
+
+document.addEventListener('click', e => {
+  let t;
+  if (e.target.id === 'mechBtn') { S.mech = !S.mech; render(); return; }
+  if (t = e.target.closest('[data-ack]')) {
+    if (t.dataset.ack === 'yes' && S.pendingAck != null) { S.volLeaf = S.pendingAck; S.vol = null; }
+    S.pendingAck = null;
+    closeAck();
+    render();
+    return;
+  }
+  if (t = e.target.closest('[data-fmt]')) { S.fmt = +t.dataset.fmt; S.fmtOther = null; render(); return; }
+  if (t = e.target.closest('[data-fmtbranch]')) { S.fmtOtherOpen = !S.fmtOtherOpen; render(); return; }
+  if (t = e.target.closest('[data-fmtother]')) { S.fmtOther = +t.dataset.fmtother; S.fmt = null; render(); return; }
+  if (t = e.target.closest('[data-unstop]')) { S.stopped = false; S.fmtOther = null; S.fmtOtherOpen = false; S.step = 0; render(); return; }
+  if (t = e.target.closest('[data-vol]')) { S.vol = +t.dataset.vol; S.volLeaf = null; render(); return; }
+  if (t = e.target.closest('[data-volbranch]')) { S.volOpen = !S.volOpen; render(); return; }
+  if (t = e.target.closest('[data-volleaf]')) {
+    const n = +t.dataset.volleaf, leaf = Q_VOLUME.branch.leaves[n];
+    if (leaf.ack) { S.pendingAck = n; openAck(leaf.ack); return; }
+    S.volLeaf = n; S.vol = null; render();
+    return;
+  }
+  if (t = e.target.closest('[data-time]')) { S.time = +t.dataset.time; render(); return; }
+  if (t = e.target.closest('[data-day]')) { S.day = +t.dataset.day; S.slot = null; render(); return; }
+  if (t = e.target.closest('[data-slot]')) { S.slot = t.dataset.slot; render(); return; }
+  if (t = e.target.closest('[data-next]')) {
+    if (S.step === 0 && S.fmtOther != null) { S.stopped = true; render(); window.scrollTo({top:0,behavior:'smooth'}); return; }
+    if (S.step < 5) S.step++;
+    render();
+    window.scrollTo({top:0,behavior:'smooth'});
+    return;
+  }
+  if (t = e.target.closest('[data-back]')) { if (S.step > 0) S.step--; render(); return; }
+  if (t = e.target.closest('[data-keepposted]')) { return; } // decorative in this prototype — no real submission
+  if (t = e.target.closest('[data-restart]')) {
+    Object.assign(S, { step:0, fmt:null, fmtOther:null, fmtOtherOpen:false, stopped:false, vol:null, volLeaf:null, volOpen:false, time:null, name:'', email:'', phone:'', slot:null });
+    render();
+    return;
+  }
+});
+
+render();
+</script>
+</body>
+</html>
