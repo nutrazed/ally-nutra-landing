@@ -110,35 +110,31 @@ p{font-size:15px;line-height:1.7;color:hsl(var(--muted-foreground));}
    logo into a ~39px track and misplacing header-actions into the middle
    track instead of the right-hand one. Pinning survives any sibling being
    display:none. */
+/* MOBILE-ONLY fallback (<=1100px, where .main-nav — and the nav-integrated
+   .nav-brand inside it, below — is display:none). At that width there's no
+   "nav cluster" for a brand item to join (the drawer opens separately on
+   its own trigger), so home still needs its own always-visible link in the
+   header row; the desktop-width .logo{display:none} rule further down is
+   what hands the job to .nav-brand once the cluster exists to join. Not
+   asked for explicitly in the brief (which is about the desktop nav
+   cluster specifically) but kept deliberately — removing it would leave
+   mobile with no way home at all. */
 .logo{display:flex;align-items:center;gap:10px;flex-shrink:0;justify-self:start;grid-column:1;}
-/* feature/nav-restructure: "Home" no longer has its own nav item, so the
-   logo (already the only link back to "/home") gains the active state Home
-   used to carry, and a text wordmark so it reads as the home affordance on
-   its own — the mark alone is small/illegible enough at 46px that it can't
-   carry the brand name by itself (see the image itself: most of its canvas
-   is empty padding around a small glyph). No separate underline is drawn
-   on it — matches the pre-existing "the mark already carries its own amber
-   accents" rule just above for .logo-img, extended to the new text. */
 .logo-wordmark{font-family:var(--font-slab);font-weight:600;font-size:19px;letter-spacing:-0.01em;color:#fff;white-space:nowrap;transition:color .15s;}
 .logo.active .logo-wordmark{color:hsl(var(--ally-orange));font-weight:700;}
-/* Not hidden at narrow widths: the logo's <img alt=""> is decorative on
-   purpose (see the JSX) — this text is the link's ONLY accessible name, so
-   display:none-ing it below some breakpoint would leave the logo link with
-   none at all. .main-nav already disappears at <=1100px (below), freeing
-   the room this needs long before that would matter visually. */
+/* Not hidden below any width itself (only ever hidden by the desktop-only
+   rule further down): the logo's <img alt=""> is decorative on purpose
+   (see the JSX) — this text is the link's ONLY accessible name, so
+   display:none-ing it while the link is still meant to be usable would
+   leave it with none at all. */
+.logo-img{height:46px;width:auto;display:block;}
 /* Real logo (public/lovable-uploads/ally-nutra-logo-white.png, trimmed to content, copied
    here as logo-white.png) replaces the old CSS text wordmark + amber ::after-style
    underline — the real mark already carries its own amber accents, so no separate
    underline is drawn here (would render two). Constrained by height only, per the
    "never stretch the wordmark" rule; width follows the source's own aspect ratio.
    46px (was 36px) — the "ALLY+" cap-height is ~130px of the 627px source, so
-   clearspace ~9-10px at this size; the grid's own gaps (24px container
-   padding, ~15px top/bottom in the fixed 76px row, 24px before the nav)
-   already clear that with room to spare, so no other spacing changed.
-   .header-inner's height is fixed (not content-derived), so this does not
-   push the header taller — it only gives the mark more room within the
-   existing 76px row. */
-.logo-img{height:46px;width:auto;display:block;}
+   clearspace ~9-10px at this size. */
 .main-nav{display:flex;align-items:center;gap:6px;justify-self:center;grid-column:2;}
 .header-actions{display:flex;align-items:center;gap:20px;justify-self:end;grid-column:3;}
 /* nav-icon: one consistent 16px slot for every icon in NavIcons.jsx, in
@@ -146,9 +142,36 @@ p{font-size:15px;line-height:1.7;color:hsl(var(--muted-foreground));}
    hover/focus treatment below for why every one of these rules also carries
    position:relative. */
 .nav-icon{width:16px;height:16px;flex-shrink:0;}
-.main-nav a{position:relative;display:inline-flex;align-items:center;gap:7px;font-size:14px;font-weight:500;color:hsl(0 0% 100% / .75);padding:8px 14px;border-radius:var(--radius-sm);transition:color .15s;white-space:nowrap;}
-.main-nav a:hover{color:#fff;}
-.main-nav a.active{color:hsl(var(--ally-orange));font-weight:700;}
+/* `.main-nav > a`, not `.main-nav a`: the Services dropdown PANEL (with its
+   own SERVICE_LINKS anchors) is a DOM descendant of .main-nav too (the
+   dropdown div is a direct child, the panel and its links are nested
+   further inside it) — a plain descendant selector here would also match
+   those, and did: adding :not(.nav-brand) below raised this rule's
+   specificity above .nav-dropdown-panel a's, which had been winning only
+   by source-order tie-break before that, and the panel's three non-active
+   links rendered invisible (this .75-white on the panel's white
+   background) until caught by this PR's own contrast audit and fixed here
+   with the child combinator. Only .nav-brand and the top-level MAIN_LINKS/
+   trigger items are direct children of .main-nav; the panel's links are
+   not, so `>` scopes correctly without needing :not() for this. */
+.main-nav>a:not(.nav-brand){position:relative;display:inline-flex;align-items:center;gap:7px;font-size:14px;font-weight:500;color:hsl(0 0% 100% / .75);padding:8px 14px;border-radius:var(--radius-sm);transition:color .15s;white-space:nowrap;}
+.main-nav>a:not(.nav-brand):hover{color:#fff;}
+.main-nav>a.active{color:hsl(var(--ally-orange));font-weight:700;}
+/* nav-brand: the wordmark, moved from its old far-left spot (was .logo,
+   now mobile-only above) to sit as the FIRST item in the nav cluster
+   itself, alongside Services. Font-family/size/weight/padding/gap are
+   :not(.nav-brand)'s .main-nav>a values, read off the rendered page and
+   matched deliberately (not eyeballed) — see the PR body's computed-style
+   comparison. The two differences from a real nav item, both intentional:
+   colour is unconditionally amber (never the dimmed .75-white other items
+   rest at) so it still reads as the brand rather than a seventh nav item;
+   and it never gets :hover — see the :not(.nav-brand) exclusions above and
+   in the hover/focus treatment below. The glyph's own size/spacing is
+   untouched (.logo-img's rules, reused verbatim via .nav-brand-img). */
+.main-nav>a.nav-brand{display:inline-flex;align-items:center;gap:10px;font-size:14px;font-weight:500;color:hsl(var(--ally-orange));padding:8px 14px;white-space:nowrap;}
+.main-nav>a.nav-brand.active{font-weight:700;}
+.nav-brand-img{height:46px;width:auto;display:block;}
+@media (min-width:1101px){.logo{display:none;}}
 
 /* ---- Services dropdown (desktop) ---- */
 .nav-dropdown{position:relative;}
@@ -165,7 +188,14 @@ p{font-size:15px;line-height:1.7;color:hsl(var(--muted-foreground));}
    click-only, matching normal account-menu expectations. */
 @media (hover:hover){.nav-dropdown.hover-open:hover .nav-dropdown-panel{display:block;}}
 .nav-dropdown-panel a{position:relative;display:flex;align-items:center;gap:10px;padding:12px 18px;color:hsl(var(--ally-navy));font-size:14px;font-weight:500;border-radius:var(--radius-sm);text-decoration:none;}
-.nav-dropdown-panel a[aria-current="page"]{color:#9A6B12;font-weight:700;background:hsl(var(--ally-orange)/.1);}
+/* .05, not .1: #9A6B12 text on this tint at .1 measures 4.37:1 (fails AA) —
+   found by this PR's own contrast audit of the nav's active state, not
+   assumed; at .05 it measures 4.52:1. Same colour pair, same fix as an
+   earlier session's quote+BQA rebuild (public/quote/index.html's
+   --ally-amber-tint), pre-existing here and unrelated to this PR's other
+   changes, fixed because the audit this PR was asked to run is exactly
+   what surfaced it. */
+.nav-dropdown-panel a[aria-current="page"]{color:#9A6B12;font-weight:700;background:hsl(var(--ally-orange)/.05);}
 
 /* ---- Account menu panel — right-aligned variant of the same panel ---- */
 .nav-dropdown-panel--right{left:auto;right:0;min-width:200px;}
@@ -232,19 +262,19 @@ p{font-size:15px;line-height:1.7;color:hsl(var(--muted-foreground));}
        the .eyebrow/[aria-current] rules above) for AA-safe text on light
        surfaces — this bar is decorative (WCAG 1.4.11's 3:1 non-text bar
        applies, not 1.4.3's 4.5:1), and both colours clear that easily. */
-.main-nav a::after,.nav-dropdown-trigger::after,
+.main-nav>a:not(.nav-brand)::after,.nav-dropdown-trigger::after,
 .nav-dropdown-panel a::after,
 .mobile-nav a::after,.mobile-nav-group-trigger::after,.mobile-nav-sublist a::after{
   content:'';position:absolute;height:2px;border-radius:1px;
   transform:scaleX(0);transform-origin:left;transition:transform .18s ease;
 }
-.main-nav a::after,.nav-dropdown-trigger::after,
+.main-nav>a:not(.nav-brand)::after,.nav-dropdown-trigger::after,
 .mobile-nav a::after,.mobile-nav-group-trigger::after{
   left:14px;right:14px;bottom:4px;background:hsl(var(--ally-orange));
 }
 .nav-dropdown-panel a::after{left:18px;right:18px;bottom:6px;background:hsl(var(--ally-orange-ink));}
 .mobile-nav-sublist a::after{left:40px;right:24px;bottom:7px;background:hsl(var(--ally-orange-ink));}
-.main-nav a:hover::after,.main-nav a:focus-visible::after,
+.main-nav>a:not(.nav-brand):hover::after,.main-nav>a:not(.nav-brand):focus-visible::after,
 .nav-dropdown-trigger:hover::after,.nav-dropdown-trigger:focus-visible::after,
 .nav-dropdown-panel a:hover::after,.nav-dropdown-panel a:focus-visible::after,
 .mobile-nav a:hover::after,.mobile-nav a:focus-visible::after,
@@ -253,7 +283,13 @@ p{font-size:15px;line-height:1.7;color:hsl(var(--muted-foreground));}
   transform:scaleX(1);
 }
 @media (prefers-reduced-motion:reduce){
-  .main-nav a::after,.nav-dropdown-trigger::after,.nav-dropdown-panel a::after,
+  /* `.main-nav>a:not(.nav-brand)`, matching the base rule above exactly:
+     with the plain descendant form this override's specificity (0,1,2)
+     used to lose to the base rule's (0,2,2) once :not(.nav-brand) was
+     added there, so reduced-motion silently stopped taking effect on the
+     one selector it matters most for — caught by this PR's own
+     prefers-reduced-motion check (emulated, not assumed), not by eye. */
+  .main-nav>a:not(.nav-brand)::after,.nav-dropdown-trigger::after,.nav-dropdown-panel a::after,
   .mobile-nav a::after,.mobile-nav-group-trigger::after,.mobile-nav-sublist a::after{
     transition:none;
   }
