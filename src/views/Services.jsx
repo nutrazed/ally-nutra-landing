@@ -6,6 +6,14 @@ import services01 from '../assets/images/services-01.jpg';
 import services02 from '../assets/images/services-02.jpg';
 import services03 from '../assets/images/services-03.jpg';
 import services04 from '../assets/images/services-04.jpg';
+// Not services-01.jpg (the plan's stated assignment): that file is already
+// used lower on this same page (the Sachets format card, ~line 113) — using
+// it again for the hero would duplicate a photo already shown a few
+// sections down. facility-05 is a bottle-filling line in motion, reads as
+// "manufacturing capability, at a glance" for a services OVERVIEW hero, and
+// is deliberately not facility-01 (the plan's own pick for the Facility
+// page's hero, batch 3) to avoid pre-empting that page's choice.
+import svcHero from '../assets/images/facility-05.jpg';
 
 import rd01 from '../assets/images/rd-01.jpg';
 import rd02 from '../assets/images/rd-02.jpg';
@@ -68,17 +76,18 @@ export default function Services() {
               <Link to="/contact" className="btn btn-outline-light btn-lg">Schedule a call</Link>
             </div>
           </div>
-          <div className="svc-index">
-            <div className="svc-index-item" style={sx("border-bottom:1px solid hsl(0 0% 100% / .1);")}>
-              <span className="mono-chip" style={sx("color:hsl(0 0% 100% / .25);")}>Service index</span>
-            </div>
-            <div className="svc-index-item"><span className="svc-index-num">01</span><span className="svc-index-name">Capsule manufacturing</span><span className="svc-index-tag">Solid dose</span></div>
-            <div className="svc-index-item"><span className="svc-index-num">02</span><span className="svc-index-name">Sachet manufacturing</span><span className="svc-index-tag">Powder</span></div>
-            <div className="svc-index-item"><span className="svc-index-num">03</span><span className="svc-index-name">Stick pack manufacturing</span><span className="svc-index-tag">On-the-go</span></div>
-            <div className="svc-index-item"><span className="svc-index-num">04</span><span className="svc-index-name">Pouch / bag manufacturing</span><span className="svc-index-tag">Resealable</span></div>
-            <div className="svc-index-item" style={sx('background:hsl(var(--ally-orange)/.06);')}>
-              <span className="svc-index-num">+</span>
-              <span className="svc-index-name" style={sx("color:hsl(0 0% 100% / .55);font-weight:500;")}>Custom formulation · private label · Amazon FBA</span>
+          <div className="photo duotone ratio-4x3 hero-media">
+            <img
+              src={svcHero}
+              width="900"
+              height="600"
+              alt="A production line filling white bottles beneath a stainless steel dispensing funnel"
+              loading="lazy"
+              onError={hideAndTint}
+            />
+            <div className="hero-media-badge">
+              <span className="num">4</span>
+              <span className="lbl">Formats, one facility</span>
             </div>
           </div>
         </div>
@@ -167,20 +176,17 @@ export default function Services() {
             <h2>Beyond the bottle.</h2>
             <p>Manufacturing is the core — but we support your brand across the full product lifecycle.</p>
           </div>
-          <div className="grid grid-2">
-            <div className="card" style={sx("border-left:3px solid hsl(var(--ally-orange));")}>
-              <div className="mono-chip" style={sx("color:hsl(var(--ally-orange-ink));margin-bottom:10px;")}>SVC-01 · formulation</div>
-              <h3 style={sx("margin-bottom:10px;")}>Custom formulation R&amp;D</h3>
-              <p style={sx('margin-bottom:16px;')}>Bring us a concept or a competitor product — our PhD formulators design from scratch, optimizing for efficacy, cost, and shelf stability.</p>
-              <ul className="bullet-list">
-                <li>Ingredient compatibility testing</li>
-                <li>Stability &amp; accelerated aging studies</li>
-                <li>Full R&amp;D documentation package</li>
-              </ul>
-            </div>
-            <div className="card" style={sx("border-left:3px solid hsl(var(--ally-orange));")}>
-              <div className="mono-chip" style={sx("color:hsl(var(--ally-orange-ink));margin-bottom:10px;")}>SVC-02 · private label</div>
-              <h3 style={sx("margin-bottom:10px;")}>Private label launch</h3>
+          {/* One dominant card (Private label — the highest-value alternative
+              to a from-scratch quote) + two secondary. "Custom formulation
+              R&D" (was SVC-01) is cut here, not demoted: the R&D section
+              directly below already covers the identical claim in full —
+              see the long-standing comment on RD_CELLS. Renumbered 01-03
+              for the new set; these are presentational codes only, not
+              referenced ids. */}
+          <div className="svc-featured-grid">
+            <div className="card svc-featured" style={sx("border-left:3px solid hsl(var(--ally-orange));")}>
+              <div className="mono-chip" style={sx("color:hsl(var(--ally-orange-ink));margin-bottom:10px;")}>SVC-01 · private label</div>
+              <h3>Private label launch</h3>
               <p style={sx('margin-bottom:16px;')}>Skip the R&amp;D. Choose from our library of 200+ proven formulas, apply your brand, and go to market in as little as three weeks.</p>
               <ul className="bullet-list">
                 <li>200+ ready-to-brand formulas</li>
@@ -188,25 +194,27 @@ export default function Services() {
                 <li>COA included on every batch</li>
               </ul>
             </div>
-            <div className="card" style={sx("border-left:3px solid hsl(var(--ally-orange));")}>
-              <div className="mono-chip" style={sx("color:hsl(var(--ally-orange-ink));margin-bottom:10px;")}>SVC-03 · packaging</div>
-              <h3 style={sx("margin-bottom:10px;")}>Packaging &amp; label design</h3>
-              <p style={sx('margin-bottom:16px;')}>Full-service packaging from structural design through print-ready artwork — compliant, shelf-ready, and on-brand.</p>
-              <ul className="bullet-list">
-                <li>FDA supplement facts panel generation</li>
-                <li>Print-ready artwork files</li>
-                <li>Barcode &amp; lot code setup</li>
-              </ul>
-            </div>
-            <div className="card" style={sx("border-left:3px solid hsl(var(--ally-orange));")}>
-              <div className="mono-chip" style={sx("color:hsl(var(--ally-orange-ink));margin-bottom:10px;")}>SVC-04 · fulfillment</div>
-              <h3 style={sx("margin-bottom:10px;")}>Amazon FBA preparation</h3>
-              <p style={sx('margin-bottom:16px;')}>We prep, label, and bundle your finished product to Amazon's exact FBA specifications, so your inventory arrives ready to sell.</p>
-              <ul className="bullet-list">
-                <li>FNSKU labeling &amp; poly-bagging</li>
-                <li>Multi-unit bundling &amp; kitting</li>
-                <li>Direct-to-FC shipping available</li>
-              </ul>
+            <div className="svc-secondary-row">
+              <div className="card" style={sx("border-left:3px solid hsl(var(--ally-orange));")}>
+                <div className="mono-chip" style={sx("color:hsl(var(--ally-orange-ink));margin-bottom:10px;")}>SVC-02 · packaging</div>
+                <h3 style={sx("margin-bottom:10px;")}>Packaging &amp; label design</h3>
+                <p style={sx('margin-bottom:16px;')}>Full-service packaging from structural design through print-ready artwork — compliant, shelf-ready, and on-brand.</p>
+                <ul className="bullet-list">
+                  <li>FDA supplement facts panel generation</li>
+                  <li>Print-ready artwork files</li>
+                  <li>Barcode &amp; lot code setup</li>
+                </ul>
+              </div>
+              <div className="card" style={sx("border-left:3px solid hsl(var(--ally-orange));")}>
+                <div className="mono-chip" style={sx("color:hsl(var(--ally-orange-ink));margin-bottom:10px;")}>SVC-03 · fulfillment</div>
+                <h3 style={sx("margin-bottom:10px;")}>Amazon FBA preparation</h3>
+                <p style={sx('margin-bottom:16px;')}>We prep, label, and bundle your finished product to Amazon's exact FBA specifications, so your inventory arrives ready to sell.</p>
+                <ul className="bullet-list">
+                  <li>FNSKU labeling &amp; poly-bagging</li>
+                  <li>Multi-unit bundling &amp; kitting</li>
+                  <li>Direct-to-FC shipping available</li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
@@ -216,14 +224,19 @@ export default function Services() {
         <div className="container">
           <div className="section-header">
             <span className="eyebrow" style={sx('justify-content:center;')}>R&amp;D and innovation</span>
-            <h2>Science is the product.</h2>
+            {/* Pull-quote scale: every other h2 on this page is the section's
+                default size. This is the one moment of type-hierarchy
+                variation the plan's §3 fix calls for — sized up because the
+                line stands on its own as the section's thesis, not because
+                the section is more important than its neighbors. */}
+            <h2 style={sx('font-size:clamp(32px,4.2vw,48px);max-width:640px;margin-inline:auto;')}>Science is the product.</h2>
             <p>
               Our in-house team works where nutrition science meets manufacturing — turning
               ingredient research into formulas that work, taste good, and hold up on the shelf.
             </p>
           </div>
 
-          <div className="rd-matrix">
+          <div className="rd-matrix rd-matrix-lead">
             {RD_CELLS.map((cell) => (
               <div className="rd-cell" key={cell.num}>
                 <span className="rd-cell-num">{cell.num}</span>
