@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AllyNutra · Quote → BQA → Submit (Redesign)</title>
+<title>AllyNutra · Quote + BQA (Merged, Option F)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Roboto+Slab:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap">
@@ -14,30 +14,35 @@
      Pages build alike, without hardcoding the base path here. -->
 <script defer src="../shared/demo-role.js"></script>
 <style>
-  /* ── AllyNutra tokens — Direction 1A (from Ally_Nutra_Design_System__standalone_.html) ──
-     Navy carries the brand; amber is a single functional mark per view. */
+  /* ── AllyNutra tokens — AN-DESIGN-001 canonical hex (verified against
+     scripts/palette-lint.mjs's ALLOWED_HEX set). Navy carries the brand;
+     amber is a single functional mark per view. Every non-canonical value
+     is either an allowed hex or an rgba() of an allowed hex's RGB triple
+     (palette-lint's "token + alpha" exemption) — see PR body for the full
+     remap table. */
   :root{
-    --ally-navy:#1E3A5F; --ally-navy-2:#2E5D9E; --ally-navy-line:#33507A;
+    --ally-navy:#1E3A5F; --ally-navy-2:#2E5D9E; --ally-navy-line:rgba(30,58,95,.35);
     --ally-amber:#F0A829; --ally-amber-deep:#9A6B12;
-    --ally-amber-tint:rgba(240,168,41,0.10); --ally-amber-tint-line:rgba(240,168,41,0.35);
-    --ally-ink:#1B1D20; --ally-ink-2:#3A3E43;
-    --text-primary:#1B1D20; --text-body:#3A3E43; --text-secondary:#5B6168;
-    --text-muted:#5B6168; --text-meta:#71717A;
+    /* alpha kept low deliberately: amber-deep text on this tint composited over white
+       measures 4.52:1 at .05 vs 4.37:1 (fails AA) at the .10 originally used for
+       decorative amber-tint fills elsewhere — see PR body contrast audit. */
+    --ally-amber-tint:rgba(240,168,41,0.05); --ally-amber-tint-line:rgba(240,168,41,0.35);
+    --text-primary:#18181B; --text-body:#18181B; --text-secondary:#71717A;
+    --text-muted:#71717A; --text-meta:#71717A;
     --color-accent-text:var(--ally-amber-deep);
-    --surface-page:#ECEAE6; --surface-paper:#F4F2ED; --surface-card:#FFFFFF;
+    --surface-page:#ECEAE6; --surface-card:#FFFFFF;
     --surface-muted:#F4F4F5;
-    --border-default:#E4E5E2; --border-hairline:#ECEEEA;
+    --border-default:#E4E4E7; --border-hairline:#E4E4E7;
     --radius:6px; --radius-lg:8px;
     --destructive:#DC474C;
-    --ok-bg:#E6F4EA; --ok-fg:#2E7D46;
-    --review-bg:#EEF2F7; --review-fg:#1E3A5F; --review-line:rgba(30,58,95,.22);
+    --review-bg:rgba(30,58,95,.08); --review-line:rgba(30,58,95,.22);
     --font-display:'Roboto Slab',Georgia,'Times New Roman',serif;
     --font-text:'Roboto',Helvetica,Arial,sans-serif;
     --font-num:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%}
-  body{font-family:var(--font-text);background:#33608F;color:var(--text-body);-webkit-font-smoothing:antialiased}
+  body{font-family:var(--font-text);background:var(--ally-navy);color:var(--text-body);-webkit-font-smoothing:antialiased}
   .app{min-height:100vh;display:flex;flex-direction:column}
   input::placeholder,textarea::placeholder{color:var(--text-muted)}
   button{font-family:inherit;cursor:pointer}
@@ -52,7 +57,7 @@
   header.rev .row{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
   .logo{font-family:var(--font-display);font-size:17px;font-weight:600;letter-spacing:-0.02em;color:#fff}
   .logo u{border-bottom:2px solid var(--ally-amber);padding-bottom:2px;text-decoration:none}
-  .revtag{font-family:var(--font-num);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#C6D4EC;background:rgba(255,255,255,.06);border:1px dashed rgba(255,255,255,.28);border-radius:99px;padding:4px 11px}
+  .revtag{font-family:var(--font-num);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.75);background:rgba(255,255,255,.06);border:1px dashed rgba(255,255,255,.28);border-radius:99px;padding:4px 11px}
   .swbtn{margin-left:auto;font-size:12.5px;font-weight:600;color:#fff;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.35);border-radius:var(--radius);padding:8px 13px;display:flex;align-items:center;gap:7px}
   .swbtn:hover{background:rgba(255,255,255,.16)}
   .swbtn svg{transition:transform .14s ease}
@@ -66,7 +71,7 @@
   .sw-grp h6{font-family:var(--font-num);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-meta);margin-bottom:7px}
   .sw-row{display:flex;flex-wrap:wrap;gap:6px}
   .sw-chip{font-size:12px;font-weight:600;color:var(--ally-navy);background:var(--review-bg);border:1px solid var(--review-line);border-radius:99px;padding:5px 11px}
-  .sw-chip:hover{background:#E1E9F2}
+  .sw-chip:hover{background:rgba(30,58,95,.12)}
   .sw-chip.current{background:var(--ally-navy);border-color:var(--ally-navy);color:#fff}
   .sw-reset{width:100%;margin-top:4px;font-size:12px;font-weight:600;color:var(--destructive);background:none;border:1px dashed var(--destructive);border-radius:var(--radius);padding:7px}
 
@@ -78,16 +83,22 @@
 
   h2.pg{font-family:var(--font-display);font-size:24px;font-weight:500;letter-spacing:-0.01em;color:var(--text-primary)}
   .lede{font-size:15px;color:var(--text-secondary)}
-  .pghead{position:relative;overflow:hidden;background:linear-gradient(135deg,#264A73 0%,#1E3A5F 52%,#172E4B 100%);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius-lg);padding:24px 26px;margin-bottom:20px;box-shadow:0 2px 10px -3px rgba(23,46,75,.35)}
-  .pghead::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:var(--ally-amber)}
-  .pghead .eyebrow{display:flex;align-items:center;gap:9px;font-family:var(--font-num);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ally-amber);margin-bottom:10px}
-  .pghead .eyebrow::before{content:"";width:20px;height:1px;background:var(--ally-amber);opacity:.75}
-  .pghead h2.pg{color:#fff;font-weight:600;letter-spacing:-0.015em}
-  .pghead .lede{color:#B9C9DE;margin-top:7px;max-width:64ch;line-height:1.55}
+
+  /* single top-of-page masthead (replaces the old per-screen dark pghead
+     banner — the merged single-page layout has one flowing light-surface
+     header instead of a wizard "screen 1" banner). Given a white card
+     background (not the bare beige page bg) because measurement showed
+     amber-ink only clears 4.5:1 against white/near-white, not against
+     --surface-page's #ECEAE6 (measures 3.90:1 there) — see PR body. */
+  .pagehead{margin-bottom:20px;background:var(--surface-card);border:1px solid var(--border-default);border-radius:var(--radius-lg);padding:22px 24px}
+  .pagehead .eyebrow{display:flex;align-items:center;gap:9px;font-family:var(--font-num);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--color-accent-text);margin-bottom:10px}
+  .pagehead .eyebrow::before{content:"";width:20px;height:1px;background:var(--color-accent-text);opacity:.75}
+  .pagehead h2.pg{font-weight:600;letter-spacing:-0.015em}
+  .pagehead .lede{margin-top:7px;max-width:64ch;line-height:1.55}
 
   .btn-navy{font-size:13px;font-weight:600;color:#fff;background:var(--ally-navy);border:none;border-radius:var(--radius);padding:10px 16px;white-space:nowrap;display:inline-flex;align-items:center;gap:7px}
-  .btn-navy:hover{background:#17314f}
-  .btn-navy:disabled{opacity:.42;cursor:not-allowed;background:var(--ally-navy)}
+  .btn-navy:hover{filter:brightness(.88)}
+  .btn-navy:disabled{opacity:.42;cursor:not-allowed;filter:none}
   .btn-out{font-size:13px;font-weight:600;color:var(--ally-navy);background:var(--surface-card);border:1px solid var(--ally-navy);border-radius:var(--radius);padding:9px 15px;white-space:nowrap}
   .btn-out:hover{background:var(--surface-muted)}
   .btn-ghost{font-size:12.5px;font-weight:600;color:var(--text-secondary);background:none;border:none;padding:9px 6px}
@@ -102,7 +113,10 @@
   .pill .d{width:6px;height:6px;border-radius:50%}
   .pill.gold{background:var(--ally-amber-tint);color:var(--color-accent-text)} .pill.gold .d{background:var(--ally-amber)}
   .pill.navy{background:rgba(30,58,95,.08);color:var(--ally-navy)} .pill.navy .d{background:var(--ally-navy)}
-  .pill.slate{background:var(--surface-muted);color:var(--text-secondary)} .pill.slate .d{background:var(--text-muted)}
+  /* card, not surface-muted: text-secondary on surface-muted measures 4.40:1 (fails
+     AA); on card it measures 4.83:1. Border added so the pill keeps a visible edge
+     against the white resultcard it sits on — see PR body contrast audit. */
+  .pill.slate{background:var(--surface-card);color:var(--text-secondary);border:1px solid var(--border-default)} .pill.slate .d{background:var(--text-muted)}
 
   .note{display:flex;align-items:flex-start;gap:10px;padding:13px 15px;background:var(--ally-amber-tint);border:1px solid var(--ally-amber-tint-line);border-radius:var(--radius);font-size:12.5px;color:var(--text-primary);line-height:1.5}
 
@@ -133,7 +147,8 @@
   .tab{font-size:13px;font-weight:500;color:var(--text-secondary);background:none;border:none;padding:9px 4px;margin-right:18px;border-bottom:2px solid transparent}
   .tab.on{color:var(--text-primary);border-bottom-color:var(--ally-amber)}
 
-  /* stepper — reused for both the quote wizard progress and BQA question progress */
+  /* stepper — booking sub-flow only (Intro/Schedule/Confirmed). The merged
+     block list itself has no step counter (spec §0). */
   .stepper{display:flex;align-items:flex-start}
   .step{flex:1;display:flex;flex-direction:column;align-items:center}
   .step .line{display:flex;align-items:center;width:100%}
@@ -150,7 +165,9 @@
   .ingtable{border:1px solid var(--border-default);border-radius:var(--radius);overflow:hidden;margin-bottom:8px}
   .ingrow{display:grid;grid-template-columns:2fr 1fr 1fr 32px;gap:10px;padding:10px 12px;border-bottom:1px solid var(--border-hairline);align-items:center}
   .ingrow:last-child{border-bottom:none}
-  .ingrow.head{background:var(--surface-muted);font-family:var(--font-num);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--text-meta)}
+  /* card, not surface-muted — same 4.40:1→4.83:1 fix as .pill.slate above; the
+     existing border-bottom (shared with data rows) still separates the header. */
+  .ingrow.head{background:var(--surface-card);font-family:var(--font-num);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--text-meta)}
   .ingrow input{width:100%;font-size:13px;border:1px solid var(--border-default);border-radius:4px;padding:6px 8px;font-family:inherit}
   .ingrow .rm{width:26px;height:26px;border-radius:99px;border:1px solid var(--border-default);background:var(--surface-card);color:var(--text-muted);display:flex;align-items:center;justify-content:center}
   .ingrow .rm:hover{border-color:var(--destructive);color:var(--destructive)}
@@ -164,7 +181,10 @@
   .divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--border-hairline)}
 
   /* review recap */
-  .recap{background:var(--surface-muted);border:1px solid var(--border-default);border-radius:var(--radius-lg);padding:16px 18px;margin-bottom:20px}
+  /* card, not surface-muted: .recrow .rk (text-secondary) measures 4.40:1 on
+     surface-muted (fails AA), 4.83:1 on card. Existing border keeps the box
+     legible as a distinct panel. */
+  .recap{background:var(--surface-card);border:1px solid var(--border-default);border-radius:var(--radius-lg);padding:16px 18px;margin-bottom:20px}
   .recap h4{font-family:var(--font-display);font-size:15px;font-weight:600;color:var(--text-primary);margin-bottom:12px}
   .recrow{display:flex;justify-content:space-between;gap:16px;padding:7px 0;border-top:1px solid var(--border-hairline);font-size:13px}
   .recrow:first-of-type{border-top:none}
@@ -175,15 +195,22 @@
   .consent input{margin-top:3px;flex:none}
   .consent p{margin:0}
 
-  /* BQA */
-  .bqahead{text-align:center;max-width:520px;margin:0 auto 26px}
+  /* BQA option rows (reused inside blocks 3/5/7) */
+  .qeyebrow{font-family:var(--font-num);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-meta);margin-bottom:8px}
+  .qtitle{font-family:var(--font-display);font-size:19px;font-weight:600;color:var(--text-primary);margin-bottom:18px;line-height:1.35}
+
+  /* centered header + card chrome reused by result/booking full-screen states.
+     Given the same white-card treatment as .pagehead (background/border/padding):
+     .eyebrow2 (amber-deep) measures 3.90:1 directly on --surface-page (fails AA),
+     4.68:1 on card; .sub (text-secondary) measures 4.02:1 on --surface-page,
+     4.83:1 on card. See PR body contrast audit. */
+  .bqahead{text-align:center;max-width:560px;margin:0 auto 26px;background:var(--surface-card);border:1px solid var(--border-default);border-radius:var(--radius-lg);padding:24px 26px 26px}
   .bqahead .eyebrow2{font-family:var(--font-num);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--color-accent-text);margin-bottom:10px}
   .bqahead h1{font-family:var(--font-display);font-size:26px;font-weight:600;color:var(--text-primary);letter-spacing:-0.01em;line-height:1.25}
   .bqahead .sub{font-size:13.5px;color:var(--text-secondary);margin-top:9px;line-height:1.5}
-
   .qcard{background:var(--surface-card);border:1px solid var(--border-default);border-radius:var(--radius-lg);padding:26px 28px}
-  .qeyebrow{font-family:var(--font-num);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-meta);margin-bottom:8px}
-  .qtitle{font-family:var(--font-display);font-size:19px;font-weight:600;color:var(--text-primary);margin-bottom:18px;line-height:1.35}
+  .qfoot{display:flex;align-items:center;justify-content:space-between;margin-top:20px;padding-top:16px;border-top:1px solid var(--border-hairline)}
+  .qcount{font-size:12px;color:var(--text-muted)}
 
   .optionrow{display:flex;align-items:center;gap:12px;padding:13px 15px;border:1px solid var(--border-default);border-radius:var(--radius);margin-bottom:8px;background:var(--surface-card);width:100%;text-align:left}
   .optionrow:hover{border-color:var(--ally-navy)}
@@ -204,13 +231,11 @@
   .subopt .st{font-size:13px;color:var(--text-primary)}
   .subopt .sd{font-size:11.5px;color:var(--text-secondary);margin-top:1px}
 
-  .qfoot{display:flex;align-items:center;justify-content:space-between;margin-top:20px;padding-top:16px;border-top:1px solid var(--border-hairline)}
-  .qcount{font-size:12px;color:var(--text-muted)}
   .phonenudge{display:flex;align-items:center;gap:9px;margin-top:18px;padding-top:16px;border-top:1px solid var(--border-hairline);font-size:13px;color:var(--text-secondary)}
   .phonenudge a{color:var(--ally-navy);font-weight:600}
 
   /* ack modal */
-  .modalbg{position:fixed;inset:0;background:rgba(20,28,38,.5);display:none;align-items:center;justify-content:center;z-index:70;padding:20px}
+  .modalbg{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:70;padding:20px}
   .modalbg.open{display:flex}
   .modal{background:#fff;border-radius:var(--radius-lg);max-width:420px;width:100%;padding:24px 26px;box-shadow:0 20px 50px -10px rgba(0,0,0,.35)}
   .modal h3{font-family:var(--font-display);font-size:17px;font-weight:600;color:var(--text-primary);margin-bottom:10px}
@@ -222,12 +247,16 @@
   .rbadge{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
   .rbadge.qualified{background:var(--ally-amber-tint);color:var(--ally-amber-deep)}
   .rbadge.review{background:rgba(30,58,95,.08);color:var(--ally-navy)}
-  .rbadge.waitlisted{background:var(--surface-muted);color:var(--text-muted);border:2px solid var(--border-default)}
+  /* card, not surface-muted — same 4.40:1→4.83:1 fix as .pill.slate above. */
+  .rbadge.waitlisted{background:var(--surface-card);color:var(--text-muted);border:2px solid var(--border-default)}
   .rpill{margin-bottom:14px}
   .resultcard h1{font-family:var(--font-display);font-size:24px;font-weight:600;color:var(--text-primary);margin-bottom:12px;letter-spacing:-0.01em}
   .resultcard .rbody{font-size:14.5px;color:var(--text-secondary);line-height:1.6;max-width:40ch;margin:0 auto}
   .resultcard .ractions{margin-top:22px;display:flex;justify-content:center;gap:12px}
-  .whatnext{text-align:left;background:var(--surface-muted);border:1px solid var(--border-default);border-radius:var(--radius);padding:16px 18px;margin-top:20px}
+  /* card, not surface-muted: .whatnext h5 (text-meta) measures 4.40:1 on
+     surface-muted (fails AA), 4.83:1 on card. Existing border keeps the box
+     legible as a distinct panel. */
+  .whatnext{text-align:left;background:var(--surface-card);border:1px solid var(--border-default);border-radius:var(--radius);padding:16px 18px;margin-top:20px}
   .whatnext h5{font-family:var(--font-num);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-meta);margin-bottom:10px}
   .whatnext li{font-size:13px;color:var(--text-body);line-height:1.6;margin-left:16px;margin-bottom:4px}
   .redirtext{margin-top:14px;font-size:12px;color:var(--text-muted)}
@@ -239,7 +268,24 @@
   .scoringcard h2{font-family:var(--font-display);font-size:19px;font-weight:600;color:var(--text-primary)}
   .scoringcard p{font-size:13px;color:var(--text-secondary);margin-top:6px}
 
-  footer.rev{background:var(--ally-navy);border-top:1px solid var(--ally-navy-line);padding:14px 24px;text-align:center;font-family:var(--font-num);font-size:10.5px;letter-spacing:.06em;color:#8FA6C4;text-transform:uppercase}
+  footer.rev{background:var(--ally-navy);border-top:1px solid var(--ally-navy-line);padding:14px 24px;text-align:center;font-family:var(--font-num);font-size:10.5px;letter-spacing:.06em;color:rgba(255,255,255,.65);text-transform:uppercase}
+
+  /* ── block list (Option F: progressive-reveal single page) ── */
+  .blk{margin-bottom:12px}
+  .blkhead{display:flex;align-items:center;gap:14px;padding:18px 20px;width:100%;text-align:left;background:none;border:none}
+  .blk.open .blkhead,.blk.done .blkhead{cursor:pointer}
+  .blk.locked .blkhead{cursor:default}
+  .blk.locked{opacity:.55}
+  .blknum{flex:none;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:700;font-family:var(--font-num);border:2px solid var(--border-default);background:var(--surface-card);color:var(--text-muted)}
+  .blk.done .blknum{background:var(--ally-amber);border-color:var(--ally-amber);color:#fff}
+  .blk.open .blknum{border-color:var(--ally-navy);color:var(--ally-navy)}
+  .blktitles{flex:1;min-width:0}
+  .blktitle{font-family:var(--font-display);font-size:15.5px;font-weight:600;color:var(--text-primary)}
+  .blksum{font-size:12.5px;color:var(--text-secondary);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .blkchev{flex:none;color:var(--text-muted);transition:transform .14s ease}
+  .blk.open .blkchev{transform:rotate(180deg)}
+  .blkbody{padding:0 20px 24px;border-top:1px solid var(--border-hairline);padding-top:20px;margin:0 20px 0}
+  .blkbody-inner{padding:0}
 
   @media (max-width:640px){
     .fgrid,.optgrid.two{grid-template-columns:1fr}
@@ -254,7 +300,7 @@
   <header class="rev">
     <div class="row">
       <a class="logo" style="text-decoration:none" href="../?role=visitor" data-an-role-href="../?role={role}"><img src="../logo-white.png" alt="Ally Nutra" style="height:46px;width:auto;display:block"></a>
-      <span class="revtag">Design review · Quote → BQA → Submit redesign</span>
+      <span class="revtag">Design review · Merged Quote+BQA (Option F)</span>
       <div class="sw" id="sw">
         <button class="swbtn" id="swBtn" aria-haspopup="true" aria-expanded="false">
           Jump to state
@@ -283,6 +329,11 @@
 // ════════════════════════════════════════════════════════════════
 // This is a static design mockup. All data below is local, in-memory
 // state — there is no fetch/XHR, no Supabase, no submission of any kind.
+//
+// Option F architecture: the five-step quote wizard and three-question BQA
+// have been merged into ONE page of 8 progressive-reveal blocks (locked /
+// open / done), followed by two full-screen states reached after block 8
+// (scoring/result, booking) — those two stay full-screen, not blocks.
 // ════════════════════════════════════════════════════════════════
 
 const svg = (paths, size=15) => `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${paths}</svg>`;
@@ -327,6 +378,8 @@ const MATERIAL_TYPES = ['Undecided','Foil Laminate','Kraft Paper','Matte Film','
 const POUCH_SIZES = ['Undecided','4"×6"','6"×9"','8"×12"','10"×14"','Other'];
 const CLOSURE_TYPES = ['Undecided','Zip-Lock','Tear Notch','Spout Cap','Heat Seal Only','Other'];
 const PROVIDED_BY = ['Customer','Ally Nutra','Undecided','Other'];
+// Demo fixture only — NOT live scheduling. Labelled visibly in the booking UI (see OPEN
+// QUESTIONS #1 in the PR body).
 const BOOKING_DAYS = [
   {v:'mon', l:'Mon', d:'Jul 27'},
   {v:'tue', l:'Tue', d:'Jul 28'},
@@ -336,10 +389,74 @@ const BOOKING_DAYS = [
 ];
 const BOOKING_SLOTS = ['9:00 AM','11:00 AM','1:00 PM','3:00 PM'];
 
+// ── BQA scoring constants — 100-point weighted score, pass at 60. Score is
+// computed but NEVER shown to the user. Bands: Qualified 60–100 · Under
+// Review 40–59 · Waitlisted 0–39. Q2 (block 5) reproduces production's
+// parent/leaf accordion: 3 flat top-level rows, then one disclosure row
+// ("500–1,000 units") revealing 3 leaves when expanded, or already expanded
+// if the current answer is one of its leaves. Pilot/Sample leaves (36 pts
+// each) require an acknowledgement modal before the answer is recorded; the
+// one-off leaf sets immediately, no modal. NO outcome override for
+// pilot/sample — these leads qualify on score like anyone else.
+const Q1_OPTS = [
+  {l:'Ready now / within 1 month', pts:32},
+  {l:'1–3 months', pts:24},
+  {l:'3–6 months', pts:16},
+  {l:'6+ months / just exploring', pts:8},
+];
+const Q2_TOP_OPTS = [
+  {l:'Large / ongoing volume, $50k+', pts:48},
+  {l:'Standard production run, ~$15k–50k', pts:36},
+  {l:'Small first order, ~$5k–15k', pts:24},
+];
+const Q2_LEAF_OPTS = [
+  {l:'Pilot run — 500–1,000 units', pts:36, ackKey:'pilot'},
+  {l:'Sample run — 5–10 units', pts:36, ackKey:'sample'},
+  {l:'No plans to scale — one-time order', pts:12},
+];
+// Flat scoring array — indices 0-2 are the top rows, 3-5 are the leaves.
+const Q2_OPTS = [...Q2_TOP_OPTS, ...Q2_LEAF_OPTS];
+const Q3_OPTS = [
+  {l:'Established, scaling multiple products', pts:20},
+  {l:'Established brand adding SKUs', pts:15},
+  {l:'Early stage, first product(s)', pts:10},
+  {l:'Just an idea / pre-launch', pts:5},
+];
+// Exact copy from src/components/bqa/bqaBranches.ts (ackContent.q2_a_pilot / q2_a_sample).
+// NOTE (OPEN QUESTION #3): this copy is written for stick-pack units ("each unit contains
+// 3–6 sticks"). The pilot/sample leaves are reachable from block 5 regardless of which
+// delivery format was chosen in block 2 — the gate isn't conditioned on format. Reported,
+// not rewritten, per instructions.
+const ACK_COPY = {
+  pilot: {
+    title: 'Pilot runs — minimum commitment',
+    body: 'A 500–1,000 unit pilot run starts at approximately $10,000. The final cost depends on your formulation — more or premium ingredients will increase the total.',
+  },
+  sample: {
+    title: 'Sample runs — minimum commitment',
+    body: 'A sample run is 5–10 units with a $2,000 minimum. For stick packs, each unit contains 3–6 sticks — so a 10-unit sample is 30–60 sticks total.',
+  },
+};
+
+function bqaScore(){
+  let s = 0;
+  if(S.bqa.a1!==null) s += Q1_OPTS[S.bqa.a1].pts;
+  if(S.bqa.a2!==null) s += Q2_OPTS[S.bqa.a2].pts;
+  if(S.bqa.a3!==null) s += Q3_OPTS[S.bqa.a3].pts;
+  return s;
+}
+function scoreToOutcome(score){
+  if(score>=60) return 'qualified';
+  if(score>=40) return 'review';
+  return 'waitlisted';
+}
+
 // ── state ──────────────────────────────────────────────
 const S = {
-  screen: 'quote-1',
-  q: { // quote wizard answers
+  screen: 'blocks', // 'blocks' | 'scoring' | 'result' | 'booking-intro' | 'booking-schedule' | 'booking-confirming' | 'booking-confirmed'
+  open: 1, // currently-expanded block id (1-8)
+  done: {1:false,2:false,3:false,4:false,5:false,6:false,7:false,8:false},
+  q: { // block answers
     leadType: 'complete', email: 'jordan@coastlinewellness.co', phone: '(555) 219-4471',
     deliveryFormat: 'capsules', capsuleType: '', tabletType: '', unitsPerBox: '', pouchVolume: '',
     ingredients: [ {name:'Ashwagandha (KSM-66)', amount:'600', unit:'mg'}, {name:'Rhodiola Rosea', amount:'200', unit:'mg'} ],
@@ -348,87 +465,96 @@ const S = {
     materialType:'', unitsPerBoxPkg:'', netWeight:'', pkgDims:'',
     pouchSize:'', pouchVolumePkg:'', pkgMaterial:'', closureType:'',
     labelsBy:'', designBy:'', pkgComments:'',
-    fullName:'Jordan Wells', contactPhone:'(555) 219-4471', company:'Coastline Wellness Co.',
+    fullName:'Jordan Wells', company:'Coastline Wellness Co.',
     projectNotes:'', smsConsent:false,
   },
-  bqa: { qIndex: 0, a1:null, a2:null, a3:null, ackedQ2:{pilot:false,sample:false}, pendingAck:null, q2Open:false },
+  bqa: { a1:null, a2:null, a3:null, ackedQ2:{pilot:false,sample:false}, pendingAck:null, q2Open:false },
   result: { outcome: null, committed: false, submitting:false },
-  booking: { origin:null, date:null, slot:null, name:'', email:'', phone:'' },
+  booking: { origin:null, date:null, slot:null },
 };
 
 function go(id){ S.screen = id; render(); window.scrollTo({top:0,behavior:'auto'}); }
 function closeSwitcher(){ document.getElementById('sw').classList.remove('open'); }
-
-// ══════════════════════════════════════════════════════
-// QUOTE STEP 1 — LeadType (src/components/quote/steps/LeadTypeStep.tsx)
-// ══════════════════════════════════════════════════════
-function renderQuote1(){
-  return `<div class="fu">
-    <div class="pghead">
-      <div class="eyebrow">Contract manufacturing</div>
-      <h2 class="pg" style="font-size:28px">Get a quote</h2>
-      <p class="lede">Tell us where you are, and we'll route you to the fastest path — instant pricing or a formulation specialist.</p>
-    </div>
-    <div class="card cardpad">
-      <div class="optgrid two" style="margin-bottom:22px">
-        <button class="opt${S.q.leadType==='complete'?' sel':''}" data-set="leadType" data-val="complete">
-          <span class="oi">${ICONS.formula}</span>
-          <span><span class="on">I have my formula ready</span><br><span class="od">Ready with ingredient list, dosages, and specifications</span></span>
-        </button>
-        <button class="opt${S.q.leadType==='needs-refining'?' sel':''}" data-idea-start="1">
-          <span class="oi">${ICONS.help}</span>
-          <span><span class="on">I have an idea but need help refining it</span><br><span class="od">We'll show you a few ways to connect with our team</span></span>
-        </button>
-      </div>
-      <div class="fgrid">
-        <div class="fgroup"><label class="fl">Business email *</label><input class="fi" data-bind="q.email" value="${S.q.email}" placeholder="you@company.com"></div>
-        <div class="fgroup"><label class="fl">Phone number *</label><input class="fi" data-bind="q.phone" value="${S.q.phone}" placeholder="(555) 123-4567"></div>
-      </div>
-      <div style="display:flex;justify-content:flex-end;margin-top:6px">
-        <button class="btn-navy" data-nav="quote-2">Continue</button>
-      </div>
-    </div>
-  </div>`;
-}
-
-// ══════════════════════════════════════════════════════
-// QUOTE STEP 2 — DeliveryFormat
-// ══════════════════════════════════════════════════════
+function fmtLabel(v){ const f=FORMATS.find(x=>x.v===v); return f?f.l:v; }
 function selectList(name, options, current, otherField){
   return `<select class="fi" data-bind="${name}">` +
     options.map(o=>`<option value="${o}" ${o===current?'selected':''}>${o}</option>`).join('') +
     `</select>` +
     (current==='Other' && otherField ? `<input class="fi" style="margin-top:8px" data-bind="${otherField}" placeholder="Please specify" value="${S.q[otherField.split('.')[1]]||''}">` : '');
 }
-function renderQuote2(){
+function optRow(name, idx, sel, label){
+  return `<button class="optionrow${sel?' sel':''}" data-radio="${name}" data-idx="${idx}"><span class="rd"></span><span class="ot">${label}</span></button>`;
+}
+
+// ══════════════════════════════════════════════════════
+// BLOCK BODIES — each returns the inner form markup for one block.
+// Content/options/point-values are verbatim from the source quote wizard
+// and BQA screens; only the wrapping chrome (wizHead/qcard/stepper) changed.
+// ══════════════════════════════════════════════════════
+
+// Block 1 — Lead type + contact (src/components/quote/steps/LeadTypeStep.tsx)
+function block1Body(){
+  return `<div class="optgrid two" style="margin-bottom:22px">
+    <button class="opt${S.q.leadType==='complete'?' sel':''}" data-set="q.leadType" data-val="complete">
+      <span class="oi">${ICONS.formula}</span>
+      <span><span class="on">I have my formula ready</span><br><span class="od">Ready with ingredient list, dosages, and specifications</span></span>
+    </button>
+    <button class="opt${S.q.leadType==='needs-refining'?' sel':''}" data-idea-start="1">
+      <span class="oi">${ICONS.help}</span>
+      <span><span class="on">I have an idea but need help refining it</span><br><span class="od">We'll show you a few ways to connect with our team</span></span>
+    </button>
+  </div>
+  <div class="fgrid">
+    <div class="fgroup"><label class="fl">Business email *</label><input class="fi" data-bind="q.email" value="${S.q.email}" placeholder="you@company.com"></div>
+    <div class="fgroup"><label class="fl">Phone number *</label><input class="fi" data-bind="q.phone" value="${S.q.phone}" placeholder="(555) 123-4567"></div>
+  </div>
+  <div style="display:flex;justify-content:flex-end;margin-top:6px">
+    <button class="btn-navy" data-blocknext="1">Continue</button>
+  </div>`;
+}
+function block1Sum(){
+  const label = S.q.leadType==='needs-refining' ? 'I have an idea but need help refining it' : 'I have my formula ready';
+  return `${label} · ${S.q.email}`;
+}
+
+// Block 2 — Delivery format
+function block2Body(){
   const f = S.q.deliveryFormat;
   let sub = '';
   if(f==='capsules') sub = `<div class="fgroup"><label class="fl">Capsule Type *</label>${selectList('q.capsuleType', CAPSULE_TYPES, S.q.capsuleType, 'q.capsuleTypeOther')}</div>`;
   else if(f==='tablets') sub = `<div class="fgroup"><label class="fl">Tablet Type *</label>${selectList('q.tabletType', TABLET_TYPES, S.q.tabletType, 'q.tabletTypeOther')}</div>`;
   else if(f==='sachets'||f==='stick-packs') sub = `<div class="fgroup"><label class="fl">Units Per Box *</label>${selectList('q.unitsPerBox', UNITS_PER_BOX, S.q.unitsPerBox, 'q.unitsPerBoxOther')}</div>`;
   else if(f==='pouches') sub = `<div class="fgroup"><label class="fl">Pouch Volume / Net Weight *</label>${selectList('q.pouchVolume', POUCH_VOLUMES, S.q.pouchVolume, 'q.pouchVolumeOther')}</div>`;
-
-  return `<div class="fu">
-    ${wizHead(2,'Get an Instant Quote')}
-    <div class="card cardpad">
-      <div class="qeyebrow">Delivery Format</div>
-      <p class="lede" style="margin-bottom:16px">Choose your preferred product format</p>
-      <div class="optgrid" style="margin-bottom:20px">
-        ${FORMATS.map(fmt=>`<button class="opt${fmt.v===f?' sel':''}" data-set="q.deliveryFormat" data-val="${fmt.v}">
-          <span class="oi">${ICONS[fmt.icon]}</span>
-          <span><span class="on">${fmt.l}</span><br><span class="od">${fmt.d}</span></span>
-        </button>`).join('')}
-      </div>
-      ${sub}
-      ${wizFoot(2)}
-    </div>
+  return `<div class="qeyebrow">Delivery Format</div>
+  <p class="lede" style="margin-bottom:16px">Choose your preferred product format</p>
+  <div class="optgrid" style="margin-bottom:20px">
+    ${FORMATS.map(fmt=>`<button class="opt${fmt.v===f?' sel':''}" data-set="q.deliveryFormat" data-val="${fmt.v}">
+      <span class="oi">${ICONS[fmt.icon]}</span>
+      <span><span class="on">${fmt.l}</span><br><span class="od">${fmt.d}</span></span>
+    </button>`).join('')}
+  </div>
+  ${sub}
+  <div style="display:flex;justify-content:flex-end;margin-top:6px">
+    <button class="btn-navy" data-blocknext="2">Continue</button>
   </div>`;
 }
+function block2Sum(){
+  const f = S.q.deliveryFormat;
+  const detail = f==='capsules'?S.q.capsuleType:f==='tablets'?S.q.tabletType:(f==='sachets'||f==='stick-packs')?S.q.unitsPerBox:f==='pouches'?S.q.pouchVolume:'';
+  return detail ? `${fmtLabel(f)} · ${detail}` : fmtLabel(f);
+}
 
-// ══════════════════════════════════════════════════════
-// QUOTE STEP 3 — CompleteFormulation
-// ══════════════════════════════════════════════════════
-function renderQuote3(){
+// Block 3 — Timeline (BQA Q1, interleaved gate — not labelled an assessment)
+function block3Body(){
+  return `${Q1_OPTS.map((o,n)=>optRow('bqa-a1',n,S.bqa.a1===n,o.l)).join('')}
+  <div style="display:flex;justify-content:flex-end;margin-top:6px">
+    <button class="btn-navy" data-blocknext="3" ${S.bqa.a1===null?'disabled':''}>Continue</button>
+  </div>`;
+}
+function block3Sum(){ return S.bqa.a1!==null ? Q1_OPTS[S.bqa.a1].l : ''; }
+
+// Block 4 — Formulation
+function block4Body(){
   const rows = S.q.ingredients.map((ing,i)=>`
     <div class="ingrow">
       <input data-ing="${i}.name" value="${ing.name}" placeholder="Ingredient name">
@@ -436,42 +562,60 @@ function renderQuote3(){
       <input data-ing="${i}.unit" value="${ing.unit}" placeholder="mg / g / IU">
       <button class="rm" data-rmIng="${i}" title="Remove">${ICONS.trash}</button>
     </div>`).join('');
-  return `<div class="fu">
-    ${wizHead(3,'Get an Instant Quote')}
-    <div class="card cardpad">
-      <div class="qeyebrow">Your Formulation</div>
-      <p class="lede" style="margin-bottom:16px">Enter your ingredient details and specifications</p>
+  return `<div class="dropzone">
+    <span class="dz-ic">${ICONS.upload}</span>
+    <div><div style="font-size:13.5px;font-weight:600;color:var(--text-primary)">Have a label or product page?</div>
+    <div style="font-size:12px;color:var(--text-secondary);margin-top:2px">Paste a product URL or upload a label image to auto-fill your formulation in seconds.</div></div>
+    <button class="btn-out" style="margin-left:auto" disabled title="Decorative in this mockup — no real upload">Upload label</button>
+  </div>
+  <div class="divider">or enter your formulation manually</div>
 
-      <div class="dropzone">
-        <span class="dz-ic">${ICONS.upload}</span>
-        <div><div style="font-size:13.5px;font-weight:600;color:var(--text-primary)">Have a label or product page?</div>
-        <div style="font-size:12px;color:var(--text-secondary);margin-top:2px">Paste a product URL or upload a label image to auto-fill your formulation in seconds.</div></div>
-        <button class="btn-out" style="margin-left:auto" disabled title="Decorative in this mockup — no real upload">Upload label</button>
-      </div>
-      <div class="divider">or enter your formulation manually</div>
+  <label class="fl">Ingredients *</label>
+  <div class="ingtable">
+    <div class="ingrow head"><span>Name</span><span>Amount</span><span>Unit</span><span></span></div>
+    ${rows}
+  </div>
+  <button class="adder" data-addIng="1" style="margin-bottom:20px">${ICONS.plus} Add ingredient</button>
 
-      <label class="fl">Ingredients *</label>
-      <div class="ingtable">
-        <div class="ingrow head"><span>Name</span><span>Amount</span><span>Unit</span><span></span></div>
-        ${rows}
-      </div>
-      <button class="adder" data-addIng="1" style="margin-bottom:20px">${ICONS.plus} Add ingredient</button>
-
-      <div class="fgrid">
-        <div class="fgroup"><label class="fl">Serving Size *</label><input class="fi" data-bind="q.servingSize" value="${S.q.servingSize}" placeholder="e.g., 2"><div class="fhelp">Number of capsules per serving</div></div>
-        <div class="fgroup"><label class="fl">Servings Per Container *</label><input class="fi" data-bind="q.servingsPerContainer" value="${S.q.servingsPerContainer}" placeholder="e.g., 30"><div class="fhelp">Total servings in one bottle</div></div>
-      </div>
-      <div class="fgroup"><label class="fl">Additional Formulation Notes</label><textarea class="fi" data-bind="q.formulationNotes" placeholder="Any additional notes about your formulation, dosages, or special requirements">${S.q.formulationNotes}</textarea></div>
-
-      ${wizFoot(3)}
-    </div>
+  <div class="fgrid">
+    <div class="fgroup"><label class="fl">Serving Size *</label><input class="fi" data-bind="q.servingSize" value="${S.q.servingSize}" placeholder="e.g., 2"><div class="fhelp">Number of capsules per serving</div></div>
+    <div class="fgroup"><label class="fl">Servings Per Container *</label><input class="fi" data-bind="q.servingsPerContainer" value="${S.q.servingsPerContainer}" placeholder="e.g., 30"><div class="fhelp">Total servings in one bottle</div></div>
+  </div>
+  <div class="fgroup"><label class="fl">Additional Formulation Notes</label><textarea class="fi" data-bind="q.formulationNotes" placeholder="Any additional notes about your formulation, dosages, or special requirements">${S.q.formulationNotes}</textarea></div>
+  <div style="display:flex;justify-content:flex-end;margin-top:6px">
+    <button class="btn-navy" data-blocknext="4">Continue</button>
   </div>`;
 }
+function block4Sum(){ return `${S.q.ingredients.length} ingredient${S.q.ingredients.length===1?'':'s'} · ${S.q.servingSize||'—'} per serving`; }
 
-// ══════════════════════════════════════════════════════
-// QUOTE STEP 4 — Packaging
-// ══════════════════════════════════════════════════════
-function renderQuote4(){
+// Block 5 — Scale & budget (BQA Q2, interleaved gate; pilot/sample ack modal)
+function block5Body(){
+  const selectedIsLeaf = S.bqa.a2!==null && S.bqa.a2 >= Q2_TOP_OPTS.length;
+  const showLeaves = S.bqa.q2Open || selectedIsLeaf;
+  const leafRows = Q2_LEAF_OPTS.map((o,n)=>{
+    const idx = Q2_TOP_OPTS.length + n;
+    return `<button class="subopt${S.bqa.a2===idx?' sel':''}" data-q2leaf="${idx}"${o.ackKey?` data-q2ack="${o.ackKey}"`:''}><span class="st">${o.l}</span></button>`;
+  }).join('');
+  return `${Q2_TOP_OPTS.map((o,n)=>optRow('bqa-a2',n,S.bqa.a2===n,o.l)).join('')}
+  <div class="optionrow branch${showLeaves?' open':''}${selectedIsLeaf?' sel':''}">
+    <div class="bh" data-q2branchtoggle="1"><span class="rd"></span><span class="ot">500–1,000 units</span><span class="chev">${ICONS.chevronDown}</span></div>
+    <div class="subopts">
+      <div style="font-size:12px;color:var(--text-secondary);margin-bottom:2px">What kind of small run is this?</div>
+      ${leafRows}
+    </div>
+  </div>
+  <div style="display:flex;justify-content:flex-end;margin-top:6px">
+    <button class="btn-navy" data-blocknext="5" ${S.bqa.a2===null?'disabled':''}>Continue</button>
+  </div>`;
+}
+function block5Sum(){ return S.bqa.a2!==null ? Q2_OPTS[S.bqa.a2].l : ''; }
+
+// Block 6 — Packaging & services
+// NOTE (OPEN QUESTION #2, verbatim from source): every bottle/lid field below is marked
+// required (*) but its option list's first entry is "Undecided" — a required field with
+// an always-available non-answer. Carried over unchanged; not resolved by dropping either
+// the asterisk or the option, per instructions. See PR body OPEN QUESTIONS.
+function block6Body(){
   const fmt = FORMATS.find(f=>f.v===S.q.deliveryFormat) || FORMATS[0];
   let section = '';
   if(fmt.cat==='bottled'){
@@ -498,231 +642,124 @@ function renderQuote4(){
       <div class="fgroup"><label class="fl">Closure Type</label>${selectList('q.closureType', CLOSURE_TYPES, S.q.closureType)}</div>
     </div>`;
   }
-  return `<div class="fu">
-    ${wizHead(4,'Get an Instant Quote')}
-    <div class="card cardpad">
-      <div class="qeyebrow">Packaging &amp; Services</div>
-      <p class="lede" style="margin-bottom:16px">Configure your packaging preferences</p>
-      ${section}
-      <div class="qeyebrow">Labels &amp; Design</div>
-      <div class="fgrid" style="margin-bottom:16px">
-        <div class="fgroup"><label class="fl">Labels Provided By *</label>${selectList('q.labelsBy', PROVIDED_BY, S.q.labelsBy)}</div>
-        <div class="fgroup"><label class="fl">Graphic Design By *</label>${selectList('q.designBy', PROVIDED_BY, S.q.designBy)}</div>
-      </div>
-      <div class="fgroup"><label class="fl">Additional Comments</label><textarea class="fi" data-bind="q.pkgComments" placeholder="Any other details about your project, special requests, timeline needs...">${S.q.pkgComments}</textarea></div>
-      ${wizFoot(4)}
-    </div>
+  return `${section}
+  <div class="qeyebrow">Labels &amp; Design</div>
+  <div class="fgrid" style="margin-bottom:16px">
+    <div class="fgroup"><label class="fl">Labels Provided By *</label>${selectList('q.labelsBy', PROVIDED_BY, S.q.labelsBy)}</div>
+    <div class="fgroup"><label class="fl">Graphic Design By *</label>${selectList('q.designBy', PROVIDED_BY, S.q.designBy)}</div>
+  </div>
+  <div class="fgroup"><label class="fl">Additional Comments</label><textarea class="fi" data-bind="q.pkgComments" placeholder="Any other details about your project, special requests, timeline needs...">${S.q.pkgComments}</textarea></div>
+  <div style="display:flex;justify-content:flex-end;margin-top:6px">
+    <button class="btn-navy" data-blocknext="6">Continue</button>
   </div>`;
 }
-
-// ══════════════════════════════════════════════════════
-// QUOTE STEP 5 — Contact + Review & Consent (recap panel is this
-// redesign's addition — real captured data, no invented content)
-// ══════════════════════════════════════════════════════
-function fmtLabel(v){ const f=FORMATS.find(x=>x.v===v); return f?f.l:v; }
-function renderQuote5(){
+function block6Sum(){
   const q = S.q;
-  const pkgLine = (()=>{
-    const fmt = FORMATS.find(f=>f.v===q.deliveryFormat);
-    if(fmt.cat==='bottled') return [q.bottleType,q.bottleSize,q.bottleColor].filter(x=>x&&x!=='Undecided').join(' · ') || '—';
-    if(fmt.cat==='flexible-single') return [q.materialType,q.netWeight].filter(x=>x&&x!=='Undecided').join(' · ') || '—';
-    if(fmt.cat==='flexible-bulk') return [q.pouchSize,q.pkgMaterial].filter(x=>x&&x!=='Undecided').join(' · ') || '—';
-    return '—';
-  })();
-  return `<div class="fu">
-    ${wizHead(5,'Get an Instant Quote')}
-    <div class="card cardpad">
-      <div class="recap">
-        <h4>Review your request</h4>
-        <div class="recrow"><span class="rk">Delivery format</span><span class="rv">${fmtLabel(q.deliveryFormat)}</span></div>
-        <div class="recrow"><span class="rk">Ingredients</span><span class="rv">${q.ingredients.length} listed</span></div>
-        <div class="recrow"><span class="rk">Serving</span><span class="rv">${q.servingSize||'—'} per serving · ${q.servingsPerContainer||'—'} servings/container</span></div>
-        <div class="recrow"><span class="rk">Packaging</span><span class="rv">${pkgLine}</span></div>
-        <div class="recrow"><span class="rk">Labels / design by</span><span class="rv">${q.labelsBy||'—'} / ${q.designBy||'—'}</span></div>
-      </div>
+  const fmt = FORMATS.find(f=>f.v===q.deliveryFormat);
+  let pkgLine = '—';
+  if(fmt.cat==='bottled') pkgLine = [q.bottleType,q.bottleSize,q.bottleColor].filter(x=>x&&x!=='Undecided').join(' · ') || '—';
+  else if(fmt.cat==='flexible-single') pkgLine = [q.materialType,q.netWeight].filter(x=>x&&x!=='Undecided').join(' · ') || '—';
+  else if(fmt.cat==='flexible-bulk') pkgLine = [q.pouchSize,q.pkgMaterial].filter(x=>x&&x!=='Undecided').join(' · ') || '—';
+  return pkgLine;
+}
 
-      <div class="fgrid">
-        <div class="fgroup"><label class="fl">Full Name *</label><input class="fi" data-bind="q.fullName" value="${q.fullName}"></div>
-        <div class="fgroup"><label class="fl">Email Address</label><input class="fi" value="${q.email}" disabled></div>
-      </div>
-      <div class="fgrid">
-        <div class="fgroup"><label class="fl">Phone *</label><input class="fi" data-bind="q.contactPhone" value="${q.contactPhone}"></div>
-        <div class="fgroup"><label class="fl">Company</label><input class="fi" data-bind="q.company" value="${q.company}"></div>
-      </div>
-      <div class="fgroup"><label class="fl">Tell us about your project</label><textarea class="fi" data-bind="q.projectNotes" placeholder="Tell us about your project, questions, or how we can help...">${q.projectNotes}</textarea></div>
-
-      <div class="consent">
-        <input type="checkbox" id="smsConsent" ${q.smsConsent?'checked':''} data-check="q.smsConsent">
-        <p>By checking this box, I expressly consent to receive transactional calls and text messages (SMS/MMS) from Ally Nutra LLC — including appointment confirmations, reminders, and account-related notifications — at the phone number provided. Consent is not required to make a purchase. Message frequency varies. Msg &amp; data rates may apply. Reply STOP to opt out at any time. View our Privacy Policy.</p>
-      </div>
-      <div class="consent" style="padding-top:0">
-        <span style="width:16px"></span>
-        <p>By submitting this form, you agree to receive email communications from Ally Nutra regarding your quote request and product updates. You can unsubscribe at any time.</p>
-      </div>
-
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px">
-        <button class="btn-ghost" data-nav="quote-4">${ICONS.arrowLeft} Previous</button>
-        <button class="btn-navy" data-nav="bqa">Continue</button>
-      </div>
-    </div>
+// Block 7 — Brand stage (BQA Q3, interleaved gate)
+function block7Body(){
+  return `${Q3_OPTS.map((o,n)=>optRow('bqa-a3',n,S.bqa.a3===n,o.l)).join('')}
+  <div class="phonenudge">${ICONS.phone} Prefer to talk? &nbsp;<a href="tel:+18887205888" data-nudge="1">Call (888) 720-5888</a></div>
+  <div style="display:flex;justify-content:flex-end;margin-top:6px">
+    <button class="btn-navy" data-blocknext="7" ${S.bqa.a3===null?'disabled':''}>Continue</button>
   </div>`;
 }
+function block7Sum(){ return S.bqa.a3!==null ? Q3_OPTS[S.bqa.a3].l : ''; }
 
-function wizHead(n, title){
-  const labels = ['Lead type','Delivery format','Formulation','Packaging','Review & consent'];
-  const steps = labels.map((l,i)=>({name:l, state: i<n-1?'done':i===n-1?'now':'todo'}));
-  return `<h2 class="pg" style="margin-bottom:4px">${title}</h2>
-  <div class="meta" style="margin-bottom:14px">Step ${n} of 5</div>
-  <div class="stepper" style="margin-bottom:22px">${stepperHtml(steps)}</div>`;
-}
-function wizFoot(n){
-  return `<div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
-    ${n>1?`<button class="btn-ghost" data-nav="quote-${n-1}">Previous</button>`:'<span></span>'}
-    <button class="btn-navy" data-nav="quote-${n+1}">Next</button>
+// Block 8 — Review & consent. Merge decision #2: contacts collected once —
+// this block asks only Full Name + Company (the duplicate Phone field from
+// the original wizard is removed; email/phone already came from block 1).
+function block8Body(){
+  const q = S.q;
+  const fmt = FORMATS.find(f=>f.v===q.deliveryFormat);
+  const pkgLine = fmt.cat==='bottled' ? ([q.bottleType,q.bottleSize,q.bottleColor].filter(x=>x&&x!=='Undecided').join(' · ') || '—')
+    : fmt.cat==='flexible-single' ? ([q.materialType,q.netWeight].filter(x=>x&&x!=='Undecided').join(' · ') || '—')
+    : ([q.pouchSize,q.pkgMaterial].filter(x=>x&&x!=='Undecided').join(' · ') || '—');
+  return `<div class="recap">
+    <h4>Review your request</h4>
+    <div class="recrow"><span class="rk">Delivery format</span><span class="rv">${fmtLabel(q.deliveryFormat)}</span></div>
+    <div class="recrow"><span class="rk">Ingredients</span><span class="rv">${q.ingredients.length} listed</span></div>
+    <div class="recrow"><span class="rk">Serving</span><span class="rv">${q.servingSize||'—'} per serving · ${q.servingsPerContainer||'—'} servings/container</span></div>
+    <div class="recrow"><span class="rk">Packaging</span><span class="rv">${pkgLine}</span></div>
+    <div class="recrow"><span class="rk">Labels / design by</span><span class="rv">${q.labelsBy||'—'} / ${q.designBy||'—'}</span></div>
+  </div>
+
+  <div class="fgrid">
+    <div class="fgroup"><label class="fl">Full Name *</label><input class="fi" data-bind="q.fullName" value="${q.fullName}"></div>
+    <div class="fgroup"><label class="fl">Company</label><input class="fi" data-bind="q.company" value="${q.company}"></div>
+  </div>
+  <div class="fgroup"><label class="fl">Tell us about your project</label><textarea class="fi" data-bind="q.projectNotes" placeholder="Tell us about your project, questions, or how we can help...">${q.projectNotes}</textarea></div>
+
+  <div class="consent">
+    <input type="checkbox" id="smsConsent" ${q.smsConsent?'checked':''} data-check="q.smsConsent">
+    <p>By checking this box, I expressly consent to receive transactional calls and text messages (SMS/MMS) from Ally Nutra LLC — including appointment confirmations, reminders, and account-related notifications — at the phone number provided. Consent is not required to make a purchase. Message frequency varies. Msg &amp; data rates may apply. Reply STOP to opt out at any time. View our Privacy Policy.</p>
+  </div>
+  <div class="consent" style="padding-top:0">
+    <span style="width:16px"></span>
+    <p>By submitting this form, you agree to receive email communications from Ally Nutra regarding your quote request and product updates. You can unsubscribe at any time.</p>
+  </div>
+
+  <div style="display:flex;justify-content:flex-end;margin-top:18px">
+    <button class="btn-navy" data-blocknext="8">Continue</button>
   </div>`;
 }
-function stepperHtml(steps){
-  return steps.map((s,i)=>{
-    const first=i===0, last=i===steps.length-1;
-    const ldone = s.state==='done' || (i>0 && steps[i-1].state==='done');
-    const rdone = s.state==='done';
-    const dotCls = s.state==='done'?'done':s.state==='now'?'now':'';
-    const mark = s.state==='done'?'✓':(i+1);
-    return `<div class="step">
-      <div class="line">
-        <div class="conn ${first?'hide':(ldone?'done':'')}"></div>
-        <div class="dot ${dotCls}">${mark}</div>
-        <div class="conn ${last?'hide':(rdone?'done':'')}"></div>
+function block8Sum(){ return `${S.q.fullName} · ${S.q.company||'—'}`; }
+
+// Block registry — id, title (neutral; blocks 3/5/7 are never labelled an
+// assessment per merge decision #1), body/sum functions, and whether this
+// block's Continue is gated on an answer (matches the exact gating each
+// piece of source logic already had — quote steps were never gated, the
+// three BQA questions were).
+const BLOCKS = [
+  {id:1, title:'Lead type & contact', body:block1Body, sum:block1Sum},
+  {id:2, title:'Delivery format', body:block2Body, sum:block2Sum},
+  {id:3, title:'Timeline', body:block3Body, sum:block3Sum},
+  {id:4, title:'Formulation', body:block4Body, sum:block4Sum},
+  {id:5, title:'Scale & budget', body:block5Body, sum:block5Sum},
+  {id:6, title:'Packaging & services', body:block6Body, sum:block6Sum},
+  {id:7, title:'Brand stage', body:block7Body, sum:block7Sum},
+  {id:8, title:'Review & consent', body:block8Body, sum:block8Sum},
+];
+
+function renderBlocks(){
+  const rows = BLOCKS.map(b=>{
+    const isOpen = S.open===b.id;
+    const isDone = S.done[b.id] && !isOpen;
+    const isLocked = !isOpen && !S.done[b.id] && b.id !== firstUndone();
+    const stateCls = isOpen?'open':isDone?'done':'locked';
+    const mark = S.done[b.id] && !isOpen ? ICONS.check : b.id;
+    const sum = (isDone) ? b.sum() : '';
+    return `<div class="blk ${stateCls}" id="blk-${b.id}">
+      <div class="card">
+        <button class="blkhead" data-blkhead="${b.id}" ${isLocked?'disabled':''} aria-expanded="${isOpen}">
+          <span class="blknum">${mark}</span>
+          <span class="blktitles">
+            <span class="blktitle">${b.title}</span>
+            ${sum?`<div class="blksum">${sum}</div>`:''}
+          </span>
+          <span class="blkchev">${ICONS.chevronDown}</span>
+        </button>
+        ${isOpen?`<div class="blkbody fu">${b.body()}</div>`:''}
       </div>
-      <div class="lbl ${s.state==='now'?'now':''}">${s.name}</div>
     </div>`;
   }).join('');
+  return `<div class="pagehead">
+    <div class="eyebrow">Contract manufacturing</div>
+    <h2 class="pg" style="font-size:28px">Get a quote</h2>
+    <p class="lede">Tell us where you are, and we'll route you to the fastest path — instant pricing or a formulation specialist.</p>
+  </div>
+  <div class="blocklist">${rows}</div>`;
 }
-
-// ══════════════════════════════════════════════════════
-// BQA — 3 questions, 100-point weighted score, pass at 60.
-// Score is computed but NEVER shown to the user — mirrors real
-// behavior, where only the outcome string reaches the client.
-// Bands: Qualified 60–100 · Under Review 40–59 · Waitlisted 0–39.
-// Q2 reproduces production's parent/leaf accordion (Qualify.tsx +
-// bqaBranches.ts): 3 flat top-level rows, then one disclosure row
-// ("500–1,000 units") that reveals 3 leaves when expanded — or is already
-// expanded if the current answer is one of its leaves. Pilot/Sample leaves
-// (36 pts each — a qualifying-worthy mid-tier, mirroring production's Q2
-// pilot/sample = 15/20) require an acknowledgement modal before the answer
-// is recorded (copy verbatim from src/components/bqa/bqaBranches.ts); the
-// one-off leaf sets immediately, no modal. NO outcome override for
-// pilot/sample — production removed that override deliberately; these
-// leads qualify on score like anyone else.
-// ══════════════════════════════════════════════════════
-const Q1_OPTS = [
-  {l:'Ready now / within 1 month', pts:32},
-  {l:'1–3 months', pts:24},
-  {l:'3–6 months', pts:16},
-  {l:'6+ months / just exploring', pts:8},
-];
-const Q2_TOP_OPTS = [
-  {l:'Large / ongoing volume, $50k+', pts:48},
-  {l:'Standard production run, ~$15k–50k', pts:36},
-  {l:'Small first order, ~$5k–15k', pts:24},
-];
-const Q2_LEAF_OPTS = [
-  {l:'Pilot run — 500–1,000 units', pts:36, ackKey:'pilot'},
-  {l:'Sample run — 5–10 units', pts:36, ackKey:'sample'},
-  {l:'No plans to scale — one-time order', pts:12},
-];
-// Flat scoring array — indices 0-2 are the top rows, 3-5 are the leaves.
-// bqaScore()/findIndex(ackKey) both index into this unchanged.
-const Q2_OPTS = [...Q2_TOP_OPTS, ...Q2_LEAF_OPTS];
-const Q3_OPTS = [
-  {l:'Established, scaling multiple products', pts:20},
-  {l:'Established brand adding SKUs', pts:15},
-  {l:'Early stage, first product(s)', pts:10},
-  {l:'Just an idea / pre-launch', pts:5},
-];
-// Exact copy from src/components/bqa/bqaBranches.ts (ackContent.q2_a_pilot / q2_a_sample).
-const ACK_COPY = {
-  pilot: {
-    title: 'Pilot runs — minimum commitment',
-    body: 'A 500–1,000 unit pilot run starts at approximately $10,000. The final cost depends on your formulation — more or premium ingredients will increase the total.',
-  },
-  sample: {
-    title: 'Sample runs — minimum commitment',
-    body: 'A sample run is 5–10 units with a $2,000 minimum. For stick packs, each unit contains 3–6 sticks — so a 10-unit sample is 30–60 sticks total.',
-  },
-};
-
-function bqaAnswered(i){
-  return [S.bqa.a1!==null, S.bqa.a2!==null, S.bqa.a3!==null][i];
-}
-function bqaScore(){
-  let s = 0;
-  if(S.bqa.a1!==null) s += Q1_OPTS[S.bqa.a1].pts;
-  if(S.bqa.a2!==null) s += Q2_OPTS[S.bqa.a2].pts;
-  if(S.bqa.a3!==null) s += Q3_OPTS[S.bqa.a3].pts;
-  return s;
-}
-function scoreToOutcome(score){
-  if(score>=60) return 'qualified';
-  if(score>=40) return 'review';
-  return 'waitlisted';
-}
-
-function renderBqa(){
-  const i = S.bqa.qIndex;
-  const total = 3;
-  const steps = Array.from({length:total},(_,n)=>({name:'', state: n<i?'done':n===i?'now':'todo'}));
-  let body = '';
-  if(i===0){
-    body = `<div class="qeyebrow">Question 01 of 03</div>
-    <div class="qtitle">How soon are you looking to start production?</div>
-    ${Q1_OPTS.map((o,n)=>optRow('bqa-a1',n,S.bqa.a1===n,o.l)).join('')}`;
-  } else if(i===1){
-    const selectedIsLeaf = S.bqa.a2!==null && S.bqa.a2 >= Q2_TOP_OPTS.length;
-    const showLeaves = S.bqa.q2Open || selectedIsLeaf;
-    const leafRows = Q2_LEAF_OPTS.map((o,n)=>{
-      const idx = Q2_TOP_OPTS.length + n;
-      return `<button class="subopt${S.bqa.a2===idx?' sel':''}" data-q2leaf="${idx}"${o.ackKey?` data-q2ack="${o.ackKey}"`:''}><span class="st">${o.l}</span></button>`;
-    }).join('');
-    body = `<div class="qeyebrow">Question 02 of 03</div>
-    <div class="qtitle">What scale and budget are you planning for your first order?</div>
-    ${Q2_TOP_OPTS.map((o,n)=>optRow('bqa-a2',n,S.bqa.a2===n,o.l)).join('')}
-    <div class="optionrow branch${showLeaves?' open':''}${selectedIsLeaf?' sel':''}">
-      <div class="bh" data-q2branchtoggle="1"><span class="rd"></span><span class="ot">500–1,000 units</span><span class="chev">${ICONS.chevronDown}</span></div>
-      <div class="subopts">
-        <div style="font-size:12px;color:var(--text-secondary);margin-bottom:2px">What kind of small run is this?</div>
-        ${leafRows}
-      </div>
-    </div>`;
-  } else {
-    body = `<div class="qeyebrow">Question 03 of 03</div>
-    <div class="qtitle">Where is your brand today?</div>
-    ${Q3_OPTS.map((o,n)=>optRow('bqa-a3',n,S.bqa.a3===n,o.l)).join('')}
-    <div class="phonenudge">${ICONS.phone} Prefer to talk? &nbsp;<a href="tel:+18887205888" data-nudge="1">Call (888) 720-5888</a></div>`;
-  }
-  const answeredCount = [0,1,2].filter(bqaAnswered).length;
-  const canContinue = bqaAnswered(i);
-  return `<div class="fu">
-    <div class="bqahead">
-      <div class="eyebrow2">Brand Qualification Assessment</div>
-      <h1>We'd love to learn about your brand.<br>Let's see how we can work together.</h1>
-      <p class="sub">A few quick questions so a specialist can tailor the right conversation.</p>
-    </div>
-    <div class="stepper" style="margin-bottom:22px">${stepperHtml(steps)}</div>
-    <div class="qcard">
-      ${body}
-      <div class="qfoot">
-        <span class="qcount">${answeredCount} of ${total} answered</span>
-        <div style="display:flex;gap:10px">
-          ${i>0?`<button class="btn-out" data-bqaback="1">Back</button>`:''}
-          <button class="btn-navy" data-bqanext="1" ${canContinue?'':'disabled'}>${i===total-1?'See my result':'Continue'}</button>
-        </div>
-      </div>
-    </div>
-  </div>`;
-}
-function optRow(name, idx, sel, label, extraAttr=''){
-  return `<button class="optionrow${sel?' sel':''}" data-radio="${name}" data-idx="${idx}" ${extraAttr}><span class="rd"></span><span class="ot">${label}</span></button>`;
+function firstUndone(){
+  for(const b of BLOCKS) if(!S.done[b.id]) return b.id;
+  return 9; // all done
 }
 
 function renderScoring(){
@@ -779,8 +816,8 @@ function renderResult(){
   }
 
   return `<div class="fu">
-    <div class="bqahead" style="margin-bottom:22px"><div class="eyebrow2">Brand Qualification Assessment</div></div>
     <div class="resultcard ${c.cls}">
+      <div class="qeyebrow" style="color:var(--color-accent-text);margin-bottom:16px">Brand Qualification Assessment</div>
       <div class="rbadge ${c.cls}">${c.badge}</div>
       <div class="pill ${c.pillCls} rpill"><span class="d"></span>${c.pillTxt}</div>
       <h1>${c.h1}</h1>
@@ -792,10 +829,11 @@ function renderResult(){
 
 // ══════════════════════════════════════════════════════
 // BOOKING — Calendly-style flow (booking-intro → booking-schedule → booking-confirmed).
-// Two entry points: the "idea, need help refining" lead-type card (S.booking.origin='idea',
-// skips the quote wizard + BQA entirely) and the Qualified BQA outcome's "Schedule your call"
-// button (S.booking.origin='qualified'). Static mock — hardcoded days/slots, no real calendar,
-// no network calls.
+// Two entry points: block 1's "idea, need help refining" card (S.booking.origin='idea',
+// skips the block list + BQA entirely) and the Qualified outcome's "Schedule your call"
+// button (S.booking.origin='qualified'). Merge decision #2: contacts were already
+// collected in block 1 (email/phone) and block 8 (name) — booking prefills from S.q and
+// asks for nothing new. Static mock — hardcoded days/slots, no real calendar, no network.
 // ══════════════════════════════════════════════════════
 function renderBookingIntro(){
   return `<div class="fu">
@@ -831,24 +869,28 @@ function renderBookingSchedule(){
   </button>`).join('');
   const slotRows = BOOKING_SLOTS.map(s=>`<button class="optionrow${S.booking.slot===s?' sel':''}" data-set="booking.slot" data-val="${s}"><span class="rd"></span><span class="ot">${s}</span></button>`).join('');
   const canContinue = !!(S.booking.date && S.booking.slot);
+  const name = S.q.fullName || '—', email = S.q.email || '—', phone = S.q.phone || '—';
   return `<div class="fu">
     <div class="bqahead">
       <div class="eyebrow2">Talk to a specialist</div>
       <h1>Pick a day and time</h1>
       <p class="sub">All times shown in your local timezone.</p>
+      <!-- kept inside .bqahead (its white card), not the beige .region: .step .lbl
+           (text-secondary) measures 4.02:1 directly on the page background (fails AA),
+           4.83:1 on card — see PR body contrast audit. -->
+      <div class="stepper" style="margin-top:20px">${stepperHtml(steps)}</div>
     </div>
-    <div class="stepper" style="margin-bottom:22px">${stepperHtml(steps)}</div>
     <div class="qcard">
-      <div class="qeyebrow">Choose a day</div>
+      <div class="qeyebrow">Choose a day <span style="font-weight:400;text-transform:none;letter-spacing:0">— sample availability for this demo, not a live calendar</span></div>
       <div class="optgrid" style="grid-template-columns:repeat(5,1fr);margin-bottom:20px">${dayTiles}</div>
       <div class="qeyebrow">Choose a time</div>
       <div style="margin-bottom:20px">${slotRows}</div>
-      <div class="qeyebrow">Your details</div>
-      <div class="fgrid">
-        <div class="fgroup"><label class="fl">Full Name</label><input class="fi" data-bind="booking.name" value="${S.booking.name}" placeholder="Your name"></div>
-        <div class="fgroup"><label class="fl">Email</label><input class="fi" data-bind="booking.email" value="${S.booking.email}" placeholder="you@company.com"></div>
+      <div class="recap" style="margin-bottom:0">
+        <h4>Your details</h4>
+        <div class="recrow"><span class="rk">Name</span><span class="rv">${name}</span></div>
+        <div class="recrow"><span class="rk">Email</span><span class="rv">${email}</span></div>
+        <div class="recrow"><span class="rk">Phone</span><span class="rv">${phone}</span></div>
       </div>
-      <div class="fgroup"><label class="fl">Phone</label><input class="fi" data-bind="booking.phone" value="${S.booking.phone}" placeholder="(555) 123-4567"></div>
       <div class="qfoot">
         <button class="btn-out" data-bookingback="1">Back</button>
         <button class="btn-navy" data-bookingnext="1" ${canContinue?'':'disabled'}>Confirm booking</button>
@@ -892,17 +934,34 @@ function renderBookingConfirmed(){
   </div>`;
 }
 
+function stepperHtml(steps){
+  return steps.map((s,i)=>{
+    const first=i===0, last=i===steps.length-1;
+    const ldone = s.state==='done' || (i>0 && steps[i-1].state==='done');
+    const rdone = s.state==='done';
+    const dotCls = s.state==='done'?'done':s.state==='now'?'now':'';
+    const mark = s.state==='done'?'✓':(i+1);
+    return `<div class="step">
+      <div class="line">
+        <div class="conn ${first?'hide':(ldone?'done':'')}"></div>
+        <div class="dot ${dotCls}">${mark}</div>
+        <div class="conn ${last?'hide':(rdone?'done':'')}"></div>
+      </div>
+      <div class="lbl ${s.state==='now'?'now':''}">${s.name}</div>
+    </div>`;
+  }).join('');
+}
+
 // ══════════════════════════════════════════════════════
 // render dispatch
 // ══════════════════════════════════════════════════════
 function render(){
   const map = {
-    'quote-1':renderQuote1, 'quote-2':renderQuote2, 'quote-3':renderQuote3, 'quote-4':renderQuote4, 'quote-5':renderQuote5,
-    'bqa':renderBqa, 'scoring':renderScoring, 'result':renderResult,
+    'blocks':renderBlocks, 'scoring':renderScoring, 'result':renderResult,
     'booking-intro':renderBookingIntro, 'booking-schedule':renderBookingSchedule,
     'booking-confirming':renderBookingConfirming, 'booking-confirmed':renderBookingConfirmed,
   };
-  document.getElementById('content').innerHTML = (map[S.screen]||renderQuote1)();
+  document.getElementById('content').innerHTML = (map[S.screen]||renderBlocks)();
   renderSwitcher();
 }
 
@@ -910,15 +969,8 @@ function render(){
 function renderSwitcher(){
   const chip=(id,label,active)=>`<button class="sw-chip${active?' current':''}" data-jump="${id}">${label}</button>`;
   document.getElementById('swPanel').innerHTML = `
-    <div class="sw-grp"><h6>Quote wizard</h6><div class="sw-row">
-      ${chip('quote-1','1 · Lead type', S.screen==='quote-1')}
-      ${chip('quote-2','2 · Format', S.screen==='quote-2')}
-      ${chip('quote-3','3 · Formulation', S.screen==='quote-3')}
-      ${chip('quote-4','4 · Packaging', S.screen==='quote-4')}
-      ${chip('quote-5','5 · Review & consent', S.screen==='quote-5')}
-    </div></div>
-    <div class="sw-grp"><h6>BQA questions</h6><div class="sw-row">
-      ${[0,1,2].map(n=>`<button class="sw-chip${S.screen==='bqa'&&S.bqa.qIndex===n?' current':''}" data-jumpq="${n}">Q${n+1}</button>`).join('')}
+    <div class="sw-grp"><h6>Blocks</h6><div class="sw-row">
+      ${BLOCKS.map(b=>`<button class="sw-chip${S.screen==='blocks'&&S.open===b.id?' current':''}" data-jumpblk="${b.id}">${b.id} · ${b.title}</button>`).join('')}
     </div></div>
     <div class="sw-grp"><h6>BQA result</h6><div class="sw-row">
       <button class="sw-chip${S.screen==='result'&&S.result.outcome==='qualified'?' current':''}" data-jumpr="qualified">Qualified</button>
@@ -933,7 +985,7 @@ function renderSwitcher(){
       ${chip('booking-schedule','2 · Schedule', S.screen==='booking-schedule')}
       ${chip('booking-confirmed','3 · Confirmed', S.screen==='booking-confirmed')}
     </div></div>
-    <button class="sw-reset" data-resetall="1">Reset mockup to step 1</button>
+    <button class="sw-reset" data-resetall="1">Reset mockup to block 1</button>
   `;
 }
 
@@ -952,6 +1004,12 @@ function setDeep(path, val){
   for(let i=0;i<parts.length-1;i++) obj = obj[parts[i]];
   obj[parts[parts.length-1]] = val;
 }
+function scrollToBlock(id){
+  requestAnimationFrame(()=>{
+    const el = document.getElementById('blk-'+id);
+    if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+  });
+}
 
 document.addEventListener('click', e=>{
   // switcher toggle
@@ -960,23 +1018,61 @@ document.addEventListener('click', e=>{
   if(!e.target.closest('#sw')) document.getElementById('sw').classList.remove('open');
 
   const jump = e.target.closest('[data-jump]'); if(jump){ go(jump.dataset.jump); closeSwitcher(); return; }
-  const jumpq = e.target.closest('[data-jumpq]'); if(jumpq){ S.bqa.qIndex=+jumpq.dataset.jumpq; S.bqa.q2Open=false; go('bqa'); closeSwitcher(); return; }
+  const jumpblk = e.target.closest('[data-jumpblk]');
+  if(jumpblk){
+    const id = +jumpblk.dataset.jumpblk;
+    for(let n=1;n<id;n++) S.done[n]=true; // design-review tool: jump anywhere regardless of flow gating
+    S.open = id;
+    go('blocks'); closeSwitcher(); scrollToBlock(id); return;
+  }
   const jumpr = e.target.closest('[data-jumpr]'); if(jumpr){ S.result.outcome=jumpr.dataset.jumpr; S.result.committed=false; go('result'); closeSwitcher(); return; }
   const jumpsub = e.target.closest('[data-jumpsubmit]'); if(jumpsub){ if(!S.result.outcome) S.result.outcome='qualified'; S.result.committed=true; go('result'); closeSwitcher(); return; }
   const resetAll = e.target.closest('[data-resetall]');
   if(resetAll){
-    S.bqa.qIndex=0; S.bqa.a1=S.bqa.a2=S.bqa.a3=null;
+    S.open=1; S.done={1:false,2:false,3:false,4:false,5:false,6:false,7:false,8:false};
+    S.bqa.a1=S.bqa.a2=S.bqa.a3=null;
     S.bqa.ackedQ2={pilot:false,sample:false}; S.bqa.pendingAck=null; S.bqa.q2Open=false;
     S.result.outcome=null; S.result.committed=false; S.result.submitting=false;
     S.booking.origin=null; S.booking.date=null; S.booking.slot=null;
-    S.booking.name=''; S.booking.email=''; S.booking.phone='';
-    go('quote-1'); closeSwitcher(); return;
+    go('blocks'); closeSwitcher(); return;
   }
 
   const nav = e.target.closest('[data-nav]'); if(nav){ go(nav.dataset.nav); return; }
 
+  // NOTE (OPEN QUESTION #4, verbatim from source): this "idea, need help refining"
+  // shortcut existed unchanged in the original wizard (also named data-idea-start) and
+  // bypasses blocks 2-8 and the entire score/gate sequence entirely, going straight to
+  // booking. The merged-flow spec doesn't describe this branch. Kept as-is (matches
+  // current production behavior) rather than silently removed or silently folded into
+  // the block sequence — see PR body OPEN QUESTIONS.
   const ideaStart = e.target.closest('[data-idea-start]');
   if(ideaStart){ S.q.leadType='needs-refining'; S.booking.origin='idea'; go('booking-intro'); return; }
+
+  // block header click — reopen a done block, or no-op on a locked one
+  const blkHead = e.target.closest('[data-blkhead]');
+  if(blkHead){
+    if(blkHead.disabled) return;
+    const id = +blkHead.dataset.blkhead;
+    S.open = (S.open===id) ? S.open : id;
+    render(); scrollToBlock(id); return;
+  }
+
+  // block Continue — marks the block done, returns focus to the frontier
+  // (blocks below keep their answers; editing an earlier done block does
+  // not force the user back through everything in between)
+  const blockNext = e.target.closest('[data-blocknext]');
+  if(blockNext){
+    const id = +blockNext.dataset.blocknext;
+    S.done[id] = true;
+    if(id===8){
+      S.open = 9;
+      go('scoring');
+      setTimeout(()=>{ S.result.outcome = scoreToOutcome(bqaScore()); S.result.committed=false; go('result'); }, 700);
+      return;
+    }
+    S.open = firstUndone();
+    render(); scrollToBlock(S.open); return;
+  }
 
   const optset = e.target.closest('[data-set]');
   if(optset){ setDeep(optset.dataset.set, optset.dataset.val); render(); return; }
@@ -986,10 +1082,10 @@ document.addEventListener('click', e=>{
   const rmIng = e.target.closest('[data-rmIng]');
   if(rmIng){ S.q.ingredients.splice(+rmIng.dataset.rmIng,1); render(); return; }
 
-  // Q2 parent/leaf accordion. The parent only toggles the reveal — it never
-  // records an answer. A leaf click either opens the ack modal (unacked
-  // pilot/sample — answer withheld until confirm) or sets S.bqa.a2 directly
-  // (the one-off leaf, or a leaf already acknowledged this session).
+  // Q2 parent/leaf accordion (block 5). The parent only toggles the reveal —
+  // it never records an answer. A leaf click either opens the ack modal
+  // (unacked pilot/sample — answer withheld until confirm) or sets
+  // S.bqa.a2 directly (the one-off leaf, or an already-acknowledged leaf).
   const q2branch = e.target.closest('[data-q2branchtoggle]');
   if(q2branch){ S.bqa.q2Open = !S.bqa.q2Open; render(); return; }
   const q2leaf = e.target.closest('[data-q2leaf]');
@@ -1017,7 +1113,7 @@ document.addEventListener('click', e=>{
   }
   if(e.target.closest('[data-ackcancel]')){ S.bqa.pendingAck=null; closeAck(); return; }
 
-  // BQA radios
+  // BQA radios (blocks 3 / 5 / 7)
   const radio = e.target.closest('[data-radio]');
   if(radio){
     const name = radio.dataset.radio, idx = +radio.dataset.idx;
@@ -1029,20 +1125,8 @@ document.addEventListener('click', e=>{
 
   const nudge = e.target.closest('[data-nudge]'); if(nudge){ e.preventDefault(); /* logged as bqa_call_nudge_exit in production; no-op here */ return; }
 
-  const bqaBack = e.target.closest('[data-bqaback]');
-  if(bqaBack){ S.bqa.qIndex = Math.max(0, S.bqa.qIndex-1); S.bqa.q2Open=false; render(); return; }
-  const bqaNext = e.target.closest('[data-bqanext]');
-  if(bqaNext){
-    if(S.bqa.qIndex < 2){ S.bqa.qIndex++; S.bqa.q2Open=false; render(); }
-    else {
-      go('scoring');
-      setTimeout(()=>{ S.result.outcome = scoreToOutcome(bqaScore()); S.result.committed=false; go('result'); }, 700);
-    }
-    return;
-  }
-
   const bookingBack = e.target.closest('[data-bookingback]');
-  if(bookingBack){ go(S.booking.origin==='idea' ? 'quote-1' : 'result'); return; }
+  if(bookingBack){ go(S.booking.origin==='idea' ? 'blocks' : 'result'); return; }
   const bookingNext = e.target.closest('[data-bookingnext]');
   if(bookingNext){
     go('booking-confirming');
