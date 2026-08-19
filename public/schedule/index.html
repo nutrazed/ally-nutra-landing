@@ -5,6 +5,13 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Ally Nutra — Schedule (redesigned)</title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;500;600&family=Roboto:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<!-- AN-DEMO role switch (feature/nav-system-unification) — this page never
+     loaded it before, so the ?role= param arriving from Home.jsx's
+     scheduleUrl(role) link was inert here: no switcher pill, and the new
+     home-link logo below had no way to re-resolve to the current role.
+     Same relative path reasoning as public/quote/index.html: this file is
+     served one level under the site root. -->
+<script defer src="../shared/demo-role.js"></script>
 <style>
 /* ── AllyNutra tokens — AN-DESIGN-001 canonical hex, same vocabulary as
    public/quote/index.html. Extension colours (good/warn + their text-safe
@@ -29,11 +36,17 @@ body{font-family:var(--font-text);background:var(--surface-page);color:var(--tex
 button{font-family:inherit;cursor:pointer}
 a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--ally-amber);outline-offset:1px}
 
-/* review masthead */
-header.rev{background:var(--ally-navy);height:56px;display:flex;align-items:center}
-header.rev .in{max-width:1120px;margin:0 auto;padding:0 24px;width:100%;display:flex;align-items:center;gap:14px}
-.logo{font-family:var(--font-display);font-weight:600;color:#fff;font-size:18px}
-.logo b{color:var(--ally-amber)}
+/* review masthead — height switched from a fixed 56px to padding-based
+   sizing (matches quote's header.rev) so the real logo-white.png (46px,
+   shared across quote/portal/admin/schedule — see the PR body's nav spec
+   block) has comfortable top/bottom room instead of nearly touching the
+   bar's edges. No other rule in this file depends on the old 56px number
+   (checked). */
+header.rev{background:var(--ally-navy);padding:12px 24px;display:flex;align-items:center}
+header.rev .in{max-width:1120px;margin:0 auto;padding:0;width:100%;display:flex;align-items:center;gap:14px}
+/* .logo carries no type rules — the fake text wordmark ("ALLY+") this used
+   to style was invented and never was the brand mark; it's gone from the
+   markup below, replaced by the actual logo-white.png image. */
 .revtag{font-family:var(--font-num);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:rgba(255,255,255,.55)}
 .mechbtn{margin-left:auto;border:1px solid rgba(255,255,255,.3);background:transparent;color:rgba(255,255,255,.85);border-radius:999px;padding:7px 15px;font-size:12px;font-weight:600}
 .mechbtn.on{background:var(--ally-amber);border-color:var(--ally-amber);color:var(--ally-navy)}
@@ -175,7 +188,7 @@ footer.rev{background:var(--ally-navy);border-top:1px solid rgba(255,255,255,.1)
 <body>
 
 <header class="rev"><div class="in">
-  <div class="logo">ALLY<b>+</b></div>
+  <a class="logo" style="text-decoration:none" href="../?role=visitor" data-an-role-href="../?role={role}"><img src="../logo-white.png" alt="Ally Nutra" style="height:46px;width:auto;display:block"></a>
   <span class="revtag" id="tag"></span>
   <button class="mechbtn" id="mechBtn">Show mechanism</button>
 </div></header>

@@ -204,7 +204,16 @@
   header.h-14 h1 { font-family:'Roboto Slab',Georgia,serif; font-weight:500; }
 
   /* ===== Ported top-bar chrome (AN task-1 design) ===== */
-  .topbar{ background:#1E3A5F; height:46px; transition:height .2s ease; }
+  /* feature/nav-system-unification: grown from 46px to 64px so the shared
+     logo-white.png (now 46px here too, was 28px — see the PR body's nav
+     spec block for why 46px) has ~9px of top/bottom breathing room instead
+     of exactly filling the bar edge-to-edge. Checked before growing this:
+     no JS measures or hardcodes 46 anywhere (the collapse target is
+     height:0, not a ratio of the expanded height; #tb-handle is
+     position:fixed with a JS-computed `left`, not a `top` derived from
+     this number) and .navitem below is grown to match so the buttons still
+     fill the bar's full height exactly as before. */
+  .topbar{ background:#1E3A5F; height:64px; transition:height .2s ease; }
   /* Batch 84: manual pin/collapse (Batch 83's auto-hide-on-approach was reverted -- Zed didn't
      want the bar hiding on its own). overflow:hidden stays scoped to ONLY .tb-collapsed, not
      the base rule -- that part of Batch 83's reasoning still holds: .acctpanel is
@@ -227,7 +236,7 @@
   #tb-handle{ display:none; position:fixed; top:0; width:36px; height:14px; padding:0; border:0; border-bottom-left-radius:6px; border-bottom-right-radius:6px; background:#1E3A5F; color:#fff; cursor:pointer; z-index:5; align-items:center; justify-content:center; }
   #tb-handle:hover, #tb-handle:focus-visible{ background:#2E5D9E; }
   #tb-handle.tb-handle-visible{ display:flex; }
-  .navitem{ position:relative; display:inline-flex; align-items:center; gap:6px; height:46px; padding:0 8px; color:#ECEAE6; cursor:pointer; font-size:12px; border:0; background:none; transition:color .14s, background .14s; white-space:nowrap; }
+  .navitem{ position:relative; display:inline-flex; align-items:center; gap:6px; height:64px; padding:0 8px; color:#ECEAE6; cursor:pointer; font-size:12px; border:0; background:none; transition:color .14s, background .14s; white-space:nowrap; }
   .navitem:hover{ color:#fff; background:rgba(255,255,255,0.05); }
   .navitem.current{ color:#fff; }
   @keyframes pop{ from{ opacity:0; transform:translateY(-4px); } to{ opacity:1; transform:none; } }
@@ -325,6 +334,14 @@
   .topbar .navitem:hover::after{ transform:scaleX(.55); opacity:.4; }
   .topbar .navitem.current{ color:#fff; }
   .topbar .navitem.current::after{ transform:scaleX(1); opacity:1; }
+  /* feature/nav-system-unification: this underline already used the same
+     mechanism as the marketing nav's (transform:scaleX + opacity on ::after)
+     but had no prefers-reduced-motion override — added to match. */
+  @media (prefers-reduced-motion:reduce){ .topbar .navitem::after{ transition:none; } }
+  /* feature/nav-system-unification: sidebar module links had hover/active
+     but no explicit keyboard-focus indicator of their own (relying on the
+     browser default outline, easy to lose against the dark sidebar bg). */
+  .mod-link:focus-visible{ outline:2px solid #F0A829; outline-offset:1px; }
   /* safety net: constrain every top-bar icon (arbitrary w-[..] classes aren't in the compiled CSS) */
   .topbar .navitem > svg{ width:15px; height:15px; flex:none; }
   .topbar button[aria-label="Notifications"] svg{ width:18px; height:18px; }
@@ -1177,7 +1194,7 @@
     <div class="flex items-stretch px-4">
       <div class="flex items-center pr-5 mr-2 border-r border-white/10" style="width:216px">
         <a href="../?role=admin" data-an-role-href="../?role={role}" style="display:flex;align-items:center;text-decoration:none">
-          <img src="../logo-white.png" alt="Ally Nutra" style="height:28px;width:auto;display:block">
+          <img src="../logo-white.png" alt="Ally Nutra" style="height:46px;width:auto;display:block">
         </a>
       </div>
       <!-- Batch: the "Viewing as" pill previously lived here (fix/admin-header), placed
