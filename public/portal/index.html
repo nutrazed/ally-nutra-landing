@@ -82,8 +82,13 @@
   header.mk{background:var(--ally-navy);border-bottom:1px solid var(--ally-navy-line);padding:14px 28px;flex:none}
   header.mk .row{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:24px}
   .mknav{display:flex;align-items:center;gap:4px;font-size:14px}
-  .mknav .mknav-brand{display:inline-flex;align-items:center;gap:10px;font-weight:500;color:var(--ally-amber);padding:8px 10px;white-space:nowrap}
-  .mknav .mknav-brand img{height:46px;width:auto;display:block}
+  /* fix/wordmark-nav-item: gap matches .mknav a's 7px now, not the 10px
+     the old 46px PNG needed. font-size isn't set here — it never was;
+     both this and .mknav a simply inherit .mknav's 14px, so there was
+     nothing to drift out of sync on that property. svg sized via the
+     inline width/height on the markup below, same as every other .mknav
+     icon on this page. */
+  .mknav .mknav-brand{display:inline-flex;align-items:center;gap:7px;font-weight:500;color:var(--ally-amber);padding:8px 10px;white-space:nowrap}
   .mknav a{position:relative;display:inline-flex;align-items:center;gap:7px;color:rgba(255,255,255,.75);font-weight:500;text-decoration:none;cursor:pointer;padding:8px 10px;border-radius:var(--radius);transition:color .15s}
   .mknav a svg{width:16px;height:16px;flex:none}
   .mknav a:hover{color:#fff}
@@ -267,7 +272,7 @@
   <header class="mk">
     <div class="row">
       <nav class="mknav">
-        <a class="mknav-brand" style="text-decoration:none" href="../?role=visitor#/home" data-an-role-href="../?role={role}#/home"><img src="../logo-white.png" alt="Ally Nutra" width="783" height="627"><span>Ally Nutra</span></a>
+        <a class="mknav-brand" style="text-decoration:none" href="../?role=visitor#/home" data-an-role-href="../?role={role}#/home"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="12" height="4" rx="2"/><line x1="8" y1="6" x2="8" y2="10"/></svg><span>Ally Nutra</span></a>
         <a href="../?role=visitor#/services" data-an-role-href="../?role={role}#/services"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>Our Services ▾</a>
         <a href="../?role=visitor#/facility" data-an-role-href="../?role={role}#/facility"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="2.5" width="10" height="11" rx="1"/><rect x="5.3" y="5" width="1.8" height="1.8"/><rect x="8.9" y="5" width="1.8" height="1.8"/><rect x="5.3" y="8.4" width="1.8" height="1.8"/><rect x="8.9" y="8.4" width="1.8" height="1.8"/></svg>Facility</a>
         <a href="../?role=visitor#/certifications" data-an-role-href="../?role={role}#/certifications"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2 13 4v4.2c0 3.6-2.3 6-5 6.8-2.7-.8-5-3.2-5-6.8V4Z"/><path d="M5.6 8.1 7.1 9.6 10.3 6.2"/></svg>Certifications</a>

@@ -157,7 +157,11 @@
     background:hsl(var(--paper));
     -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
   }
-  /* Headings + wordmark use the slab serif */
+  /* Headings use the slab serif. (fix/wordmark-nav-item: this file's
+     header logo is image-only — no live text wordmark to match against
+     nav type. A dead, unused .wordmark rule that once carried the same
+     slab/19px/500 stack as the bug elsewhere was removed from here;
+     it was never applied to any element.) */
   h1,h2,h3,h4,h5,h6 { font-family:'Roboto Slab', Georgia, serif; letter-spacing:-0.015em; font-weight:500; }
   .font-mono, code, kbd, .mono { font-family:'JetBrains Mono', ui-monospace, monospace; }
 
@@ -245,8 +249,6 @@
   .pill-team{ background:rgba(255,255,255,.08); color:#ECEAE6; border:1px solid rgba(255,255,255,.14); }
   .pill-admin{ background:rgba(220,71,76,.16); color:#ECEAE6; border:1px solid rgba(220,71,76,.5); }
   .cnt{ background:#1E3A5F; color:#fff; font-family:'JetBrains Mono',monospace; font-size:9px; padding:0 5px; border-radius:9999px; line-height:16px; }
-  .wordmark{ font-family:'Roboto Slab',serif; font-weight:500; font-size:19px; color:#fff; letter-spacing:-0.01em; white-space:nowrap; }
-  .wordmark .u{ border-bottom:3px solid #F0A829; padding-bottom:2px; }
   .navitem:focus-visible{ outline:2px solid #F0A829; outline-offset:2px; }
   /* below 1500px, 10 topbar categories + icons no longer reliably fit without wrap/overflow (measured
      against #toolstab across the 1100-1440px range) — drop the icon glyphs to reclaim width; text-only
