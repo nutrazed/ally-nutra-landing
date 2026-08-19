@@ -110,7 +110,22 @@ p{font-size:15px;line-height:1.7;color:hsl(var(--muted-foreground));}
    logo into a ~39px track and misplacing header-actions into the middle
    track instead of the right-hand one. Pinning survives any sibling being
    display:none. */
-.logo{display:flex;align-items:center;flex-shrink:0;justify-self:start;grid-column:1;}
+.logo{display:flex;align-items:center;gap:10px;flex-shrink:0;justify-self:start;grid-column:1;}
+/* feature/nav-restructure: "Home" no longer has its own nav item, so the
+   logo (already the only link back to "/home") gains the active state Home
+   used to carry, and a text wordmark so it reads as the home affordance on
+   its own — the mark alone is small/illegible enough at 46px that it can't
+   carry the brand name by itself (see the image itself: most of its canvas
+   is empty padding around a small glyph). No separate underline is drawn
+   on it — matches the pre-existing "the mark already carries its own amber
+   accents" rule just above for .logo-img, extended to the new text. */
+.logo-wordmark{font-family:var(--font-slab);font-weight:600;font-size:19px;letter-spacing:-0.01em;color:#fff;white-space:nowrap;transition:color .15s;}
+.logo.active .logo-wordmark{color:hsl(var(--ally-orange));font-weight:700;}
+/* Not hidden at narrow widths: the logo's <img alt=""> is decorative on
+   purpose (see the JSX) — this text is the link's ONLY accessible name, so
+   display:none-ing it below some breakpoint would leave the logo link with
+   none at all. .main-nav already disappears at <=1100px (below), freeing
+   the room this needs long before that would matter visually. */
 /* Real logo (public/lovable-uploads/ally-nutra-logo-white.png, trimmed to content, copied
    here as logo-white.png) replaces the old CSS text wordmark + amber ::after-style
    underline — the real mark already carries its own amber accents, so no separate
@@ -126,16 +141,21 @@ p{font-size:15px;line-height:1.7;color:hsl(var(--muted-foreground));}
 .logo-img{height:46px;width:auto;display:block;}
 .main-nav{display:flex;align-items:center;gap:6px;justify-self:center;grid-column:2;}
 .header-actions{display:flex;align-items:center;gap:20px;justify-self:end;grid-column:3;}
-.main-nav a{font-size:14px;font-weight:500;color:hsl(0 0% 100% / .75);padding:8px 14px;border-radius:var(--radius-sm);transition:color .15s;white-space:nowrap;}
+/* nav-icon: one consistent 16px slot for every icon in NavIcons.jsx, in
+   every context (top nav, dropdown panels, mobile drawer) — see the nav
+   hover/focus treatment below for why every one of these rules also carries
+   position:relative. */
+.nav-icon{width:16px;height:16px;flex-shrink:0;}
+.main-nav a{position:relative;display:inline-flex;align-items:center;gap:7px;font-size:14px;font-weight:500;color:hsl(0 0% 100% / .75);padding:8px 14px;border-radius:var(--radius-sm);transition:color .15s;white-space:nowrap;}
 .main-nav a:hover{color:#fff;}
 .main-nav a.active{color:hsl(var(--ally-orange));font-weight:700;}
 
 /* ---- Services dropdown (desktop) ---- */
 .nav-dropdown{position:relative;}
-.nav-dropdown-trigger{display:flex;align-items:center;gap:4px;font-size:14px;font-weight:500;color:hsl(0 0% 100% / .75);padding:8px 14px;border-radius:var(--radius-sm);background:none;border:none;cursor:pointer;font-family:inherit;transition:color .15s;}
+.nav-dropdown-trigger{position:relative;display:flex;align-items:center;gap:7px;font-size:14px;font-weight:500;color:hsl(0 0% 100% / .75);padding:8px 14px;border-radius:var(--radius-sm);background:none;border:none;cursor:pointer;font-family:inherit;transition:color .15s;}
 .nav-dropdown-trigger:hover{color:#fff;}
 .nav-dropdown-trigger.active{color:hsl(var(--ally-orange));font-weight:700;}
-.nav-dropdown-caret{width:10px;height:10px;flex-shrink:0;transition:transform .15s;}
+.nav-dropdown-caret{width:10px;height:10px;flex-shrink:0;margin-left:1px;transition:transform .15s;}
 .nav-dropdown.is-open .nav-dropdown-caret{transform:rotate(180deg);}
 .nav-dropdown-panel{position:absolute;top:100%;left:0;margin-top:4px;background:#fff;border:1px solid hsl(var(--border));border-radius:var(--radius-md);min-width:250px;padding:8px;box-shadow:0 10px 30px rgba(0,0,0,.15);z-index:200;display:none;}
 .nav-dropdown.is-open .nav-dropdown-panel{display:block;}
@@ -144,8 +164,7 @@ p{font-size:15px;line-height:1.7;color:hsl(var(--muted-foreground));}
    outside-click, Escape) via the plain `.nav-dropdown` class but stays
    click-only, matching normal account-menu expectations. */
 @media (hover:hover){.nav-dropdown.hover-open:hover .nav-dropdown-panel{display:block;}}
-.nav-dropdown-panel a{display:block;padding:12px 18px;color:hsl(var(--ally-navy));font-size:14px;font-weight:500;border-radius:var(--radius-sm);text-decoration:none;transition:background .15s;}
-.nav-dropdown-panel a:hover{background:hsl(var(--ally-orange)/.12);}
+.nav-dropdown-panel a{position:relative;display:flex;align-items:center;gap:10px;padding:12px 18px;color:hsl(var(--ally-navy));font-size:14px;font-weight:500;border-radius:var(--radius-sm);text-decoration:none;}
 .nav-dropdown-panel a[aria-current="page"]{color:#9A6B12;font-weight:700;background:hsl(var(--ally-orange)/.1);}
 
 /* ---- Account menu panel — right-aligned variant of the same panel ---- */
@@ -168,20 +187,77 @@ p{font-size:15px;line-height:1.7;color:hsl(var(--muted-foreground));}
 .hamburger svg{width:22px;height:22px;}
 .mobile-nav{display:none;background:hsl(var(--ally-navy));border-top:1px solid hsl(0 0% 100% / .08);}
 .mobile-nav.is-open{display:block;}
-.mobile-nav a{display:block;padding:14px 24px;font-size:15px;font-weight:500;color:hsl(0 0% 100% / .85);border-bottom:1px solid hsl(0 0% 100% / .06);}
+.mobile-nav a{position:relative;display:flex;align-items:center;gap:10px;padding:14px 24px;font-size:15px;font-weight:500;color:hsl(0 0% 100% / .85);border-bottom:1px solid hsl(0 0% 100% / .06);}
 .mobile-nav a.active{color:hsl(var(--ally-orange));}
 .mobile-nav .call-btn{margin:14px 24px;}
 
 /* ---- Services group (mobile, nested inside the hamburger menu — NOT the
    desktop absolute panel, which would render off-screen at narrow widths) ---- */
-.mobile-nav-group-trigger{width:100%;display:flex;align-items:center;justify-content:space-between;background:none;border:none;font-family:inherit;text-align:left;padding:14px 24px;font-size:15px;font-weight:500;color:hsl(0 0% 100% / .85);border-bottom:1px solid hsl(0 0% 100% / .06);cursor:pointer;}
+.mobile-nav-group-trigger{position:relative;width:100%;display:flex;align-items:center;justify-content:space-between;background:none;border:none;font-family:inherit;text-align:left;padding:14px 24px;font-size:15px;font-weight:500;color:hsl(0 0% 100% / .85);border-bottom:1px solid hsl(0 0% 100% / .06);cursor:pointer;}
+.mobile-nav-label{display:flex;align-items:center;gap:10px;}
 .mobile-nav-group-trigger.active{color:hsl(var(--ally-orange));}
 .mobile-nav-group-trigger .nav-dropdown-caret{color:hsl(0 0% 100% / .5);}
 .mobile-nav-group.is-open .mobile-nav-group-trigger .nav-dropdown-caret{transform:rotate(180deg);}
 .mobile-nav-sublist{display:none;background:hsl(0 0% 100% / .04);}
 .mobile-nav-group.is-open .mobile-nav-sublist{display:block;}
-.mobile-nav-sublist a{padding:13px 24px 13px 40px;font-size:14px;color:hsl(0 0% 100% / .75);border-bottom:1px solid hsl(0 0% 100% / .06);}
+.mobile-nav-sublist a{position:relative;display:flex;align-items:center;gap:9px;padding:13px 24px 13px 40px;font-size:14px;color:hsl(0 0% 100% / .75);border-bottom:1px solid hsl(0 0% 100% / .06);}
 .mobile-nav-sublist a[aria-current="page"]{color:hsl(var(--ally-orange));}
+
+/* ---- Nav hover/focus treatment (feature/nav-restructure) ----
+   Replaces the previous colour-only hover (.main-nav a:hover{color:#fff},
+   .nav-dropdown-panel a:hover{background:...}) with one single mechanism
+   used everywhere a nav-style link appears: an underline bar that animates
+   in on hover AND on keyboard focus (:focus-visible), so the two match —
+   :focus-visible also keeps the site's global 2px amber outline (see
+   :focus-visible at the top of this file); this bar is additive, not a
+   replacement for it.
+     - position:absolute, not a static border: the bar never occupies box
+       space, so nothing here ever reflows a row on hover/focus, at any
+       width or padding.
+     - transform:scaleX, not width: a transform is composited, not a layout
+       property, and (unlike animating width or left/right) it can be
+       disabled outright under prefers-reduced-motion without leaving a
+       half-finished shape behind — see below.
+     - active stays distinguishable at rest: an active top-nav/mobile link
+       is already amber + bold (.active, defined above) with no bar; an
+       active dropdown-panel row is amber-ink text on a soft amber tint
+       ([aria-current="page"], also above). Hovering either ADDS this bar on
+       top, but a merely-hovered inactive item never acquires the active
+       item's persistent colour/weight/tint — the two states cannot be
+       confused whether or not the active item happens to be hovered too.
+     - colour differs by surface, not the mechanism: base --ally-orange on
+       the navy contexts (top nav, mobile drawer) reads clearly against
+       navy; --ally-orange-ink on the white dropdown panel is the same
+       text-safe variant already used everywhere else on this file (e.g.
+       the .eyebrow/[aria-current] rules above) for AA-safe text on light
+       surfaces — this bar is decorative (WCAG 1.4.11's 3:1 non-text bar
+       applies, not 1.4.3's 4.5:1), and both colours clear that easily. */
+.main-nav a::after,.nav-dropdown-trigger::after,
+.nav-dropdown-panel a::after,
+.mobile-nav a::after,.mobile-nav-group-trigger::after,.mobile-nav-sublist a::after{
+  content:'';position:absolute;height:2px;border-radius:1px;
+  transform:scaleX(0);transform-origin:left;transition:transform .18s ease;
+}
+.main-nav a::after,.nav-dropdown-trigger::after,
+.mobile-nav a::after,.mobile-nav-group-trigger::after{
+  left:14px;right:14px;bottom:4px;background:hsl(var(--ally-orange));
+}
+.nav-dropdown-panel a::after{left:18px;right:18px;bottom:6px;background:hsl(var(--ally-orange-ink));}
+.mobile-nav-sublist a::after{left:40px;right:24px;bottom:7px;background:hsl(var(--ally-orange-ink));}
+.main-nav a:hover::after,.main-nav a:focus-visible::after,
+.nav-dropdown-trigger:hover::after,.nav-dropdown-trigger:focus-visible::after,
+.nav-dropdown-panel a:hover::after,.nav-dropdown-panel a:focus-visible::after,
+.mobile-nav a:hover::after,.mobile-nav a:focus-visible::after,
+.mobile-nav-group-trigger:hover::after,.mobile-nav-group-trigger:focus-visible::after,
+.mobile-nav-sublist a:hover::after,.mobile-nav-sublist a:focus-visible::after{
+  transform:scaleX(1);
+}
+@media (prefers-reduced-motion:reduce){
+  .main-nav a::after,.nav-dropdown-trigger::after,.nav-dropdown-panel a::after,
+  .mobile-nav a::after,.mobile-nav-group-trigger::after,.mobile-nav-sublist a::after{
+    transition:none;
+  }
+}
 
 @media (max-width:1100px){
   .main-nav{display:none;}

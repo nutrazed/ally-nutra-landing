@@ -5,20 +5,34 @@ import { SERVICE_KEYS, pageKeyFromPathname } from '../lib/pages.js';
 import { useDemoRole } from '../contexts/DemoRoleContext.jsx';
 import { quoteUrl, portalUrl, adminUrl } from '../lib/demoRole.js';
 import { useExclusiveDropdown } from '../hooks/useExclusiveDropdown.js';
+import {
+  IconGrid,
+  IconFactory,
+  IconTag,
+  IconCapsule,
+  IconBuilding,
+  IconBadge,
+  IconPerson,
+  IconHelp,
+  IconMail,
+} from './NavIcons.jsx';
 
+// feature/nav-restructure: "Home" no longer has its own nav item (the logo,
+// linking to /home, is the only way home now — see the <Link className="logo">
+// below), so every remaining item gets an icon (rule #3 of the brief).
 const SERVICE_LINKS = [
-  { to: '/services', label: 'All services' },
-  { to: '/contract-manufacturing', label: 'Contract manufacturing' },
-  { to: '/private-label', label: 'Private label supplements' },
-  { to: '/capsule-manufacturing', label: 'Capsule manufacturing' },
+  { to: '/services', label: 'All services', icon: IconGrid },
+  { to: '/contract-manufacturing', label: 'Contract manufacturing', icon: IconFactory },
+  { to: '/private-label', label: 'Private label supplements', icon: IconTag },
+  { to: '/capsule-manufacturing', label: 'Capsule manufacturing', icon: IconCapsule },
 ];
 
 const MAIN_LINKS = [
-  { to: '/facility', label: 'Facility' },
-  { to: '/certifications', label: 'Certifications' },
-  { to: '/about', label: 'About us' },
-  { to: '/faq', label: 'FAQs' },
-  { to: '/contact', label: 'Contact' },
+  { to: '/facility', label: 'Facility', icon: IconBuilding },
+  { to: '/certifications', label: 'Certifications', icon: IconBadge },
+  { to: '/about', label: 'About us', icon: IconPerson },
+  { to: '/faq', label: 'FAQs', icon: IconHelp },
+  { to: '/contact', label: 'Contact', icon: IconMail },
 ];
 
 // Client-only account menu (feature/account-menu) — collapses what used to
@@ -197,13 +211,11 @@ export default function Header() {
   return (
     <header className="site-header">
       <div className="container header-inner">
-        <Link to="/home" className="logo">
-          <img className="logo-img" src={logoWhite} alt="Ally Nutra" width="783" height="627" />
+        <Link to="/home" className={`logo${isHome ? ' active' : ''}`}>
+          <img className="logo-img" src={logoWhite} alt="" width="783" height="627" />
+          <span className="logo-wordmark">Ally Nutra</span>
         </Link>
         <nav className="main-nav" aria-label="Primary">
-          <NavLink to="/home" className={({ isActive }) => (isActive ? 'active' : undefined)}>
-            Home
-          </NavLink>
           <div
             className={`nav-dropdown hover-open${desktopOpen ? ' is-open' : ''}`}
             id="servicesDropdown"
@@ -219,7 +231,8 @@ export default function Header() {
               aria-controls="servicesDropdownPanel"
               onClick={onDesktopTriggerClick}
             >
-              Services
+              <IconGrid />
+              <span>Services</span>
               <svg
                 className="nav-dropdown-caret"
                 viewBox="0 0 24 24"
@@ -240,7 +253,8 @@ export default function Header() {
                   role="menuitem"
                   aria-current={pageKeyFromPathname(link.to) === currentKey ? 'page' : undefined}
                 >
-                  {link.label}
+                  <link.icon />
+                  <span>{link.label}</span>
                 </Link>
               ))}
             </div>
@@ -251,7 +265,8 @@ export default function Header() {
               to={link.to}
               className={({ isActive }) => (isActive ? 'active' : undefined)}
             >
-              {link.label}
+              <link.icon />
+              <span>{link.label}</span>
             </NavLink>
           ))}
         </nav>
@@ -351,9 +366,6 @@ export default function Header() {
         </div>
       </div>
       <nav id="mobileNav" className={`mobile-nav${mobileOpen ? ' is-open' : ''}`} aria-label="Mobile">
-        <NavLink to="/home" className={({ isActive }) => (isActive ? 'active' : undefined)}>
-          Home
-        </NavLink>
         <div className={`mobile-nav-group${mobileServicesOpen ? ' is-open' : ''}`} id="mobileServicesGroup">
           <button
             type="button"
@@ -362,7 +374,7 @@ export default function Header() {
             aria-controls="mobileServicesList"
             onClick={onMobileTriggerClick}
           >
-            Services
+            <span className="mobile-nav-label"><IconGrid /><span>Services</span></span>
             <svg
               className="nav-dropdown-caret"
               viewBox="0 0 24 24"
@@ -382,7 +394,8 @@ export default function Header() {
                 to={link.to}
                 aria-current={pageKeyFromPathname(link.to) === currentKey ? 'page' : undefined}
               >
-                {link.label}
+                <link.icon />
+                <span>{link.label}</span>
               </Link>
             ))}
           </div>
@@ -393,7 +406,8 @@ export default function Header() {
             to={link.to}
             className={({ isActive }) => (isActive ? 'active' : undefined)}
           >
-            {link.label}
+            <link.icon />
+            <span>{link.label}</span>
           </NavLink>
         ))}
         {isClient && (
