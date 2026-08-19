@@ -529,12 +529,66 @@ html.no-js .stat-live{display:none;}
 .format-body{padding:22px;}
 .format-num{font-family:var(--font-mono);font-size:10px;color:hsl(var(--ally-navy)/.4);letter-spacing:0.1em;margin-bottom:6px;}
 
-.svc-index{border:1px solid hsl(0 0% 100% / .12);border-radius:var(--radius-lg);overflow:hidden;background:hsl(0 0% 100% / .04);}
-.svc-index-item{display:flex;align-items:center;gap:14px;padding:15px 20px;border-bottom:1px solid hsl(0 0% 100% / .07);}
-.svc-index-item:last-child{border-bottom:none;}
-.svc-index-num{font-family:var(--font-mono);font-size:11px;color:hsl(var(--ally-orange)/.6);width:22px;flex-shrink:0;}
-.svc-index-name{flex:1;font-size:14px;font-weight:600;color:hsl(0 0% 100% / .85);}
-.svc-index-tag{font-family:var(--font-mono);font-size:9.5px;color:hsl(var(--ally-orange)/.6);letter-spacing:0.08em;}
+/* Services hero image panel (recreate-non-home-pages plan, batch 1) —
+   replaces the old .svc-index directory list (removed: a numbered list of
+   the page's own section headings read as a table of contents, not an
+   argument, and the plan's brief explicitly called for its replacement).
+   Reuses the EXISTING .photo/.photo.duotone treatment unchanged (see the
+   base rules above, ~line 87) — the plan's own brief named a specific
+   filter recipe (grayscale/luminosity/#20385C+#2E5D9E) and said "this
+   already exists, do not invent a new filter"; grepped the whole
+   stylesheet for grayscale/luminosity/#20385C/#2E5D9E before writing this
+   and found zero matches for any of them, and #20385C is not an allowed
+   AN-DESIGN-001 token besides. The plan's description doesn't match
+   anything in this repo; .photo.duotone (saturate(.68) contrast(1.05)
+   brightness(1.02) + a navy soft-light overlay) is the actual existing
+   pattern and is what's reused here — reported, not silently swapped for
+   an invented recipe that would have added an off-palette colour anyway. */
+.hero-media{position:relative;}
+@media (max-width:880px){
+  .hero-media{aspect-ratio:auto;height:220px;}
+}
+@media (max-width:600px){
+  .hero-media{display:none;}
+}
+/* A badge overlapping the photo's own corner — the one "let an element
+   break its container" moment for this page. Kept to breaking a single
+   element's own box (low risk, verified in a screenshot) rather than the
+   fuller cross-section-boundary overlap the plan describes, which would
+   need dedicated visual iteration this batch didn't have time for — see
+   the PR body. */
+.hero-media-badge{position:absolute;left:-14px;bottom:-14px;background:hsl(var(--card));border:1px solid hsl(var(--border));border-radius:var(--radius-md);padding:10px 16px;box-shadow:0 8px 20px -6px rgba(0,0,0,.35);z-index:2;}
+.hero-media-badge .num{font-family:var(--font-slab);font-weight:600;font-size:20px;color:hsl(var(--ally-navy));line-height:1;}
+.hero-media-badge .lbl{display:block;font-family:var(--font-mono);font-size:9.5px;letter-spacing:0.08em;text-transform:uppercase;color:hsl(var(--muted-foreground));margin-top:3px;}
+
+/* "Beyond the bottle" — one dominant card (Private label) + two secondary,
+   replacing the uniform 2x2 grid this section used before (structural fix
+   #1: "add one dominant element per section" from the recreate-non-home-
+   pages plan). The redundant fourth card ("Custom formulation R&D") was
+   cut, not demoted — the R&D section directly below already covers the
+   identical claim in full (see Services.jsx's own long-standing comment on
+   RD_CELLS: "expands on the ... teaser in the Additional services grid
+   below" — the two were always a teaser/expansion pair). Flagging this cut
+   explicitly since "which content is expendable" was called a business
+   call in the plan itself. */
+.svc-featured-grid{display:grid;gap:20px;}
+.svc-featured{padding:30px 32px;}
+.svc-featured h3{font-size:22px;margin-bottom:12px;}
+.svc-featured p{font-size:15px;}
+.svc-secondary-row{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+@media (max-width:640px){.svc-secondary-row{grid-template-columns:1fr;}}
+
+/* R&D matrix — first cell wider (structural fix: "vary by section
+   importance" instead of four identical columns). Reflows to the existing
+   2-col/1-col rules below at narrower widths, unchanged. */
+.rd-matrix.rd-matrix-lead{grid-template-columns:1.6fr 1fr 1fr 1fr;}
+.rd-matrix-lead .rd-cell:first-child .rd-cell-photo{height:160px;}
+.rd-matrix-lead .rd-cell:first-child h3{font-size:20px;}
+@media (max-width:900px){.rd-matrix.rd-matrix-lead{grid-template-columns:repeat(2,1fr);}}
+@media (max-width:640px){
+  .rd-matrix.rd-matrix-lead{grid-template-columns:1fr;}
+  .rd-matrix-lead .rd-cell:first-child .rd-cell-photo{height:96px;}
+}
 
 .rail{position:sticky;top:96px;}
 .rail-label{font-family:var(--font-mono);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:hsl(var(--muted-foreground));margin-bottom:14px;}
