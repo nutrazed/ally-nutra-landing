@@ -312,6 +312,73 @@ if (jsonOut) {
   }
 }
 
+// --- 5. Data-provenance / customer-PII convention checks --------------------------
+// This file has no backend and never will (it's a frontend-only UI reference,
+// migrated into ally-os for that reason). Two failure modes keep recurring:
+//   a) copy asserting the data is real/live/production (it never is);
+//   b) a customer-side email/phone using a domain or number that could collide with
+//      a real one, instead of an RFC 2606 example domain or the 555-0100..555-0199
+//      NANP fiction block.
+// Deliberately NOT covered here: real personal names. That would require shipping a
+// list of real names into a public repo to check against -- see the PR body for this
+// change, which documents it as a known gap rather than a silent omission.
+const PROVENANCE_PATTERNS = [
+  /real values? (?:are |is )?pulled from the live[\s-]?database/i,
+  /real value read from the live[\s-]?database/i,
+  /real,?\s*live[\s-]?database values/i, // catches "real, live-database values" (hyphen variant that slipped past an earlier space-only pattern -- see PR body)
+  /not sample data/i,
+  /pulled from (?:the )?(?:live |production )?database/i,
+  /\blive[\s-]?database\b/i,
+  /\bproduction data\b/i,
+  />\s*Real,\s*from\s*<code>/i, // "Real, from <table_name>" data-source captions
+];
+function findProvenanceHits(text) {
+  const hits = [];
+  for (const re of PROVENANCE_PATTERNS) {
+    const g = new RegExp(re.source, re.flags.includes('g') ? re.flags : re.flags + 'g');
+    let m;
+    while ((m = g.exec(text))) hits.push({ pattern: re.source, index: m.index, match: m[0] });
+  }
+  return hits;
+}
+
+// Customer-side email: any address whose domain is neither the company's own
+// (allynutra.com, staff -- intentionally retained) nor an RFC 2606 example domain.
+const ALLOWED_EMAIL_DOMAINS = new Set(['allynutra.com', 'example.com', 'example.net']);
+function findEmailHits(text) {
+  const re = /[A-Za-z0-9._%+-]+@([A-Za-z0-9.-]+\.[A-Za-z]{2,})/g;
+  const hits = [];
+  let m;
+  while ((m = re.exec(text))) {
+    const domain = m[1].toLowerCase();
+    if (!ALLOWED_EMAIL_DOMAINS.has(domain)) hits.push({ index: m.index, match: m[0], domain });
+  }
+  return hits;
+}
+
+// Phone numbers: must be either the published support line (888) 720-5888, or a
+// NANP-fiction number whose exchange is 555 and subscriber is 0100-0199. Only matches
+// numbers with a separator or a leading "+1" so it doesn't false-positive on unrelated
+// unformatted 10-digit strings elsewhere in the file (bank account numbers, migration
+// timestamps embedded in comments) that were never phone numbers to begin with.
+const REAL_LINE = '8887205888';
+function findPhoneHits(text) {
+  const re = /(\+1[\s.-]?\(?\d{3}\)?[\s.-]\d{3}[\s.-]?\d{4})|(\+1\d{10}\b)|(\(\d{3}\)\s?\d{3}-\d{4})/g;
+  const hits = [];
+  let m;
+  while ((m = re.exec(text))) {
+    const raw = m[0];
+    const digits = raw.replace(/\D/g, '').replace(/^1/, '');
+    if (digits.length !== 10) continue;
+    if (digits === REAL_LINE) continue; // (888) 720-5888, the one real published line
+    const exch = digits.slice(3, 6);
+    const sub = Number(digits.slice(6, 10));
+    if (exch === '555' && sub >= 100 && sub <= 199) continue; // compliant fiction block
+    hits.push({ index: m.index, match: raw });
+  }
+  return hits;
+}
+
 // --- CI mode (--check) ---------------------------------------------------------------
 // A raw "did the instance count rise" gate is the wrong invariant: reusing an
 // already-covered class on more elements isn't drift, and pages get added/removed
@@ -324,6 +391,10 @@ if (jsonOut) {
 //      genuinely new (uncovered) off-palette class, without false-failing on reused ones.
 //   3. every #page-container override's own target colour must itself be an allowed hex --
 //      catches a future override rule being added with an invented/off-palette colour.
+//   4. no copy asserting the data is real/live/production (see PROVENANCE_PATTERNS).
+//   5. no customer-side email outside allynutra.com/example.com/example.net.
+//   6. no phone number outside the 555-0100..555-0199 fiction block, except the one
+//      real published support line.
 if (args.includes('--check')) {
   const failures = [];
 
@@ -357,6 +428,27 @@ if (args.includes('--check')) {
   }
   if (badTargets.size) {
     failures.push(`${badTargets.size} off-palette hex used as an override target: ${[...badTargets.keys()].join(', ')}`);
+  }
+
+  // 4. no real/live/production data-provenance assertions.
+  const provenanceHits = findProvenanceHits(rawSrc);
+  if (provenanceHits.length) {
+    const sample = provenanceHits.slice(0, 5).map((h) => `L${lineOf(h.index)}: "${h.match}"`).join('; ');
+    failures.push(`${provenanceHits.length} data-provenance assertion(s) found (must be zero -- this file has no backend): ${sample}${provenanceHits.length > 5 ? ', …' : ''}`);
+  }
+
+  // 5. no customer-side email outside allynutra.com/example.com/example.net.
+  const emailHits = findEmailHits(rawSrc);
+  if (emailHits.length) {
+    const domains = [...new Set(emailHits.map((h) => h.domain))];
+    failures.push(`${emailHits.length} email(s) on ${domains.length} non-compliant domain(s) (must be allynutra.com or example.com/.net): ${domains.slice(0, 10).join(', ')}${domains.length > 10 ? ', …' : ''}`);
+  }
+
+  // 6. no phone number outside the 555-0100..555-0199 fiction block (or the real line).
+  const phoneHits = findPhoneHits(rawSrc);
+  if (phoneHits.length) {
+    const sample = phoneHits.slice(0, 5).map((h) => `L${lineOf(h.index)}: "${h.match}"`).join('; ');
+    failures.push(`${phoneHits.length} non-compliant phone number(s) found (must be 555-0100..555-0199, or (888) 720-5888): ${sample}${phoneHits.length > 5 ? ', …' : ''}`);
   }
 
   if (failures.length) {
