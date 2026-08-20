@@ -251,7 +251,6 @@ export default function Header() {
               aria-controls="servicesDropdownPanel"
               onClick={onDesktopTriggerClick}
             >
-              <IconGrid />
               <span>Services</span>
               <svg
                 className="nav-dropdown-caret"
@@ -285,7 +284,6 @@ export default function Header() {
               to={link.to}
               className={({ isActive }) => (isActive ? 'active' : undefined)}
             >
-              <link.icon />
               <span>{link.label}</span>
             </NavLink>
           ))}
