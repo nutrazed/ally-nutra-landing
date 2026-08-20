@@ -331,6 +331,8 @@ const PROVENANCE_PATTERNS = [
   /\blive[\s-]?database\b/i,
   /\bproduction data\b/i,
   />\s*Real,\s*from\s*<code>/i, // "Real, from <table_name>" data-source captions
+  /\bnot a mockup\b/i, // "the query is live, not a mockup" -- found only by rendering the page, not by source grep; see PR body
+  /the query is live\b/i,
 ];
 function findProvenanceHits(text) {
   const hits = [];
