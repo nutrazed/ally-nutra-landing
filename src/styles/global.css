@@ -1145,7 +1145,12 @@ html.no-js .stat-live{display:none;}
 .card-height-probe{position:absolute;top:0;left:-9999px;width:100%;visibility:hidden;pointer-events:none;}
 .card-height-probe-item{display:flex;flex-direction:column;gap:0;}
 .card-front-probe{display:block;border:1px solid transparent;}
-.card-height-probe .card-back-body{padding:24px 22px;}
+/* No probe-side padding overrides on purpose: the probe must measure with the
+   EXACT styles the real card renders with. A stale .card-back-body override
+   (24px/22px vs the real 26/24/24) under-measured every back face by a few px
+   and by a wrap-line's worth on narrow text — the shared cardHeight came up
+   short and the tallest back (Pouches, six kinds) clipped its last rows. If the
+   real padding changes, the probe follows it for free now. */
 
 .flip-card{background:transparent;border:none;overflow:visible;perspective:1600px;}
 .card-inner{
@@ -1220,10 +1225,12 @@ html.no-js .stat-live{display:none;}
 .card-kind-name{font-family:var(--font-slab);font-weight:500;font-size:14px;color:#fff;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .card-kind-spec{color:hsl(var(--ally-orange)/.9);font-size:9px;letter-spacing:0.06em;text-align:right;white-space:nowrap;flex-shrink:0;}
 .card-kind-note{font-size:11px;line-height:1.45;color:hsl(0 0% 100% / .68);}
-/* Back button: full-width footer row — hairline separator above, real padding,
-   brighter text — so it reads as the card's exit, not stray fine print. */
-.card-back-btn{align-self:stretch;box-sizing:border-box;margin-top:4px;padding:12px 0 0;border:none;border-top:1px solid hsl(0 0% 100% / .18);background:none;font-family:var(--font-mono);font-size:11.5px;letter-spacing:0.06em;text-transform:uppercase;color:hsl(0 0% 100% / .75);cursor:pointer;text-align:left;}
-.card-back-btn:hover{color:#fff;}
+/* Transparent whole-face flip-back zone (replaces the visible "← Back" footer
+   button, removed per client request). Sits above the kinds list, so any
+   click/tap on the back returns to the front; focus-visible keeps an amber ring
+   so keyboard users can see where Enter will land. */
+.card-back-flipzone{position:absolute;inset:0;z-index:1;background:transparent;border:none;padding:0;margin:0;font:inherit;cursor:pointer;}
+.card-back-flipzone:focus-visible{outline:2px solid hsl(var(--ring));outline-offset:-6px;}
 
 /* Reduced motion: no rotation at all — crossfade the faces instead. */
 @media (prefers-reduced-motion:reduce){

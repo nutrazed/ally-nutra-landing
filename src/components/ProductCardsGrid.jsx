@@ -68,7 +68,6 @@ export default function ProductCardsGrid({ products }) {
                       </li>
                     ))}
                   </ul>
-                  <span className="card-back-btn">← Back</span>
                 </div>
               </div>
             );

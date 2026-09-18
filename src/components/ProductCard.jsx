@@ -100,10 +100,20 @@ export default function ProductCard({ product, varieties, cardHeight }) {
                 </li>
               ))}
             </ul>
-            <button type="button" ref={backFirstRef} className="card-back-btn" onClick={goBack}>
-              ← Back
-            </button>
           </div>
+          {/* Flip-back: the visible "← Back" footer button was removed per client
+              request ("it annoys me") — instead the whole back face flips back on
+              click/tap via this transparent overlay. It stays a REAL button (not a
+              clickable div) so keyboard/AT users get honest semantics, and the kinds
+              list underneath stays normal content rather than being flattened into
+              a button's internals. Receives focus on flip (below). */}
+          <button
+            type="button"
+            ref={backFirstRef}
+            className="card-back-flipzone"
+            aria-label={`${product.title} — flip back`}
+            onClick={goBack}
+          ></button>
         </div>
       </div>
     </div>
