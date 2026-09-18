@@ -1024,30 +1024,94 @@ html.no-js .stat-live{display:none;}
   .comparison-usual{display:flex;}
 }
 
-/* Proof bar (§5) — credential strip + facility photo strip, total under ~320px.
-   Light section, desaturation only, no navy overlay per the "light treatment" rule. */
-.proof-bar-section{padding:36px 0;}
+/* Format showcase (§5) — was the proof bar (credential strip + five-photo facility
+   strip); the photo row is now the four branded format-card slides. The credential
+   strip row is unchanged and still opens the section. Light treatment, same rule as
+   before: no navy overlay — the slides' baked near-white backgrounds sit directly
+   on --background, and any tint would seam against it. */
+.format-showcase-section .credential-strip{margin-bottom:44px;}
 .credential-strip{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;margin-bottom:20px;font-family:var(--font-mono);font-size:11.5px;letter-spacing:0.04em;text-transform:uppercase;}
 .credential-strip a{color:hsl(var(--ally-navy)/.6);border-bottom:1px solid transparent;transition:border-color .15s,color .15s;}
 .credential-strip a:hover{color:hsl(var(--ally-navy));border-bottom-color:hsl(var(--ally-navy)/.4);}
 .credential-strip a:not(:last-child){position:relative;padding-right:16px;}
 .credential-strip a:not(:last-child)::after{content:'·';position:absolute;right:-9px;color:hsl(var(--ally-navy)/.3);}
 
-.facility-strip{display:flex;gap:12px;justify-content:center;}
-.facility-strip-item{width:200px;flex-shrink:0;}
-.facility-strip-photo{position:relative;width:100%;aspect-ratio:4/3;border-radius:var(--radius-md);overflow:hidden;background:hsl(var(--muted));}
-.facility-strip-photo img{width:100%;height:100%;object-fit:cover;filter:saturate(.68) contrast(1.05) brightness(1.02);}
-.facility-strip-photo::after{content:'';position:absolute;inset:0;background:hsl(var(--ally-navy));mix-blend-mode:soft-light;opacity:.24;pointer-events:none;}
-.facility-strip-caption{display:block;margin-top:8px;font-family:var(--font-slab);font-weight:500;font-size:13px;color:hsl(var(--ally-navy));}
-.facility-strip-sub{display:block;margin-top:2px;color:hsl(var(--muted-foreground));font-size:10px;}
+/* Carousel: one large slide at a time — the slides carry baked-in text sized for
+   full-screen viewing, so thumbnailing them 4-up would render that text unreadably
+   small (see Home.jsx §5 comment). Native scroll-snap does gesture paging; arrows
+   and dots scrollIntoView the target slide. Track edges fade out so the peeking
+   neighbour slides read as an intentional affordance, not an overflow cut; the
+   fade bands sit outside the centred active slide (600px slide in an 840px
+   track), and on the first/last slide the empty side fades over nothing. */
+.format-track{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding:8px 4px;scrollbar-width:none;scroll-behavior:smooth;max-width:840px;margin:0 auto;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 36px,#000 calc(100% - 36px),transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 36px,#000 calc(100% - 36px),transparent 100%);}
+.format-track::-webkit-scrollbar{display:none;}
+.format-track:focus-visible{outline:2px solid hsl(var(--ring));outline-offset:4px;border-radius:var(--radius-md);}
+.format-slide{flex:0 0 min(88%,600px);scroll-snap-align:center;}
+.format-slide img{width:100%;height:auto;display:block;border-radius:var(--radius-lg);border:1px solid hsl(var(--border));box-shadow:0 6px 24px hsl(var(--ally-navy)/.08);}
 
-@media (max-width:1080px){
-  .facility-strip{flex-wrap:wrap;}
-  .facility-strip-item{width:calc(33.333% - 8px);}
+/* Code-drawn stick-pack slide (slide 3) — same chrome as the img slides (border,
+   radius, shadow, white ground) so the carousel stays coherent; content is real
+   text over the company's own render. Square to match the designed cards. */
+.format-slide-card{width:100%;aspect-ratio:1/1;box-sizing:border-box;background:hsl(var(--card));border:1px solid hsl(var(--border));border-radius:var(--radius-lg);box-shadow:0 6px 24px hsl(var(--ally-navy)/.08);padding:7%;display:flex;flex-direction:column;position:relative;}
+.format-slide-eyebrow{color:hsl(var(--ally-navy)/.6);letter-spacing:0.14em;}
+.format-slide-main{flex:1;display:grid;grid-template-columns:46% 1fr;gap:6%;align-items:center;min-height:0;}
+.format-slide-art{display:flex;align-items:center;justify-content:center;min-height:0;}
+.format-slide-art img{max-width:100%;max-height:100%;width:auto;height:auto;border:none;border-radius:0;box-shadow:none;filter:saturate(.68) contrast(1.05) brightness(1.02);transform:rotate(-4deg);}
+.format-slide-copy{display:flex;flex-direction:column;gap:16px;min-width:0;}
+.format-slide-headline{font-family:var(--font-slab);font-weight:700;font-size:clamp(20px,3.4vw,27px);line-height:1.15;color:hsl(var(--ally-orange-ink));margin:0;letter-spacing:-0.01em;}
+.format-slide-bestfor{background:hsl(var(--ally-navy));border-radius:var(--radius-md);padding:14px 16px;color:#fff;}
+.format-slide-bestfor-label{display:block;color:hsl(var(--ally-orange)/.95);margin-bottom:8px;letter-spacing:0.14em;}
+.format-slide-bestfor-list{margin:0;padding:0 0 0 2px;list-style:none;display:flex;flex-direction:column;gap:5px;counter-reset:bestfor;}
+.format-slide-bestfor-list li{font-size:13px;color:hsl(0 0% 100% / .92);display:flex;align-items:baseline;gap:8px;counter-increment:bestfor;}
+.format-slide-bestfor-list li::before{content:counter(bestfor,decimal-leading-zero);font-family:var(--font-mono);font-size:9.5px;color:hsl(0 0% 100% / .5);flex-shrink:0;}
+.format-slide-arrow{position:absolute;right:7%;bottom:6%;font-size:20px;color:hsl(var(--ally-orange));}
+.format-nav{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:14px;}
+.format-arrow{width:40px;height:40px;border-radius:50%;border:1px solid hsl(var(--border));background:hsl(var(--card));display:inline-flex;align-items:center;justify-content:center;color:hsl(var(--ally-navy));cursor:pointer;transition:background-color .15s,color .15s,border-color .15s;}
+.format-arrow:hover{background:hsl(var(--ally-navy));border-color:hsl(var(--ally-navy));color:#fff;}
+.format-arrow:focus-visible{outline:2px solid hsl(var(--ring));outline-offset:2px;}
+.format-dots{display:flex;gap:8px;}
+.format-dot{width:8px;height:8px;border-radius:50%;border:none;padding:0;background:hsl(var(--ally-navy)/.2);cursor:pointer;transition:background-color .15s;}
+.format-dot:hover{background:hsl(var(--ally-navy)/.45);}
+.format-dot[aria-current="true"]{background:hsl(var(--ally-orange));}
+.format-dot:focus-visible{outline:2px solid hsl(var(--ring));outline-offset:2px;}
+.format-active-info{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 14px;margin-top:18px;}
+.format-active-name{font-family:var(--font-slab);font-weight:600;font-size:15px;color:hsl(var(--ally-navy));}
+.format-active-info .mono-chip{color:hsl(var(--muted-foreground));}
+.format-active-link{font-size:13px;font-weight:600;color:hsl(var(--ally-navy));text-decoration:underline;text-decoration-color:hsl(var(--ally-navy)/.35);text-underline-offset:3px;}
+.format-active-link:hover{text-decoration-color:hsl(var(--ally-navy));}
+
+@media (prefers-reduced-motion: reduce){
+  .format-track{scroll-behavior:auto;}
+  .format-arrow,.format-dot{transition:none;}
 }
-@media (max-width:640px){
-  .facility-strip-item{width:calc(50% - 6px);}
+
+/* VSL (§6.5) — the Work With Us video between the "Why Ally Nutra" claims and the
+   partner testimonials. Click-to-play talking-head video: navy letterbox behind
+   the poster frame, hairline border, soft shadow. Player capped at 880px, which
+   is why only the 720p/360p sources are bundled (Home.jsx §6.5 comment). */
+.vsl-frame{max-width:880px;margin:0 auto;}
+.vsl-video{width:100%;aspect-ratio:16/9;display:block;border-radius:var(--radius-lg);border:1px solid hsl(var(--border));background:hsl(var(--ally-navy));box-shadow:0 12px 32px hsl(var(--ally-navy)/.12);}
+.vsl-video:focus-visible{outline:2px solid hsl(var(--ring));outline-offset:4px;}
+.vsl-caption{display:block;text-align:center;margin-top:10px;color:hsl(var(--muted-foreground));}
+
+/* Final-CTA branded card (§09): client-requested side-by-side layout — copy left,
+   portrait card right, vertically centered against each other. The card still
+   clicks through to the quote flow. Under 900px the columns stack (text first,
+   card below, centered) so the portrait card never squeezes the copy. */
+.cta-split{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:clamp(36px,5vw,64px);align-items:center;}
+.cta-split .cta-card-link{margin-top:0;}
+.cta-split .cta-card{max-height:480px;}
+@media (max-width:900px){
+  .cta-split{grid-template-columns:1fr;gap:0;}
+  .cta-split .cta-copy{text-align:center;}
+  .cta-split .hero-ctas,.cta-split h2{margin-left:auto;margin-right:auto;}
+  .cta-split .hero-ctas{justify-content:center;}
+  .cta-split .cta-card-link{margin-top:28px;}
 }
+.cta-card-link{display:inline-block;max-width:100%;margin-top:36px;border-radius:var(--radius-lg);transition:transform .18s ease,box-shadow .18s ease;}
+.cta-card-link:hover,.cta-card-link:focus-visible{transform:translateY(-3px);box-shadow:0 14px 36px hsl(var(--ally-navy)/.16);}
+.cta-card-link:focus-visible{outline:2px solid hsl(var(--ring));outline-offset:4px;}
+.cta-card{display:block;width:100%;max-width:400px;height:auto;border-radius:var(--radius-lg);border:1px solid hsl(var(--border));box-shadow:0 6px 24px hsl(var(--ally-navy)/.08);}
 
 /* How it works: mono step/time labels, no amber — amber marks the action on this
    page, and this section is the explanation, not the action.
@@ -1089,10 +1153,21 @@ html.no-js .stat-live{display:none;}
    absolutely positioned) so scrollHeight reflects true content height at this width.
    Positioned off-screen rather than display:none, since display:none elements report
    zero scrollHeight. */
+/* Positioning context for the measurement probe: the probe is absolutely
+   positioned off-screen and width:100% — without this wrapper it resolved that
+   100% against the viewport, measuring ~48px-wider columns than the real grid
+   (less wrapping → shorter faces → shared cardHeight too small → the tallest
+   back face clipped). With the wrapper, probe and real grid share one width. */
+.product-cards-measure-wrap{position:relative;}
 .card-height-probe{position:absolute;top:0;left:-9999px;width:100%;visibility:hidden;pointer-events:none;}
 .card-height-probe-item{display:flex;flex-direction:column;gap:0;}
 .card-front-probe{display:block;border:1px solid transparent;}
-.card-height-probe .card-back-body{padding:24px 22px;}
+/* No probe-side padding overrides on purpose: the probe must measure with the
+   EXACT styles the real card renders with. A stale .card-back-body override
+   (24px/22px vs the real 26/24/24) under-measured every back face by a few px
+   and by a wrap-line's worth on narrow text — the shared cardHeight came up
+   short and the tallest back (Pouches, six kinds) clipped its last rows. If the
+   real padding changes, the probe follows it for free now. */
 
 .flip-card{background:transparent;border:none;overflow:visible;perspective:1600px;}
 .card-inner{
@@ -1135,6 +1210,9 @@ html.no-js .stat-live{display:none;}
    --card-photo-scale is set per-product (Home.jsx) to equalize apparent product
    size — contain alone still left the stick pack, whose source frame is mostly
    empty space around a thin subject, looking a third the size of the others. */
+/* Card-front photos: restored per client clarification (the removal request was
+   about the popup's per-kind imagery, not these). .card-varieties-btn stays gone
+   with the popup — see ProductCard.jsx. */
 .card-front-photo{position:relative;aspect-ratio:4/3;width:100%;overflow:hidden;flex-shrink:0;background:hsl(var(--muted));padding:14%;box-sizing:border-box;}
 .card-front-photo img{width:100%;height:100%;object-fit:contain;display:block;filter:saturate(.68) contrast(1.05) brightness(1.02);transform:scale(var(--card-photo-scale,1));}
 .card-front-photo::after{content:'';position:absolute;inset:0;background:hsl(var(--ally-navy));mix-blend-mode:soft-light;opacity:.24;pointer-events:none;}
@@ -1147,13 +1225,36 @@ html.no-js .stat-live{display:none;}
   transform:rotateY(180deg);
   justify-content:center;
 }
-.card-back-body{padding:28px 24px;display:flex;flex-direction:column;gap:14px;height:100%;}
+.card-back-body{padding:26px 24px 24px;display:flex;flex-direction:column;gap:14px;height:100%;}
 .card-back-body h3{color:#fff;font-family:var(--font-slab);font-weight:500;font-size:17px;margin:0;}
-.card-back-text{font-size:13.5px;line-height:1.6;color:hsl(0 0% 100% / .8);margin:0;flex-grow:1;}
-.card-varieties-btn{background:transparent;color:#fff;border:1.5px solid hsl(0 0% 100% / .35);width:100%;justify-content:center;min-height:44px;}
-.card-varieties-btn:hover{background:hsl(0 0% 100% / .1);border-color:#fff;}
-.card-back-btn{align-self:flex-start;font-family:var(--font-mono);font-size:11px;letter-spacing:0.04em;text-transform:uppercase;color:hsl(0 0% 100% / .55);background:none;border:none;padding:0;cursor:pointer;}
-.card-back-btn:hover{color:#fff;}
+.card-back-intro{font-size:12px;line-height:1.55;color:hsl(0 0% 100% / .65);margin:0;}
+/* The kinds list — the back face's whole job now ("only the kinds"). Name + spec
+   chip on one line, note under; hairline separators, no imagery (there are no
+   per-kind photo sources to publish — the popup's photo/diagram visuals went with
+   the popup). Chips never wrap mid-text (nowrap): a name+chip pair too wide for
+   the card wraps as a unit onto its own line instead, keeping the right edge
+   clean. The list is also the card's "tiny scroll" fallback: cards are measured
+   to fit, but if anything renders taller than measured (late webfont swap,
+   browser zoom), the list scrolls INSIDE the card with a thin navy-tinted
+   scrollbar instead of clipping — wheel/touch reach it through the flip overlay
+   (forwarded in ProductCard.jsx). overscroll-behavior contains the chain so the
+   page doesn't scroll along with the card. */
+.card-kinds{list-style:none;margin:0;padding:0;flex-grow:1;min-height:0;display:flex;flex-direction:column;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;scrollbar-width:thin;scrollbar-color:hsl(0 0% 100% / .35) transparent;}
+.card-kinds::-webkit-scrollbar{width:4px;}
+.card-kinds::-webkit-scrollbar-thumb{background:hsl(0 0% 100% / .35);border-radius:2px;}
+.card-kinds::-webkit-scrollbar-track{background:transparent;}
+.card-kind{padding:10px 0;border-top:1px solid hsl(0 0% 100% / .14);display:flex;flex-direction:column;gap:3px;}
+.card-kind:first-child{border-top:none;padding-top:0;}
+.card-kind-topline{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;row-gap:2px;}
+.card-kind-name{font-family:var(--font-slab);font-weight:500;font-size:14px;color:#fff;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.card-kind-spec{color:hsl(var(--ally-orange)/.9);font-size:9px;letter-spacing:0.06em;text-align:right;white-space:nowrap;flex-shrink:0;}
+.card-kind-note{font-size:11px;line-height:1.45;color:hsl(0 0% 100% / .68);}
+/* Transparent whole-face flip-back zone (replaces the visible "← Back" footer
+   button, removed per client request). Sits above the kinds list, so any
+   click/tap on the back returns to the front; focus-visible keeps an amber ring
+   so keyboard users can see where Enter will land. */
+.card-back-flipzone{position:absolute;inset:0;z-index:1;background:transparent;border:none;padding:0;margin:0;font:inherit;cursor:pointer;}
+.card-back-flipzone:focus-visible{outline:2px solid hsl(var(--ring));outline-offset:-6px;}
 
 /* Reduced motion: no rotation at all — crossfade the faces instead. */
 @media (prefers-reduced-motion:reduce){

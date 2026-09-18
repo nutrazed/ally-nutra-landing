@@ -1,21 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
 import ProductCard from './ProductCard.jsx';
-import VarietiesPopup from './VarietiesPopup.jsx';
 import { VARIETIES_BY_FORMAT } from '../data/productVarieties.js';
-import { hideAndTint } from '../lib/imgFallback.js';
 
 // Fixed card height, shared by all four cards so the grid never jumps when one flips.
-// Measured from BOTH faces' actual rendered content, not assumed to be the back (the
-// back has more text, but the front carries a full aspect-ratio photo plus its own
-// text — for these four cards the front is in fact the taller face; measuring only
-// the back clipped the bottom of every front card). Each face is rendered in normal
-// (non-absolute) flow inside an off-screen probe at the grid's real width, so
-// scrollHeight reflects true content height; the shared height is the max found
-// across all faces of all cards. Re-measured on resize, since text reflows at
-// narrower widths (see §6).
+// Measured from BOTH faces' actual rendered content in normal (non-absolute) flow
+// inside an off-screen probe at the grid's real width, so scrollHeight reflects true
+// content height; the shared height is the max found across all faces of all cards.
+// Re-measured on resize, since text reflows at narrower widths (see §6).
+// The front carries a full aspect-ratio photo plus its own text — historically the
+// taller face; the kinds-list back can outgrow it at narrow widths — so measuring
+// both faces stays necessary.
 export default function ProductCardsGrid({ products }) {
   const [cardHeight, setCardHeight] = useState(null);
-  const [popup, setPopup] = useState(null); // { product, triggerRef } | null
   const frontProbeRefs = useRef([]);
   const backProbeRefs = useRef([]);
   const gridRef = useRef(null);
@@ -32,62 +28,75 @@ export default function ProductCardsGrid({ products }) {
     measure();
     const ro = new ResizeObserver(measure);
     if (gridRef.current) ro.observe(gridRef.current);
+    // Re-measure once webfonts finish loading: the first pass can run before
+    // Roboto Slab / JetBrains Mono swap in, and the taller real text would
+    // otherwise overflow the height measured with fallback metrics (the kinds
+    // list's tiny scroll covers this if it still slips through — see
+    // ProductCard.jsx).
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure).catch(() => {});
     return () => ro.disconnect();
   }, [products]);
 
-  function handleOpenVarieties(product, triggerRef) {
-    setPopup({ product, triggerRef });
-  }
-
-  function handleClose() {
-    setPopup(null);
-  }
-
   return (
-    <>
+    <div className="product-cards-measure-wrap">
       {/* Off-screen measurement pass: renders each face's real content, in normal
-          flow, at the grid's actual width — then this whole block is hidden. The
-          visible cards below reuse the resulting cardHeight. */}
+          flow, at the grid's actual width — then this whole block is hidden.
+          The visible cards below reuse the resulting cardHeight. The wrapper is
+          position:relative (see global.css) so the absolutely-positioned probe
+          resolves its 100% width against THIS wrapper — the same width the real
+          grid renders at. When the probe was positioned against the viewport,
+          its columns measured ~48px wider than the real grid's, text wrapped
+          less, every back face measured short, and the tallest one (Pouches)
+          clipped — the "fourth card not fit" bug. */}
       <div className="card-height-probe" aria-hidden="true">
         <div className="product-grid card-height-probe-grid" ref={gridRef}>
-          {products.map((p, i) => (
-            <div className="card-height-probe-item" key={p.title}>
-              <div className="card-front-probe" ref={(el) => (frontProbeRefs.current[i] = el)}>
-                <div className="card-front-photo">
-                  <img src={p.img} width="900" height="675" alt="" loading="eager" onError={hideAndTint} />
+          {products.map((p, i) => {
+            const varieties = VARIETIES_BY_FORMAT[p.title];
+            return (
+              <div className="card-height-probe-item" key={p.title}>
+                <div className="card-front-probe" ref={(el) => (frontProbeRefs.current[i] = el)}>
+                  <div className="card-front-photo">
+                    <img src={p.img} width="900" height="675" alt="" loading="eager" />
+                  </div>
+                  <div className="product-body">
+                    <span className="product-format">{p.format}</span>
+                    <h3>{p.title}</h3>
+                    <p className="product-desc">{p.desc}</p>
+                    <div className="product-spec">{p.spec}</div>
+                    <span className="flip-affordance mono-chip">The kinds of {p.title.toLowerCase()} →</span>
+                  </div>
                 </div>
-                <div className="product-body">
-                  <span className="product-format">{p.format}</span>
-                  <h3>{p.title}</h3>
-                  <p className="product-desc">{p.desc}</p>
-                  <div className="product-spec">{p.spec}</div>
-                  <span className="flip-affordance mono-chip">What is this? →</span>
+                <div className="card-back-body" ref={(el) => (backProbeRefs.current[i] = el)}>
+                  <h3>{varieties.format}</h3>
+                  <p className="card-back-intro">{varieties.intro}</p>
+                  <ul className="card-kinds">
+                    {varieties.varieties.map((v) => (
+                      <li className="card-kind" key={v.id}>
+                        <div className="card-kind-topline">
+                          <span className="card-kind-name">{v.name}</span>
+                          <span className="card-kind-spec mono-chip">{v.spec}</span>
+                        </div>
+                        <span className="card-kind-note">{v.note}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
-              <div className="card-back-body" ref={(el) => (backProbeRefs.current[i] = el)}>
-                <h3>{p.title}</h3>
-                <p className="card-back-text">{p.explanation}</p>
-                <span className="btn btn-outline card-varieties-btn">{p.varietiesLabel}</span>
-                <span className="card-back-btn">← Back</span>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
       <div className="product-grid">
         {products.map((p) => (
-          <ProductCard key={p.title} product={p} cardHeight={cardHeight} onOpenVarieties={handleOpenVarieties} />
+          <ProductCard
+            key={p.title}
+            product={p}
+            varieties={VARIETIES_BY_FORMAT[p.title]}
+            cardHeight={cardHeight}
+          />
         ))}
       </div>
-
-      {popup && (
-        <VarietiesPopup
-          data={VARIETIES_BY_FORMAT[popup.product.title]}
-          triggerRef={popup.triggerRef}
-          onClose={handleClose}
-        />
-      )}
-    </>
+    </div>
   );
 }

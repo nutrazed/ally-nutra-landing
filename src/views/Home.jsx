@@ -10,43 +10,70 @@ import heroMachineWebm from '../assets/videos/hero-machine.webm';
 import heroMachineMp4 from '../assets/videos/hero-machine.mp4';
 import heroMachinePoster from '../assets/videos/hero-machine-poster.jpg';
 
-// Format card images. All four are Ally Nutra-owned renders (copied read-only from
-// the company repo, Ally-Nutra-LLC-New/ally-nutra, commit
-// 1d1b8f5ada2655441f21cbf0e52b9518a3e45955) again, restored after a real-photo trial
-// for Capsules (polish/logo-and-product-photos) didn't hold up: its photographed
-// warm-grey studio background isn't pure white, so the card's soft-light overlay
-// treats it differently from the panel's own near-white background and it reads as
-// a visible box — and one photograph next to three renders broke the row's visual
-// consistency anyway. `products/product-capsules.jpg` (the real photo) stays in the
-// repo, credited in IMAGE-CREDITS.md, marked unused — available if all four are ever
-// replaced together rather than one at a time. Sachets/stick-packs/pouches never had
-// an honest free-stock replacement candidate to begin with (see PR description).
+// "What we make" card-front images: the four Ally Nutra-owned renders, restored per
+// client clarification (the removal request targeted the per-kind popup imagery, not
+// these fronts). img/alt/imageScale are back below; the popup-only fields
+// (varietiesLabel, explanation) stay out. The three variety popup photos
+// (products/variety-*.jpg) remain unused with the popup — credited in
+// IMAGE-CREDITS.md, available for reuse.
 import productCapsules from '../assets/images/products/product-capsules.png';
 import productSachets from '../assets/images/products/product-sachets.png';
 import productStickPacks from '../assets/images/products/product-stick-packs.jpg';
 import productPouches from '../assets/images/products/product-pouches.png';
 
-// Facility photo strip (proof bar, §5). Reused from the images already committed to
-// the repo — none sourced new for this strip. facility-01/02 remain unused after
-// this (available for a future need); facility-03 and facility-04 were only used by
-// Home's old FACILITY_ZONES gallery (removed in the PR #2 restructure) and are
-// otherwise unused anywhere else in the app today. facility-05/06 ARE also used by
-// Facility.jsx's own zone cards (Packaging, Logistics) — a thumbnail here and a full
-// card there is a deliberate decision, not an accident (see PR description).
-import facility03 from '../assets/images/facility-03.jpg';
-// capsule-01.jpg (a neon pink/yellow capsule pile) was here originally but did not
-// survive the polish/presentation unified-photo treatment even at saturate(.68) — it
-// stayed visibly more saturated than its four neighbors at every setting tried up to
-// saturate(.6), exactly the "may not survive any treatment" case flagged in that
-// task. Replaced with about-03.jpg, which is already documented in
-// IMAGE-CREDITS.md as "freshly filled capsules on an encapsulation line" (i.e.
-// actually captioned as an encapsulation photo, unlike capsule-02.jpg which is a
-// tablet-polishing pan despite its filename) and reads as metallic/neutral rather
-// than saturated, unifying cleanly with the rest of the strip.
-import about03 from '../assets/images/about-03.jpg';
-import facility04 from '../assets/images/facility-04.jpg';
-import facility05 from '../assets/images/facility-05.jpg';
-import facility06 from '../assets/images/facility-06.jpg';
+// Format showcase slides (§5, replaces the five-photo facility strip). Four
+// client-supplied branded format cards — one per confirmed format — sourced from
+// the client's Google Drive folder (see IMAGE-CREDITS.md for the full URL and
+// per-file notes) as 3.png/4.png/5.png/6.png, 3375×3375 PNG (2.5/2.0/1.9/1.2 MB),
+// resized to 900×900 and palette-quantized here (119.3/87.1/94.7/64.1 KB). The
+// slides carry their own baked-in headline + "Best for" list, sized for
+// full-screen viewing — which is why §5 presents them as one-large-slide-at-a-time
+// carousel rather than a thumbnail row: at 4-up thumbnail width the baked text
+// renders unreadably small, and the slides' own arrow-button affordances were
+// designed for exactly this carousel presentation. Real-text spec chips under the
+// carousel duplicate the key facts (fill ranges, MOQs) as accessible text for
+// small screens, where the baked art scales down.
+//
+// The facility photos this replaces: facility-03/04 become unused (kept in the
+// repo per convention, credits updated); facility-05/06 remain used by
+// Facility.jsx and Services.jsx; about-03 remains used by About.jsx. The
+// /facility link the old strip carried survives in the credential strip above
+// ("50,000 sq ft").
+import showcaseCapsules from '../assets/images/formats/format-showcase-capsules.png';
+import showcaseSachets from '../assets/images/formats/format-showcase-sachets.png';
+import showcasePouches from '../assets/images/formats/format-showcase-pouches.png';
+// The stick-pack slide is the one designed card whose baked artwork the client
+// rejected ("the stick pack photo is not good"). Rather than swap in another
+// photo (the Drive folder's other stick-pack shots — fan spreads, vertical-text
+// cards — are different aspect ratios or break the slide family's design
+// language), slide 3 is drawn in code using the company's own official stick-pack
+// render (the visual live on allynutra.com's homepage today, from
+// Ally-Nutra-LLC-New/ally-nutra src/assets/format-stick-packs.png) as artwork.
+// Same content architecture as the three designed cards — eyebrow, orange
+// headline, BEST FOR list, arrow affordance — so the carousel stays coherent;
+// real text instead of baked pixels, so this slide is fully accessible where the
+// others rely on alt text. See StickPackSlide below.
+import stickPackRender from '../assets/images/formats/stick-pack-render.png';
+
+// Work With Us VSL (§6.5). The exact video that opens the company site's
+// /work-with-us landing page (Ally-Nutra-LLC-New/ally-nutra, public/lp/assets/
+// video/finalized-vsl-*.mp4, served at allynutra.com/work-with-us), copied
+// read-only from that repo at origin/main. 720p (38.6 MB) for desktop and 360p
+// (10.8 MB) as the narrow-viewport/small-pipe source, selected via <source
+// media>; the 64.7 MB 1080p master was deliberately NOT bundled — the player's
+// max on-page width is 880px, well under 720p's needs, and it would add more
+// than the entire video budget again for no visible gain. Poster frame 93 KB.
+// Duration 4:09 (ffprobe: 249.359s) — the caption under the player states it.
+import vsl720 from '../assets/videos/work-with-us-vsl-720.mp4';
+import vsl360 from '../assets/videos/work-with-us-vsl-360.mp4';
+import vslPoster from '../assets/videos/work-with-us-vsl-poster.jpg';
+
+// Final-CTA card (§09): the client's "Your Supplements, Our Expertise" branded card
+// (Drive 20.png, 3375×4219, 14.8 MB → 840×1050 palette-quantized, 352.9 KB). Clicking
+// it opens the quote flow — same quoteUrl(role) target as the "Start your quote"
+// button above it, per the client's request. Alt text describes the baked content
+// since the card's own text is pixels.
+import readyToBuildCta from '../assets/images/ready-to-build-cta.png';
 
 import { useEffect, useRef, useState } from 'react';
 
@@ -78,6 +105,11 @@ const MOQ_LOWEST = '2,000 units';
 // business day: We confirm receipt and assign a real account manager."). Both agree,
 // so this is a found fact, not a token.
 const RESPONSE_TIME = '1 business day';
+
+// Testimonials gate (§07) — see the section comment there. Flip to true once the
+// client supplies real, permissioned quotes; the disabled markup is unchanged and
+// ready.
+const SHOW_TESTIMONIALS = false;
 
 // Home hero encapsulation-machine video: falls back to the built-in SVG line
 // drawing under prefers-reduced-motion, or if the video errors out.
@@ -187,60 +219,48 @@ function HeroMech() {
   );
 }
 
-// Exactly the four formats Ally Nutra manufactures today, per the production site
-// (ally-nutra@main) and the landing-page audit's product-claim reconciliation.
-// Do not add tablets, powders, gummies, liquids, or blister packs here — those were
-// removed as unconfirmed claims, not omitted by oversight.
-// desc/spec text is UNCHANGED from before this PR — §2 requires the front face keep
-// everything it has now. Only img/alt (§1, Ally Nutra's own images) and the two new
-// back-face fields (§4) are new. Note that desc/spec still carry claims the Phase 0
-// audit found UNCONFIRMED in the company repo (e.g. sachets "nitrogen flushed",
-// stick packs "High-barrier film options") — deliberately left as-is, since fixing
-// front-face copy accuracy is a separate task from this one; see PR description.
+// desc/spec text is UNCHANGED from the pre-rework cards — img/alt/imageScale are
+// back on the fronts (client clarification), and only the popup-only fields
+// (varietiesLabel, explanation) are gone. desc/spec claims are as audited before:
+// known-unconfirmed sachet/stick-pack material claims ("nitrogen flushed",
+// "High-barrier film options") were already deliberately left as-is by the earlier
+// pass; that debt is unchanged here.
 const PRODUCTS = [
   {
     img: productCapsules,
     alt: 'A red-and-white two-piece capsule, Ally Nutra brand render',
+    imageScale: 1,
     format: 'Format 01 · Capsules',
     title: 'Capsules',
     desc: 'Two-piece, liquid-fill, vegan HPMC or bovine gelatin.',
     spec: 'SIZE 000–3 · MOQ FROM 2,500',
-    explanation: 'A two-piece shell that holds powder or oil. The most versatile format — it suits almost any blend, needs no flavouring, and is what most supplement brands start with. Available in plant-based HPMC or bovine gelatin, among other shell options.',
-    varietiesLabel: 'See the kinds of capsules',
-    imageScale: 1,
   },
   {
     img: productSachets,
     alt: 'A blank silver foil sachet packet, Ally Nutra brand render',
+    imageScale: 1.35,
     format: 'Format 02 · Sachets',
     title: 'Sachets',
     desc: 'Single-serve, foil-lined, nitrogen flushed, custom print.',
     spec: '3g–30g FILL · MOQ FROM 5,000',
-    explanation: 'A single-serve packet, sealed on all sides. Ideal for powders, granules, or liquids you want portioned out and easy to carry — no bottle, no scoop needed. Comes in a few material options depending on the barrier protection your formula needs.',
-    varietiesLabel: 'See sachet options',
-    imageScale: 1.35,
   },
   {
     img: productStickPacks,
     alt: 'A blank white stick pack tube, Ally Nutra brand render',
+    imageScale: 1,
     format: 'Format 03 · Stick packs',
     title: 'Stick packs',
     desc: 'Narrow, portable, easy-tear. High-barrier film options.',
     spec: '2g–15g FILL · MOQ FROM 10,000',
-    explanation: 'A narrow, single-serve tube — like a sachet, but slimmer and easier to tear open on the go. Common for energy powders, electrolytes, and focus or sleep blends aimed at direct-to-consumer brands. Shares the same material options as sachets.',
-    varietiesLabel: 'See stick pack options',
-    imageScale: 1,
   },
   {
     img: productPouches,
     alt: 'Blank teal stand-up pouches with a resealable zipper top',
+    imageScale: 1.05,
     format: 'Format 04 · Pouches',
     title: 'Pouches',
     desc: 'Resealable stand-up, matte, gloss, or kraft finish.',
     spec: '50g–5,000g FILL · MOQ FROM 2,000',
-    explanation: 'A resealable bag for multi-serve products — the format most bulk powders and greens blends ship in. Comes in a few stock sizes and a choice of closures, so your customer can reseal it between uses.',
-    varietiesLabel: 'See pouch options',
-    imageScale: 1.05,
   },
 ];
 
@@ -271,18 +291,169 @@ const CREDENTIAL_STRIP = [
   { label: '2,000+ materials', to: '/about' },
 ];
 
-// Captions corrected against the format-data fix already shipped: the encapsulation
-// cell reads "SIZES 000–3" (not "000–4") to match the corrected capsule-size claim
-// now canonical everywhere else in the repo (CapsuleManufacturing.jsx, Services.jsx,
-// this file's own PRODUCTS array) — see PR description for why this deliberately
-// deviates from the literal draft caption text.
-const FACILITY_STRIP = [
-  { img: facility03, alt: 'A large stainless steel blending tank on the production floor', caption: 'PRODUCTION FLOOR', sub: 'BLENDING · ISO 8' },
-  { img: about03, alt: 'A tray of freshly filled capsules on an encapsulation line, ready for inspection', caption: 'ENCAPSULATION', sub: 'SIZES 000–3 · ±2%' },
-  { img: facility04, alt: 'A gloved technician pipetting samples into a rack of test vials in the QC lab', caption: 'QC LABORATORY', sub: 'HPLC · MICROBIAL' },
-  { img: facility05, alt: 'A bottle moving under a filling funnel on an automated packaging line', caption: 'PACKAGING LINE', sub: 'INDUCTION SEAL' },
-  { img: facility06, alt: 'A warehouse aisle lined with shrink-wrapped stacks of finished goods cartons', caption: 'FINISHED GOODS', sub: 'FBA PREP · DIRECT SHIP' },
+// One slide per confirmed format, in PRODUCTS order. `spec` strings are copied
+// verbatim from the PRODUCTS array above — the carousel adds no claim the flip
+// cards don't already make. `alt` describes what each baked-in slide actually
+// shows (headline, best-for list, artwork), since the slide text itself is an
+// image and invisible to assistive tech; the active-slide info bar below the
+// carousel re-states the spec as real text for the same reason.
+const FORMAT_SHOWCASE = [
+  {
+    img: showcaseCapsules,
+    alt: 'Capsules format slide: headline "Flexible formulation, easy to swallow", best for botanicals, probiotics, custom blends; artwork of two white two-piece capsules held in steel tweezers',
+    title: 'Capsules',
+    spec: 'SIZE 000–3 · MOQ FROM 2,500',
+    to: '/capsule-manufacturing',
+    linkLabel: 'Capsule manufacturing',
+  },
+  {
+    img: showcaseSachets,
+    alt: 'Sachets format slide: headline "Single-serve convenience, premium presentation", best for powdered supplements, drink mixes, travel-friendly products; artwork of a hand holding a blank white sachet',
+    title: 'Sachets',
+    spec: '3G–30G FILL · MOQ FROM 5,000',
+    to: '/services',
+    linkLabel: 'All services',
+  },
+  {
+    // Drawn in code (see StickPackSlide) — the designed 5.png slide's artwork was
+    // rejected by the client; headline/best-for list reproduce that slide's own
+    // baked copy verbatim, spec from PRODUCTS as with the other slides.
+    render: 'stick-pack',
+    title: 'Stick packs',
+    spec: '2G–15G FILL · MOQ FROM 10,000',
+    to: '/services',
+    linkLabel: 'All services',
+  },
+  {
+    img: showcasePouches,
+    alt: 'Pouches format slide: headline "Bulk-friendly, resealable packaging", best for protein powders, superfood blends, bulk supplements; artwork of a blank white stand-up pouch',
+    title: 'Pouches',
+    spec: '50G–5,000G FILL · MOQ FROM 2,000',
+    to: '/services',
+    linkLabel: 'All services',
+  },
 ];
+
+// Code-drawn replacement for the designed stick-pack slide (see the import note
+// above). Copy is the rejected 5.png slide's own baked text, reproduced verbatim —
+// no new claims. Layout mirrors the designed cards' architecture: format eyebrow,
+// two-line orange headline, numbered BEST FOR list on a navy panel, arrow
+// affordance bottom-right (decorative on the designed cards; decorative here too).
+function StickPackSlide() {
+  return (
+    <div className="format-slide-card">
+      <span className="format-slide-eyebrow mono-chip">Format 03 · Stick packs</span>
+      <div className="format-slide-main">
+        <div className="format-slide-art">
+          <img src={stickPackRender} width="800" height="800" alt="A blank white stick pack, angled, with a soft shadow — Ally Nutra's own render" loading="lazy" />
+        </div>
+        <div className="format-slide-copy">
+          <h3 className="format-slide-headline">On-the-go format, portion-controlled</h3>
+          <div className="format-slide-bestfor">
+            <span className="format-slide-bestfor-label mono-chip">Best for</span>
+            <ol className="format-slide-bestfor-list">
+              <li>Energy blends</li>
+              <li>Electrolytes</li>
+              <li>Collagen</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+      <span className="format-slide-arrow" aria-hidden="true">→</span>
+    </div>
+  );
+}
+
+// Scroll-snap carousel: native horizontal scrolling (touch, trackpad, keyboard
+// when focused) does the paging; the prev/next buttons and dots scroll the
+// matching slide into view; the info bar under the track mirrors the centered
+// slide as real text. No transform-based slide machinery on purpose — snap
+// scrolling keeps dragging native on touch and needs no index math to stay in
+// sync with gesture paging (onScroll just reports which slide ended up nearest
+// center).
+function FormatCarousel() {
+  const trackRef = useRef(null);
+  const [active, setActive] = useState(0);
+
+  const scrollTo = (index) => {
+    const track = trackRef.current;
+    if (!track) return;
+    const clamped = Math.max(0, Math.min(FORMAT_SHOWCASE.length - 1, index));
+    const slide = track.children[clamped];
+    if (slide) slide.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+  };
+
+  const onScroll = () => {
+    const track = trackRef.current;
+    if (!track) return;
+    const mid = track.scrollLeft + track.clientWidth / 2;
+    let best = 0;
+    let bestDist = Infinity;
+    Array.from(track.children).forEach((slide, i) => {
+      const dist = Math.abs(slide.offsetLeft + slide.offsetWidth / 2 - mid);
+      if (dist < bestDist) { bestDist = dist; best = i; }
+    });
+    setActive(best);
+  };
+
+  const onKeyDown = (e) => {
+    if (e.key === 'ArrowLeft') { e.preventDefault(); scrollTo(active - 1); }
+    if (e.key === 'ArrowRight') { e.preventDefault(); scrollTo(active + 1); }
+  };
+
+  const current = FORMAT_SHOWCASE[active];
+
+  return (
+    <div
+      className="format-carousel"
+      role="group"
+      aria-roledescription="carousel"
+      aria-label="Format showcase"
+      onKeyDown={onKeyDown}
+    >
+      <div className="format-track" ref={trackRef} onScroll={onScroll} tabIndex={0}>
+        {FORMAT_SHOWCASE.map((f, i) => (
+          <div
+            className="format-slide"
+            role="group"
+            aria-roledescription="slide"
+            aria-label={`${i + 1} of ${FORMAT_SHOWCASE.length}: ${f.title}`}
+            key={f.title}
+          >
+            {f.render === 'stick-pack' ? <StickPackSlide /> : (
+              <img src={f.img} width="900" height="900" alt={f.alt} loading="lazy" onError={hideAndTint} />
+            )}
+          </div>
+        ))}
+      </div>
+      <div className="format-nav">
+        <button type="button" className="format-arrow" aria-label="Previous format" onClick={() => scrollTo(active - 1)}>
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6" /></svg>
+        </button>
+        <div className="format-dots">
+          {FORMAT_SHOWCASE.map((f, i) => (
+            <button
+              type="button"
+              className="format-dot"
+              key={f.title}
+              aria-current={i === active}
+              aria-label={`Show ${f.title}`}
+              onClick={() => scrollTo(i)}
+            ></button>
+          ))}
+        </div>
+        <button type="button" className="format-arrow" aria-label="Next format" onClick={() => scrollTo(active + 1)}>
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6" /></svg>
+        </button>
+      </div>
+      <div className="format-active-info" aria-live="polite">
+        <span className="format-active-name">{current.title}</span>
+        <span className="mono-chip">{current.spec}</span>
+        <Link to={current.to} className="format-active-link">{current.linkLabel} →</Link>
+      </div>
+    </div>
+  );
+}
 
 export default function Home() {
   const { role, isClient } = useDemoRole();
@@ -407,30 +578,31 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 05 — PROOF BAR: facility, certifications, and company stats were moved off the
-          home view in the PR #2 restructure. They come back here — compressed, but
-          with the photography intact, because the photographs ARE the proof of
-          operations. Row 1 text-only credential strip; row 2 five-photo facility
-          strip, captions required (an unlabelled photo is decoration, a labelled one
-          is evidence). Light section, no navy overlay — desaturation only. */}
-      <section className="section proof-bar-section section-rule">
+      {/* 05 — FORMAT SHOWCASE: was the five-photo facility strip (credential strip +
+          five captioned stock photos linking to /facility). Replaced with the four
+          client-supplied branded format cards: the facility photos were stock
+          (Unsplash — see IMAGE-CREDITS.md), so they proved nothing about THIS
+          factory that the credential strip's linked claims don't already carry;
+          the branded cards at least show the real formats in the client's own
+          house style. The credential strip row is kept unchanged on top — the
+          linked proof (certifications, facility, stats) survives; only the photo
+          row below it changed. Light section, slides presented as-is (near-white
+          baked backgrounds sit on --background without a seam), no tint. */}
+      <section className="section section-rule format-showcase-section">
         <div className="container">
           <div className="credential-strip">
             {CREDENTIAL_STRIP.map((c) => (
               <Link to={c.to} key={c.label}>{c.label}</Link>
             ))}
           </div>
-          <Link to="/facility" className="facility-strip">
-            {FACILITY_STRIP.map((f) => (
-              <div className="facility-strip-item" key={f.caption}>
-                <div className="facility-strip-photo">
-                  <img src={f.img} width="300" height="225" alt={f.alt} loading="lazy" onError={hideAndTint} />
-                </div>
-                <span className="facility-strip-caption">{f.caption}</span>
-                <span className="facility-strip-sub mono-chip">{f.sub}</span>
-              </div>
-            ))}
-          </Link>
+          <div className="section-header">
+            <span className="eyebrow" style={sx('justify-content:center;')}>Our formats</span>
+            <h2>Four ways to ship your product.</h2>
+            <p className="lede">
+              Every format shown blank — your brand's labels and print finish the pack.
+            </p>
+          </div>
+          <FormatCarousel />
         </div>
       </section>
 
@@ -507,15 +679,43 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 07 — PROOF: unchanged testimonials, attributions unchanged.
-          Section-banding fix: moved above "How it works" (previously the reverse
-          order). Its bottom padding was trimmed 88px→64px (top edge stays 88px, a
-          within-field boundary against 06) back when this section's bottom edge
-          bordered the navy how-it-works/final-CTA block; 08/09 are light now (see
-          08's comment), so that specific rationale no longer applies, but the
-          64px value itself is left as-is here — untouched, out of this PR's
-          scope. Also drops section-alt (grey) for the same section-rule hairline
-          as its neighbours. */}
+      {/* 06.5 — VSL: the same video that opens the company site's /work-with-us
+          landing page (allynutra.com/work-with-us), placed between the "Why Ally
+          Nutra" claims (06) and the partner testimonials (07): claims, then the
+          people making them on camera, then the customers corroborating. The h2
+          is the video page's own headline, quoted verbatim — it titles the video
+          the player below it plays, so it makes no claim this section doesn't
+          deliver. Click-to-play with native controls: this is a talking-head
+          video with an audio track (AAC), and autoplaying it muted would
+          misrepresent it; the poster frame carries the section until pressed
+          play. 720p source on viewports ≥700px, 360p below and as fallback. */}
+      <section className="section section-rule vsl-section">
+        <div className="container">
+          <div className="section-header">
+            <span className="eyebrow" style={sx('justify-content:center;')}>Work with us</span>
+            <h2>Is your manufacturer holding your brand back?</h2>
+            <p className="lede">
+              The same video that opens our Work With Us page — watch it here, no form and no gate.
+            </p>
+          </div>
+          <figure className="vsl-frame">
+            <video className="vsl-video" controls preload="metadata" poster={vslPoster}>
+              <source src={vsl720} type="video/mp4" media="(min-width: 700px)" />
+              <source src={vsl360} type="video/mp4" />
+              <a href="https://allynutra.com/work-with-us">Watch the video on allynutra.com</a>
+            </video>
+            <figcaption className="mono-chip vsl-caption">4:09 · from allynutra.com/work-with-us</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      {/* 07 — PROOF (testimonials): DISABLED while awaiting accurate testimonials.
+          The client will supply real names/companies/quotes (the old TODO below
+          already flagged the current attributions as unverifiable initials-only
+          placeholders). The section is retained behind this flag — content and
+          styling unchanged — so re-enabling is a one-line flip once the real
+          data arrives. Do NOT re-enable with the placeholder attributions. */}
+      {SHOW_TESTIMONIALS && (
       <section className="section section-rule" style={sx('padding-bottom:64px;')}>
         <div className="container">
           <div className="section-header">
@@ -552,6 +752,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      )}
 
       {/* 08 — HOW IT WORKS: immediately before the final ask (deliberate — removes
           the last hesitation right before the click, rather than being read early
@@ -597,20 +798,37 @@ export default function Home() {
           (matching Contact.jsx:182's tel-link treatment). The h2 needed no
           inline change — removing section-navy lets it fall back to the global
           `h2{color:hsl(var(--ally-navy))}` default automatically. */}
-      <section className="section section-rule" style={sx('text-align:center;')}>
+      <section className="section section-rule">
         <div className="container">
-          <h2 style={sx('max-width:640px;margin:0 auto 24px;')}>
-            Ready to build something your customers will{' '}
-            <em style={sx('font-style:italic;color:hsl(var(--ally-orange-ink));')}>actually</em> reorder?
-          </h2>
-          <div className="hero-ctas" style={sx('justify-content:center;margin-top:0;')}>
-            <a href={quoteUrl(role)} className="btn btn-primary btn-lg">{isClient ? 'Start a new quote' : 'Start your quote →'}</a>
-            <a href={scheduleUrl(role)} className="btn btn-outline btn-lg">Not sure yet? Schedule a call</a>
+          {/* Client-requested layout: copy left, branded card right, side by side
+              (stacks text-over-card under 900px). The card still clicks through to
+              the quote flow (same destination as the primary button). Text content
+              unchanged — placement only. */}
+          <div className="cta-split">
+            <div className="cta-copy">
+              <h2 style={sx('max-width:560px;margin:0 0 24px;')}>
+                Ready to build something your customers will{' '}
+                <em style={sx('font-style:italic;color:hsl(var(--ally-orange-ink));')}>actually</em> reorder?
+              </h2>
+              <div className="hero-ctas" style={sx('justify-content:flex-start;margin-top:0;')}>
+                <a href={quoteUrl(role)} className="btn btn-primary btn-lg">{isClient ? 'Start a new quote' : 'Start your quote →'}</a>
+                <a href={scheduleUrl(role)} className="btn btn-outline btn-lg">Not sure yet? Schedule a call</a>
+              </div>
+              <p className="hero-expectation" style={sx('color:hsl(var(--muted-foreground));margin-top:20px;')}>{EXPECTATION_LINE}</p>
+              <p style={sx('margin-top:12px;font-size:13px;color:hsl(var(--muted-foreground));')}>
+                Prefer to talk first? <a href="tel:+18887205888" style={sx('color:hsl(var(--ally-navy));font-weight:600;text-decoration:underline;')}>(888) 720-5888</a>
+              </p>
+            </div>
+            <a href={quoteUrl(role)} className="cta-card-link">
+              <img
+                src={readyToBuildCta}
+                width="840"
+                height="1050"
+                alt="Ally Nutra card: “Your Supplements, Our Expertise” over stand-up pouch and stick-pack artwork — start your quote"
+                className="cta-card"
+              />
+            </a>
           </div>
-          <p className="hero-expectation" style={sx('color:hsl(var(--muted-foreground));margin-top:20px;')}>{EXPECTATION_LINE}</p>
-          <p style={sx('margin-top:12px;font-size:13px;color:hsl(var(--muted-foreground));')}>
-            Prefer to talk first? <a href="tel:+18887205888" style={sx('color:hsl(var(--ally-navy));font-weight:600;text-decoration:underline;')}>(888) 720-5888</a>
-          </p>
         </div>
       </section>
 
