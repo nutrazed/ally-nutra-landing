@@ -28,14 +28,26 @@ export default function ProductCardsGrid({ products }) {
     measure();
     const ro = new ResizeObserver(measure);
     if (gridRef.current) ro.observe(gridRef.current);
+    // Re-measure once webfonts finish loading: the first pass can run before
+    // Roboto Slab / JetBrains Mono swap in, and the taller real text would
+    // otherwise overflow the height measured with fallback metrics (the kinds
+    // list's tiny scroll covers this if it still slips through — see
+    // ProductCard.jsx).
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure).catch(() => {});
     return () => ro.disconnect();
   }, [products]);
 
   return (
-    <>
+    <div className="product-cards-measure-wrap">
       {/* Off-screen measurement pass: renders each face's real content, in normal
           flow, at the grid's actual width — then this whole block is hidden.
-          The visible cards below reuse the resulting cardHeight. */}
+          The visible cards below reuse the resulting cardHeight. The wrapper is
+          position:relative (see global.css) so the absolutely-positioned probe
+          resolves its 100% width against THIS wrapper — the same width the real
+          grid renders at. When the probe was positioned against the viewport,
+          its columns measured ~48px wider than the real grid's, text wrapped
+          less, every back face measured short, and the tallest one (Pouches)
+          clipped — the "fourth card not fit" bug. */}
       <div className="card-height-probe" aria-hidden="true">
         <div className="product-grid card-height-probe-grid" ref={gridRef}>
           {products.map((p, i) => {
@@ -85,6 +97,6 @@ export default function ProductCardsGrid({ products }) {
           />
         ))}
       </div>
-    </>
+    </div>
   );
 }

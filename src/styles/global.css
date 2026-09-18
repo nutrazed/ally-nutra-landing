@@ -1142,6 +1142,12 @@ html.no-js .stat-live{display:none;}
    absolutely positioned) so scrollHeight reflects true content height at this width.
    Positioned off-screen rather than display:none, since display:none elements report
    zero scrollHeight. */
+/* Positioning context for the measurement probe: the probe is absolutely
+   positioned off-screen and width:100% — without this wrapper it resolved that
+   100% against the viewport, measuring ~48px-wider columns than the real grid
+   (less wrapping → shorter faces → shared cardHeight too small → the tallest
+   back face clipped). With the wrapper, probe and real grid share one width. */
+.product-cards-measure-wrap{position:relative;}
 .card-height-probe{position:absolute;top:0;left:-9999px;width:100%;visibility:hidden;pointer-events:none;}
 .card-height-probe-item{display:flex;flex-direction:column;gap:0;}
 .card-front-probe{display:block;border:1px solid transparent;}
@@ -1216,9 +1222,16 @@ html.no-js .stat-live{display:none;}
    per-kind photo sources to publish — the popup's photo/diagram visuals went with
    the popup). Chips never wrap mid-text (nowrap): a name+chip pair too wide for
    the card wraps as a unit onto its own line instead, keeping the right edge
-   clean — the one sentence-length "spec" (capsule sizes, still confirming with
-   production) drops to its own line that way rather than ragged-splitting. */
-.card-kinds{list-style:none;margin:0;padding:0;flex-grow:1;display:flex;flex-direction:column;}
+   clean. The list is also the card's "tiny scroll" fallback: cards are measured
+   to fit, but if anything renders taller than measured (late webfont swap,
+   browser zoom), the list scrolls INSIDE the card with a thin navy-tinted
+   scrollbar instead of clipping — wheel/touch reach it through the flip overlay
+   (forwarded in ProductCard.jsx). overscroll-behavior contains the chain so the
+   page doesn't scroll along with the card. */
+.card-kinds{list-style:none;margin:0;padding:0;flex-grow:1;min-height:0;display:flex;flex-direction:column;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;scrollbar-width:thin;scrollbar-color:hsl(0 0% 100% / .35) transparent;}
+.card-kinds::-webkit-scrollbar{width:4px;}
+.card-kinds::-webkit-scrollbar-thumb{background:hsl(0 0% 100% / .35);border-radius:2px;}
+.card-kinds::-webkit-scrollbar-track{background:transparent;}
 .card-kind{padding:10px 0;border-top:1px solid hsl(0 0% 100% / .14);display:flex;flex-direction:column;gap:3px;}
 .card-kind:first-child{border-top:none;padding-top:0;}
 .card-kind-topline{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;row-gap:2px;}
