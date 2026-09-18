@@ -26,27 +26,41 @@ import productSachets from '../assets/images/products/product-sachets.png';
 import productStickPacks from '../assets/images/products/product-stick-packs.jpg';
 import productPouches from '../assets/images/products/product-pouches.png';
 
-// Facility photo strip (proof bar, §5). Reused from the images already committed to
-// the repo — none sourced new for this strip. facility-01/02 remain unused after
-// this (available for a future need); facility-03 and facility-04 were only used by
-// Home's old FACILITY_ZONES gallery (removed in the PR #2 restructure) and are
-// otherwise unused anywhere else in the app today. facility-05/06 ARE also used by
-// Facility.jsx's own zone cards (Packaging, Logistics) — a thumbnail here and a full
-// card there is a deliberate decision, not an accident (see PR description).
-import facility03 from '../assets/images/facility-03.jpg';
-// capsule-01.jpg (a neon pink/yellow capsule pile) was here originally but did not
-// survive the polish/presentation unified-photo treatment even at saturate(.68) — it
-// stayed visibly more saturated than its four neighbors at every setting tried up to
-// saturate(.6), exactly the "may not survive any treatment" case flagged in that
-// task. Replaced with about-03.jpg, which is already documented in
-// IMAGE-CREDITS.md as "freshly filled capsules on an encapsulation line" (i.e.
-// actually captioned as an encapsulation photo, unlike capsule-02.jpg which is a
-// tablet-polishing pan despite its filename) and reads as metallic/neutral rather
-// than saturated, unifying cleanly with the rest of the strip.
-import about03 from '../assets/images/about-03.jpg';
-import facility04 from '../assets/images/facility-04.jpg';
-import facility05 from '../assets/images/facility-05.jpg';
-import facility06 from '../assets/images/facility-06.jpg';
+// Format showcase slides (§5, replaces the five-photo facility strip). Four
+// client-supplied branded format cards — one per confirmed format — sourced from
+// the client's Google Drive folder (see IMAGE-CREDITS.md for the full URL and
+// per-file notes) as 3.png/4.png/5.png/6.png, 3375×3375 PNG (2.5/2.0/1.9/1.2 MB),
+// resized to 900×900 and palette-quantized here (119.3/87.1/94.7/64.1 KB). The
+// slides carry their own baked-in headline + "Best for" list, sized for
+// full-screen viewing — which is why §5 presents them as one-large-slide-at-a-time
+// carousel rather than a thumbnail row: at 4-up thumbnail width the baked text
+// renders unreadably small, and the slides' own arrow-button affordances were
+// designed for exactly this carousel presentation. Real-text spec chips under the
+// carousel duplicate the key facts (fill ranges, MOQs) as accessible text for
+// small screens, where the baked art scales down.
+//
+// The facility photos this replaces: facility-03/04 become unused (kept in the
+// repo per convention, credits updated); facility-05/06 remain used by
+// Facility.jsx and Services.jsx; about-03 remains used by About.jsx. The
+// /facility link the old strip carried survives in the credential strip above
+// ("50,000 sq ft").
+import showcaseCapsules from '../assets/images/formats/format-showcase-capsules.png';
+import showcaseSachets from '../assets/images/formats/format-showcase-sachets.png';
+import showcaseStickPacks from '../assets/images/formats/format-showcase-stick-packs.png';
+import showcasePouches from '../assets/images/formats/format-showcase-pouches.png';
+
+// Work With Us VSL (§6.5). The exact video that opens the company site's
+// /work-with-us landing page (Ally-Nutra-LLC-New/ally-nutra, public/lp/assets/
+// video/finalized-vsl-*.mp4, served at allynutra.com/work-with-us), copied
+// read-only from that repo at origin/main. 720p (38.6 MB) for desktop and 360p
+// (10.8 MB) as the narrow-viewport/small-pipe source, selected via <source
+// media>; the 64.7 MB 1080p master was deliberately NOT bundled — the player's
+// max on-page width is 880px, well under 720p's needs, and it would add more
+// than the entire video budget again for no visible gain. Poster frame 93 KB.
+// Duration 4:09 (ffprobe: 249.359s) — the caption under the player states it.
+import vsl720 from '../assets/videos/work-with-us-vsl-720.mp4';
+import vsl360 from '../assets/videos/work-with-us-vsl-360.mp4';
+import vslPoster from '../assets/videos/work-with-us-vsl-poster.jpg';
 
 import { useEffect, useRef, useState } from 'react';
 
@@ -271,18 +285,135 @@ const CREDENTIAL_STRIP = [
   { label: '2,000+ materials', to: '/about' },
 ];
 
-// Captions corrected against the format-data fix already shipped: the encapsulation
-// cell reads "SIZES 000–3" (not "000–4") to match the corrected capsule-size claim
-// now canonical everywhere else in the repo (CapsuleManufacturing.jsx, Services.jsx,
-// this file's own PRODUCTS array) — see PR description for why this deliberately
-// deviates from the literal draft caption text.
-const FACILITY_STRIP = [
-  { img: facility03, alt: 'A large stainless steel blending tank on the production floor', caption: 'PRODUCTION FLOOR', sub: 'BLENDING · ISO 8' },
-  { img: about03, alt: 'A tray of freshly filled capsules on an encapsulation line, ready for inspection', caption: 'ENCAPSULATION', sub: 'SIZES 000–3 · ±2%' },
-  { img: facility04, alt: 'A gloved technician pipetting samples into a rack of test vials in the QC lab', caption: 'QC LABORATORY', sub: 'HPLC · MICROBIAL' },
-  { img: facility05, alt: 'A bottle moving under a filling funnel on an automated packaging line', caption: 'PACKAGING LINE', sub: 'INDUCTION SEAL' },
-  { img: facility06, alt: 'A warehouse aisle lined with shrink-wrapped stacks of finished goods cartons', caption: 'FINISHED GOODS', sub: 'FBA PREP · DIRECT SHIP' },
+// One slide per confirmed format, in PRODUCTS order. `spec` strings are copied
+// verbatim from the PRODUCTS array above — the carousel adds no claim the flip
+// cards don't already make. `alt` describes what each baked-in slide actually
+// shows (headline, best-for list, artwork), since the slide text itself is an
+// image and invisible to assistive tech; the active-slide info bar below the
+// carousel re-states the spec as real text for the same reason.
+const FORMAT_SHOWCASE = [
+  {
+    img: showcaseCapsules,
+    alt: 'Capsules format slide: headline "Flexible formulation, easy to swallow", best for botanicals, probiotics, custom blends; artwork of two white two-piece capsules held in steel tweezers',
+    title: 'Capsules',
+    spec: 'SIZE 000–3 · MOQ FROM 2,500',
+    to: '/capsule-manufacturing',
+    linkLabel: 'Capsule manufacturing',
+  },
+  {
+    img: showcaseSachets,
+    alt: 'Sachets format slide: headline "Single-serve convenience, premium presentation", best for powdered supplements, drink mixes, travel-friendly products; artwork of a hand holding a blank white sachet',
+    title: 'Sachets',
+    spec: '3G–30G FILL · MOQ FROM 5,000',
+    to: '/services',
+    linkLabel: 'All services',
+  },
+  {
+    img: showcaseStickPacks,
+    alt: 'Stick packs format slide: headline "On-the-go format, portion-controlled", best for energy blends, electrolytes, collagen; artwork of a blank white stick pack',
+    title: 'Stick packs',
+    spec: '2G–15G FILL · MOQ FROM 10,000',
+    to: '/services',
+    linkLabel: 'All services',
+  },
+  {
+    img: showcasePouches,
+    alt: 'Pouches format slide: headline "Bulk-friendly, resealable packaging", best for protein powders, superfood blends, bulk supplements; artwork of a blank white stand-up pouch',
+    title: 'Pouches',
+    spec: '50G–5,000G FILL · MOQ FROM 2,000',
+    to: '/services',
+    linkLabel: 'All services',
+  },
 ];
+
+// Scroll-snap carousel: native horizontal scrolling (touch, trackpad, keyboard
+// when focused) does the paging; the prev/next buttons and dots scroll the
+// matching slide into view; the info bar under the track mirrors the centered
+// slide as real text. No transform-based slide machinery on purpose — snap
+// scrolling keeps dragging native on touch and needs no index math to stay in
+// sync with gesture paging (onScroll just reports which slide ended up nearest
+// center).
+function FormatCarousel() {
+  const trackRef = useRef(null);
+  const [active, setActive] = useState(0);
+
+  const scrollTo = (index) => {
+    const track = trackRef.current;
+    if (!track) return;
+    const clamped = Math.max(0, Math.min(FORMAT_SHOWCASE.length - 1, index));
+    const slide = track.children[clamped];
+    if (slide) slide.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+  };
+
+  const onScroll = () => {
+    const track = trackRef.current;
+    if (!track) return;
+    const mid = track.scrollLeft + track.clientWidth / 2;
+    let best = 0;
+    let bestDist = Infinity;
+    Array.from(track.children).forEach((slide, i) => {
+      const dist = Math.abs(slide.offsetLeft + slide.offsetWidth / 2 - mid);
+      if (dist < bestDist) { bestDist = dist; best = i; }
+    });
+    setActive(best);
+  };
+
+  const onKeyDown = (e) => {
+    if (e.key === 'ArrowLeft') { e.preventDefault(); scrollTo(active - 1); }
+    if (e.key === 'ArrowRight') { e.preventDefault(); scrollTo(active + 1); }
+  };
+
+  const current = FORMAT_SHOWCASE[active];
+
+  return (
+    <div
+      className="format-carousel"
+      role="group"
+      aria-roledescription="carousel"
+      aria-label="Format showcase"
+      onKeyDown={onKeyDown}
+    >
+      <div className="format-track" ref={trackRef} onScroll={onScroll} tabIndex={0}>
+        {FORMAT_SHOWCASE.map((f, i) => (
+          <div
+            className="format-slide"
+            role="group"
+            aria-roledescription="slide"
+            aria-label={`${i + 1} of ${FORMAT_SHOWCASE.length}: ${f.title}`}
+            key={f.title}
+          >
+            <img src={f.img} width="900" height="900" alt={f.alt} loading="lazy" onError={hideAndTint} />
+          </div>
+        ))}
+      </div>
+      <div className="format-nav">
+        <button type="button" className="format-arrow" aria-label="Previous format" onClick={() => scrollTo(active - 1)}>
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6" /></svg>
+        </button>
+        <div className="format-dots">
+          {FORMAT_SHOWCASE.map((f, i) => (
+            <button
+              type="button"
+              className="format-dot"
+              key={f.title}
+              aria-current={i === active}
+              aria-label={`Show ${f.title}`}
+              onClick={() => scrollTo(i)}
+            ></button>
+          ))}
+        </div>
+        <button type="button" className="format-arrow" aria-label="Next format" onClick={() => scrollTo(active + 1)}>
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6" /></svg>
+        </button>
+      </div>
+      <div className="format-active-info" aria-live="polite">
+        <span className="format-active-name">{current.title}</span>
+        <span className="mono-chip">{current.spec}</span>
+        <Link to={current.to} className="format-active-link">{current.linkLabel} →</Link>
+      </div>
+    </div>
+  );
+}
 
 export default function Home() {
   const { role, isClient } = useDemoRole();
@@ -407,30 +538,31 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 05 — PROOF BAR: facility, certifications, and company stats were moved off the
-          home view in the PR #2 restructure. They come back here — compressed, but
-          with the photography intact, because the photographs ARE the proof of
-          operations. Row 1 text-only credential strip; row 2 five-photo facility
-          strip, captions required (an unlabelled photo is decoration, a labelled one
-          is evidence). Light section, no navy overlay — desaturation only. */}
-      <section className="section proof-bar-section section-rule">
+      {/* 05 — FORMAT SHOWCASE: was the five-photo facility strip (credential strip +
+          five captioned stock photos linking to /facility). Replaced with the four
+          client-supplied branded format cards: the facility photos were stock
+          (Unsplash — see IMAGE-CREDITS.md), so they proved nothing about THIS
+          factory that the credential strip's linked claims don't already carry;
+          the branded cards at least show the real formats in the client's own
+          house style. The credential strip row is kept unchanged on top — the
+          linked proof (certifications, facility, stats) survives; only the photo
+          row below it changed. Light section, slides presented as-is (near-white
+          baked backgrounds sit on --background without a seam), no tint. */}
+      <section className="section section-rule format-showcase-section">
         <div className="container">
           <div className="credential-strip">
             {CREDENTIAL_STRIP.map((c) => (
               <Link to={c.to} key={c.label}>{c.label}</Link>
             ))}
           </div>
-          <Link to="/facility" className="facility-strip">
-            {FACILITY_STRIP.map((f) => (
-              <div className="facility-strip-item" key={f.caption}>
-                <div className="facility-strip-photo">
-                  <img src={f.img} width="300" height="225" alt={f.alt} loading="lazy" onError={hideAndTint} />
-                </div>
-                <span className="facility-strip-caption">{f.caption}</span>
-                <span className="facility-strip-sub mono-chip">{f.sub}</span>
-              </div>
-            ))}
-          </Link>
+          <div className="section-header">
+            <span className="eyebrow" style={sx('justify-content:center;')}>Our formats</span>
+            <h2>Four ways to ship your product.</h2>
+            <p className="lede">
+              Every format shown blank — your brand's labels and print finish the pack.
+            </p>
+          </div>
+          <FormatCarousel />
         </div>
       </section>
 
@@ -504,6 +636,36 @@ export default function Home() {
               </p>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* 06.5 — VSL: the same video that opens the company site's /work-with-us
+          landing page (allynutra.com/work-with-us), placed between the "Why Ally
+          Nutra" claims (06) and the partner testimonials (07): claims, then the
+          people making them on camera, then the customers corroborating. The h2
+          is the video page's own headline, quoted verbatim — it titles the video
+          the player below it plays, so it makes no claim this section doesn't
+          deliver. Click-to-play with native controls: this is a talking-head
+          video with an audio track (AAC), and autoplaying it muted would
+          misrepresent it; the poster frame carries the section until pressed
+          play. 720p source on viewports ≥700px, 360p below and as fallback. */}
+      <section className="section section-rule vsl-section">
+        <div className="container">
+          <div className="section-header">
+            <span className="eyebrow" style={sx('justify-content:center;')}>Work with us</span>
+            <h2>Is your manufacturer holding your brand back?</h2>
+            <p className="lede">
+              The same video that opens our Work With Us page — watch it here, no form and no gate.
+            </p>
+          </div>
+          <figure className="vsl-frame">
+            <video className="vsl-video" controls preload="metadata" poster={vslPoster}>
+              <source src={vsl720} type="video/mp4" media="(min-width: 700px)" />
+              <source src={vsl360} type="video/mp4" />
+              <a href="https://allynutra.com/work-with-us">Watch the video on allynutra.com</a>
+            </video>
+            <figcaption className="mono-chip vsl-caption">4:09 · from allynutra.com/work-with-us</figcaption>
+          </figure>
         </div>
       </section>
 
