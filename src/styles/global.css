@@ -1094,9 +1094,20 @@ html.no-js .stat-live{display:none;}
 .vsl-video:focus-visible{outline:2px solid hsl(var(--ring));outline-offset:4px;}
 .vsl-caption{display:block;text-align:center;margin-top:10px;color:hsl(var(--muted-foreground));}
 
-/* Final-CTA branded card (§09): portrait 4:5, capped at 400px wide, centered under
-   the buttons; clicking opens the quote flow. Same border/radius/shadow family as
-   the carousel slides. */
+/* Final-CTA branded card (§09): client-requested side-by-side layout — copy left,
+   portrait card right, vertically centered against each other. The card still
+   clicks through to the quote flow. Under 900px the columns stack (text first,
+   card below, centered) so the portrait card never squeezes the copy. */
+.cta-split{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:clamp(36px,5vw,64px);align-items:center;}
+.cta-split .cta-card-link{margin-top:0;}
+.cta-split .cta-card{max-height:480px;}
+@media (max-width:900px){
+  .cta-split{grid-template-columns:1fr;gap:0;}
+  .cta-split .cta-copy{text-align:center;}
+  .cta-split .hero-ctas,.cta-split h2{margin-left:auto;margin-right:auto;}
+  .cta-split .hero-ctas{justify-content:center;}
+  .cta-split .cta-card-link{margin-top:28px;}
+}
 .cta-card-link{display:inline-block;max-width:100%;margin-top:36px;border-radius:var(--radius-lg);transition:transform .18s ease,box-shadow .18s ease;}
 .cta-card-link:hover,.cta-card-link:focus-visible{transform:translateY(-3px);box-shadow:0 14px 36px hsl(var(--ally-navy)/.16);}
 .cta-card-link:focus-visible{outline:2px solid hsl(var(--ring));outline-offset:4px;}

@@ -798,33 +798,37 @@ export default function Home() {
           (matching Contact.jsx:182's tel-link treatment). The h2 needed no
           inline change — removing section-navy lets it fall back to the global
           `h2{color:hsl(var(--ally-navy))}` default automatically. */}
-      <section className="section section-rule" style={sx('text-align:center;')}>
+      <section className="section section-rule">
         <div className="container">
-          <h2 style={sx('max-width:640px;margin:0 auto 24px;')}>
-            Ready to build something your customers will{' '}
-            <em style={sx('font-style:italic;color:hsl(var(--ally-orange-ink));')}>actually</em> reorder?
-          </h2>
-          <div className="hero-ctas" style={sx('justify-content:center;margin-top:0;')}>
-            <a href={quoteUrl(role)} className="btn btn-primary btn-lg">{isClient ? 'Start a new quote' : 'Start your quote →'}</a>
-            <a href={scheduleUrl(role)} className="btn btn-outline btn-lg">Not sure yet? Schedule a call</a>
+          {/* Client-requested layout: copy left, branded card right, side by side
+              (stacks text-over-card under 900px). The card still clicks through to
+              the quote flow (same destination as the primary button). Text content
+              unchanged — placement only. */}
+          <div className="cta-split">
+            <div className="cta-copy">
+              <h2 style={sx('max-width:560px;margin:0 0 24px;')}>
+                Ready to build something your customers will{' '}
+                <em style={sx('font-style:italic;color:hsl(var(--ally-orange-ink));')}>actually</em> reorder?
+              </h2>
+              <div className="hero-ctas" style={sx('justify-content:flex-start;margin-top:0;')}>
+                <a href={quoteUrl(role)} className="btn btn-primary btn-lg">{isClient ? 'Start a new quote' : 'Start your quote →'}</a>
+                <a href={scheduleUrl(role)} className="btn btn-outline btn-lg">Not sure yet? Schedule a call</a>
+              </div>
+              <p className="hero-expectation" style={sx('color:hsl(var(--muted-foreground));margin-top:20px;')}>{EXPECTATION_LINE}</p>
+              <p style={sx('margin-top:12px;font-size:13px;color:hsl(var(--muted-foreground));')}>
+                Prefer to talk first? <a href="tel:+18887205888" style={sx('color:hsl(var(--ally-navy));font-weight:600;text-decoration:underline;')}>(888) 720-5888</a>
+              </p>
+            </div>
+            <a href={quoteUrl(role)} className="cta-card-link">
+              <img
+                src={readyToBuildCta}
+                width="840"
+                height="1050"
+                alt="Ally Nutra card: “Your Supplements, Our Expertise” over stand-up pouch and stick-pack artwork — start your quote"
+                className="cta-card"
+              />
+            </a>
           </div>
-          <p className="hero-expectation" style={sx('color:hsl(var(--muted-foreground));margin-top:20px;')}>{EXPECTATION_LINE}</p>
-          <p style={sx('margin-top:12px;font-size:13px;color:hsl(var(--muted-foreground));')}>
-            Prefer to talk first? <a href="tel:+18887205888" style={sx('color:hsl(var(--ally-navy));font-weight:600;text-decoration:underline;')}>(888) 720-5888</a>
-          </p>
-          {/* Client-requested final visual: the branded CTA card, clickable through to
-              the quote flow (same destination as the primary button above — one more
-              way to say yes, placed right before the footer). Portrait 4:5, capped at
-              400px so it reads as a card, not a poster. */}
-          <a href={quoteUrl(role)} className="cta-card-link">
-            <img
-              src={readyToBuildCta}
-              width="840"
-              height="1050"
-              alt="Ally Nutra card: “Your Supplements, Our Expertise” over stand-up pouch and stick-pack artwork — start your quote"
-              className="cta-card"
-            />
-          </a>
         </div>
       </section>
 
