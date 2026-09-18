@@ -10,21 +10,12 @@ import heroMachineWebm from '../assets/videos/hero-machine.webm';
 import heroMachineMp4 from '../assets/videos/hero-machine.mp4';
 import heroMachinePoster from '../assets/videos/hero-machine-poster.jpg';
 
-// Format card images. All four are Ally Nutra-owned renders (copied read-only from
-// the company repo, Ally-Nutra-LLC-New/ally-nutra, commit
-// 1d1b8f5ada2655441f21cbf0e52b9518a3e45955) again, restored after a real-photo trial
-// for Capsules (polish/logo-and-product-photos) didn't hold up: its photographed
-// warm-grey studio background isn't pure white, so the card's soft-light overlay
-// treats it differently from the panel's own near-white background and it reads as
-// a visible box — and one photograph next to three renders broke the row's visual
-// consistency anyway. `products/product-capsules.jpg` (the real photo) stays in the
-// repo, credited in IMAGE-CREDITS.md, marked unused — available if all four are ever
-// replaced together rather than one at a time. Sachets/stick-packs/pouches never had
-// an honest free-stock replacement candidate to begin with (see PR description).
-import productCapsules from '../assets/images/products/product-capsules.png';
-import productSachets from '../assets/images/products/product-sachets.png';
-import productStickPacks from '../assets/images/products/product-stick-packs.jpg';
-import productPouches from '../assets/images/products/product-pouches.png';
+// "What we make" cards carry no photos (kinds-only rework, client request): the
+// client has no per-format photo sources they want published on these cards, so
+// the front is type-only and the back lists the kinds (productVarieties.js) —
+// see ProductCard.jsx. The four former card-front images (products/product-*.png,
+// plus the three variety popup photos) stay in the repo, credited and marked
+// unused in IMAGE-CREDITS.md, available if a future round sources replacements.
 
 // Format showcase slides (§5, replaces the five-photo facility strip). Four
 // client-supplied branded format cards — one per confirmed format — sourced from
@@ -46,8 +37,19 @@ import productPouches from '../assets/images/products/product-pouches.png';
 // ("50,000 sq ft").
 import showcaseCapsules from '../assets/images/formats/format-showcase-capsules.png';
 import showcaseSachets from '../assets/images/formats/format-showcase-sachets.png';
-import showcaseStickPacks from '../assets/images/formats/format-showcase-stick-packs.png';
 import showcasePouches from '../assets/images/formats/format-showcase-pouches.png';
+// The stick-pack slide is the one designed card whose baked artwork the client
+// rejected ("the stick pack photo is not good"). Rather than swap in another
+// photo (the Drive folder's other stick-pack shots — fan spreads, vertical-text
+// cards — are different aspect ratios or break the slide family's design
+// language), slide 3 is drawn in code using the company's own official stick-pack
+// render (the visual live on allynutra.com's homepage today, from
+// Ally-Nutra-LLC-New/ally-nutra src/assets/format-stick-packs.png) as artwork.
+// Same content architecture as the three designed cards — eyebrow, orange
+// headline, BEST FOR list, arrow affordance — so the carousel stays coherent;
+// real text instead of baked pixels, so this slide is fully accessible where the
+// others rely on alt text. See StickPackSlide below.
+import stickPackRender from '../assets/images/formats/stick-pack-render.png';
 
 // Work With Us VSL (§6.5). The exact video that opens the company site's
 // /work-with-us landing page (Ally-Nutra-LLC-New/ally-nutra, public/lp/assets/
@@ -61,6 +63,13 @@ import showcasePouches from '../assets/images/formats/format-showcase-pouches.pn
 import vsl720 from '../assets/videos/work-with-us-vsl-720.mp4';
 import vsl360 from '../assets/videos/work-with-us-vsl-360.mp4';
 import vslPoster from '../assets/videos/work-with-us-vsl-poster.jpg';
+
+// Final-CTA card (§09): the client's "Your Supplements, Our Expertise" branded card
+// (Drive 20.png, 3375×4219, 14.8 MB → 840×1050 palette-quantized, 352.9 KB). Clicking
+// it opens the quote flow — same quoteUrl(role) target as the "Start your quote"
+// button above it, per the client's request. Alt text describes the baked content
+// since the card's own text is pixels.
+import readyToBuildCta from '../assets/images/ready-to-build-cta.png';
 
 import { useEffect, useRef, useState } from 'react';
 
@@ -92,6 +101,11 @@ const MOQ_LOWEST = '2,000 units';
 // business day: We confirm receipt and assign a real account manager."). Both agree,
 // so this is a found fact, not a token.
 const RESPONSE_TIME = '1 business day';
+
+// Testimonials gate (§07) — see the section comment there. Flip to true once the
+// client supplies real, permissioned quotes; the disabled markup is unchanged and
+// ready.
+const SHOW_TESTIMONIALS = false;
 
 // Home hero encapsulation-machine video: falls back to the built-in SVG line
 // drawing under prefers-reduced-motion, or if the video errors out.
@@ -201,60 +215,35 @@ function HeroMech() {
   );
 }
 
-// Exactly the four formats Ally Nutra manufactures today, per the production site
-// (ally-nutra@main) and the landing-page audit's product-claim reconciliation.
-// Do not add tablets, powders, gummies, liquids, or blister packs here — those were
-// removed as unconfirmed claims, not omitted by oversight.
-// desc/spec text is UNCHANGED from before this PR — §2 requires the front face keep
-// everything it has now. Only img/alt (§1, Ally Nutra's own images) and the two new
-// back-face fields (§4) are new. Note that desc/spec still carry claims the Phase 0
-// audit found UNCONFIRMED in the company repo (e.g. sachets "nitrogen flushed",
-// stick packs "High-barrier film options") — deliberately left as-is, since fixing
-// front-face copy accuracy is a separate task from this one; see PR description.
+// desc/spec text is UNCHANGED from the pre-rework cards — only the img/alt fields
+// (kinds-only rework) and the popup-only fields (varietiesLabel, explanation) are
+// gone. desc/spec claims are as audited before: known-unconfirmed sachet/stick-pack
+// material claims ("nitrogen flushed", "High-barrier film options") were already
+// deliberately left as-is by the earlier pass; that debt is unchanged here.
 const PRODUCTS = [
   {
-    img: productCapsules,
-    alt: 'A red-and-white two-piece capsule, Ally Nutra brand render',
     format: 'Format 01 · Capsules',
     title: 'Capsules',
     desc: 'Two-piece, liquid-fill, vegan HPMC or bovine gelatin.',
     spec: 'SIZE 000–3 · MOQ FROM 2,500',
-    explanation: 'A two-piece shell that holds powder or oil. The most versatile format — it suits almost any blend, needs no flavouring, and is what most supplement brands start with. Available in plant-based HPMC or bovine gelatin, among other shell options.',
-    varietiesLabel: 'See the kinds of capsules',
-    imageScale: 1,
   },
   {
-    img: productSachets,
-    alt: 'A blank silver foil sachet packet, Ally Nutra brand render',
     format: 'Format 02 · Sachets',
     title: 'Sachets',
     desc: 'Single-serve, foil-lined, nitrogen flushed, custom print.',
     spec: '3g–30g FILL · MOQ FROM 5,000',
-    explanation: 'A single-serve packet, sealed on all sides. Ideal for powders, granules, or liquids you want portioned out and easy to carry — no bottle, no scoop needed. Comes in a few material options depending on the barrier protection your formula needs.',
-    varietiesLabel: 'See sachet options',
-    imageScale: 1.35,
   },
   {
-    img: productStickPacks,
-    alt: 'A blank white stick pack tube, Ally Nutra brand render',
     format: 'Format 03 · Stick packs',
     title: 'Stick packs',
     desc: 'Narrow, portable, easy-tear. High-barrier film options.',
     spec: '2g–15g FILL · MOQ FROM 10,000',
-    explanation: 'A narrow, single-serve tube — like a sachet, but slimmer and easier to tear open on the go. Common for energy powders, electrolytes, and focus or sleep blends aimed at direct-to-consumer brands. Shares the same material options as sachets.',
-    varietiesLabel: 'See stick pack options',
-    imageScale: 1,
   },
   {
-    img: productPouches,
-    alt: 'Blank teal stand-up pouches with a resealable zipper top',
     format: 'Format 04 · Pouches',
     title: 'Pouches',
     desc: 'Resealable stand-up, matte, gloss, or kraft finish.',
     spec: '50g–5,000g FILL · MOQ FROM 2,000',
-    explanation: 'A resealable bag for multi-serve products — the format most bulk powders and greens blends ship in. Comes in a few stock sizes and a choice of closures, so your customer can reseal it between uses.',
-    varietiesLabel: 'See pouch options',
-    imageScale: 1.05,
   },
 ];
 
@@ -309,8 +298,10 @@ const FORMAT_SHOWCASE = [
     linkLabel: 'All services',
   },
   {
-    img: showcaseStickPacks,
-    alt: 'Stick packs format slide: headline "On-the-go format, portion-controlled", best for energy blends, electrolytes, collagen; artwork of a blank white stick pack',
+    // Drawn in code (see StickPackSlide) — the designed 5.png slide's artwork was
+    // rejected by the client; headline/best-for list reproduce that slide's own
+    // baked copy verbatim, spec from PRODUCTS as with the other slides.
+    render: 'stick-pack',
     title: 'Stick packs',
     spec: '2G–15G FILL · MOQ FROM 10,000',
     to: '/services',
@@ -325,6 +316,36 @@ const FORMAT_SHOWCASE = [
     linkLabel: 'All services',
   },
 ];
+
+// Code-drawn replacement for the designed stick-pack slide (see the import note
+// above). Copy is the rejected 5.png slide's own baked text, reproduced verbatim —
+// no new claims. Layout mirrors the designed cards' architecture: format eyebrow,
+// two-line orange headline, numbered BEST FOR list on a navy panel, arrow
+// affordance bottom-right (decorative on the designed cards; decorative here too).
+function StickPackSlide() {
+  return (
+    <div className="format-slide-card">
+      <span className="format-slide-eyebrow mono-chip">Format 03 · Stick packs</span>
+      <div className="format-slide-main">
+        <div className="format-slide-art">
+          <img src={stickPackRender} width="800" height="800" alt="A blank white stick pack, angled, with a soft shadow — Ally Nutra's own render" loading="lazy" />
+        </div>
+        <div className="format-slide-copy">
+          <h3 className="format-slide-headline">On-the-go format, portion-controlled</h3>
+          <div className="format-slide-bestfor">
+            <span className="format-slide-bestfor-label mono-chip">Best for</span>
+            <ol className="format-slide-bestfor-list">
+              <li>Energy blends</li>
+              <li>Electrolytes</li>
+              <li>Collagen</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+      <span className="format-slide-arrow" aria-hidden="true">→</span>
+    </div>
+  );
+}
 
 // Scroll-snap carousel: native horizontal scrolling (touch, trackpad, keyboard
 // when focused) does the paging; the prev/next buttons and dots scroll the
@@ -382,7 +403,9 @@ function FormatCarousel() {
             aria-label={`${i + 1} of ${FORMAT_SHOWCASE.length}: ${f.title}`}
             key={f.title}
           >
-            <img src={f.img} width="900" height="900" alt={f.alt} loading="lazy" onError={hideAndTint} />
+            {f.render === 'stick-pack' ? <StickPackSlide /> : (
+              <img src={f.img} width="900" height="900" alt={f.alt} loading="lazy" onError={hideAndTint} />
+            )}
           </div>
         ))}
       </div>
@@ -669,15 +692,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 07 — PROOF: unchanged testimonials, attributions unchanged.
-          Section-banding fix: moved above "How it works" (previously the reverse
-          order). Its bottom padding was trimmed 88px→64px (top edge stays 88px, a
-          within-field boundary against 06) back when this section's bottom edge
-          bordered the navy how-it-works/final-CTA block; 08/09 are light now (see
-          08's comment), so that specific rationale no longer applies, but the
-          64px value itself is left as-is here — untouched, out of this PR's
-          scope. Also drops section-alt (grey) for the same section-rule hairline
-          as its neighbours. */}
+      {/* 07 — PROOF (testimonials): DISABLED while awaiting accurate testimonials.
+          The client will supply real names/companies/quotes (the old TODO below
+          already flagged the current attributions as unverifiable initials-only
+          placeholders). The section is retained behind this flag — content and
+          styling unchanged — so re-enabling is a one-line flip once the real
+          data arrives. Do NOT re-enable with the placeholder attributions. */}
+      {SHOW_TESTIMONIALS && (
       <section className="section section-rule" style={sx('padding-bottom:64px;')}>
         <div className="container">
           <div className="section-header">
@@ -714,6 +735,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      )}
 
       {/* 08 — HOW IT WORKS: immediately before the final ask (deliberate — removes
           the last hesitation right before the click, rather than being read early
@@ -773,6 +795,19 @@ export default function Home() {
           <p style={sx('margin-top:12px;font-size:13px;color:hsl(var(--muted-foreground));')}>
             Prefer to talk first? <a href="tel:+18887205888" style={sx('color:hsl(var(--ally-navy));font-weight:600;text-decoration:underline;')}>(888) 720-5888</a>
           </p>
+          {/* Client-requested final visual: the branded CTA card, clickable through to
+              the quote flow (same destination as the primary button above — one more
+              way to say yes, placed right before the footer). Portrait 4:5, capped at
+              400px so it reads as a card, not a poster. */}
+          <a href={quoteUrl(role)} className="cta-card-link">
+            <img
+              src={readyToBuildCta}
+              width="840"
+              height="1050"
+              alt="Ally Nutra card: “Your Supplements, Our Expertise” over stand-up pouch and stick-pack artwork — start your quote"
+              className="cta-card"
+            />
+          </a>
         </div>
       </section>
 

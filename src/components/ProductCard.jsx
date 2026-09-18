@@ -1,10 +1,18 @@
 import { useEffect, useId, useRef, useState } from 'react';
-import { hideAndTint } from '../lib/imgFallback.js';
 
-// Click/tap to flip — never hover (hover doesn't exist on touch, and causes accidental
-// flips on desktop). Multiple cards can be flipped at once; each manages its own state
-// independently, so comparing capsules against sachets doesn't require re-flipping.
-export default function ProductCard({ product, cardHeight, onOpenVarieties }) {
+// Kinds-only rework (client request): the front no longer carries a photo — the
+// client has no per-format photo sources they're happy to publish here — and the
+// varieties popup is gone with it. Flipping now answers the question the affordance
+// asks: the back face lists the kinds of this format (capsule shells, sachet/stick
+// materials, pouch sizes/closures), sourced from productVarieties.js, whose every
+// entry traces to the Phase 0 audit (see that file's header). The explanation
+// paragraph the back used to lead with is dropped — "only the kinds" — and the
+// popup-only fields (varietiesLabel, explanation) went with it.
+//
+// Flip interaction is unchanged from before: click/tap to flip — never hover
+// (hover doesn't exist on touch, and causes accidental flips on desktop). Multiple
+// cards can be flipped at once; each manages its own state independently.
+export default function ProductCard({ product, varieties, cardHeight }) {
   const [flipped, setFlipped] = useState(false);
   const frontRef = useRef(null);
   const backFirstRef = useRef(null);
@@ -53,43 +61,35 @@ export default function ProductCard({ product, cardHeight, onOpenVarieties }) {
           className="card-face card-front"
           aria-expanded={flipped}
           aria-controls={backId}
-          aria-label={`${product.title} — show details`}
+          aria-label={`${product.title} — show the kinds`}
           onClick={toggleFlip}
           inert={flipped}
         >
-          <div className="card-front-photo">
-            <img
-              src={product.img}
-              width="900"
-              height="675"
-              alt={product.alt}
-              loading="lazy"
-              onError={hideAndTint}
-              style={product.imageScale ? { '--card-photo-scale': product.imageScale } : undefined}
-            />
-          </div>
           <div className="product-body">
             <span className="product-format">{product.format}</span>
             <h3>{product.title}</h3>
             <p className="product-desc">{product.desc}</p>
             <div className="product-spec">{product.spec}</div>
-            <span className="flip-affordance mono-chip" aria-hidden="true">What is this? →</span>
+            <span className="flip-affordance mono-chip" aria-hidden="true">The kinds of {product.title.toLowerCase()} →</span>
           </div>
         </button>
 
         <div id={backId} className="card-face card-back" inert={!flipped}>
           <div className="card-back-body">
-            <h3>{product.title}</h3>
-            <p className="card-back-text">{product.explanation}</p>
-            <button
-              type="button"
-              ref={backFirstRef}
-              className="btn btn-outline card-varieties-btn"
-              onClick={() => onOpenVarieties(product, backFirstRef)}
-            >
-              {product.varietiesLabel}
-            </button>
-            <button type="button" className="card-back-btn" onClick={goBack}>
+            <h3>{varieties.format}</h3>
+            <p className="card-back-intro">{varieties.intro}</p>
+            <ul className="card-kinds">
+              {varieties.varieties.map((v) => (
+                <li className="card-kind" key={v.id}>
+                  <div className="card-kind-topline">
+                    <span className="card-kind-name">{v.name}</span>
+                    <span className="card-kind-spec mono-chip">{v.spec}</span>
+                  </div>
+                  <span className="card-kind-note">{v.note}</span>
+                </li>
+              ))}
+            </ul>
+            <button type="button" ref={backFirstRef} className="card-back-btn" onClick={goBack}>
               ← Back
             </button>
           </div>

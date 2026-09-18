@@ -1048,6 +1048,23 @@ html.no-js .stat-live{display:none;}
 .format-track:focus-visible{outline:2px solid hsl(var(--ring));outline-offset:4px;border-radius:var(--radius-md);}
 .format-slide{flex:0 0 min(88%,600px);scroll-snap-align:center;}
 .format-slide img{width:100%;height:auto;display:block;border-radius:var(--radius-lg);border:1px solid hsl(var(--border));box-shadow:0 6px 24px hsl(var(--ally-navy)/.08);}
+
+/* Code-drawn stick-pack slide (slide 3) — same chrome as the img slides (border,
+   radius, shadow, white ground) so the carousel stays coherent; content is real
+   text over the company's own render. Square to match the designed cards. */
+.format-slide-card{width:100%;aspect-ratio:1/1;box-sizing:border-box;background:hsl(var(--card));border:1px solid hsl(var(--border));border-radius:var(--radius-lg);box-shadow:0 6px 24px hsl(var(--ally-navy)/.08);padding:7%;display:flex;flex-direction:column;position:relative;}
+.format-slide-eyebrow{color:hsl(var(--ally-navy)/.6);letter-spacing:0.14em;}
+.format-slide-main{flex:1;display:grid;grid-template-columns:46% 1fr;gap:6%;align-items:center;min-height:0;}
+.format-slide-art{display:flex;align-items:center;justify-content:center;min-height:0;}
+.format-slide-art img{max-width:100%;max-height:100%;width:auto;height:auto;border:none;border-radius:0;box-shadow:none;filter:saturate(.68) contrast(1.05) brightness(1.02);transform:rotate(-4deg);}
+.format-slide-copy{display:flex;flex-direction:column;gap:16px;min-width:0;}
+.format-slide-headline{font-family:var(--font-slab);font-weight:700;font-size:clamp(20px,3.4vw,27px);line-height:1.15;color:hsl(var(--ally-orange-ink));margin:0;letter-spacing:-0.01em;}
+.format-slide-bestfor{background:hsl(var(--ally-navy));border-radius:var(--radius-md);padding:14px 16px;color:#fff;}
+.format-slide-bestfor-label{display:block;color:hsl(var(--ally-orange)/.95);margin-bottom:8px;letter-spacing:0.14em;}
+.format-slide-bestfor-list{margin:0;padding:0 0 0 2px;list-style:none;display:flex;flex-direction:column;gap:5px;counter-reset:bestfor;}
+.format-slide-bestfor-list li{font-size:13px;color:hsl(0 0% 100% / .92);display:flex;align-items:baseline;gap:8px;counter-increment:bestfor;}
+.format-slide-bestfor-list li::before{content:counter(bestfor,decimal-leading-zero);font-family:var(--font-mono);font-size:9.5px;color:hsl(0 0% 100% / .5);flex-shrink:0;}
+.format-slide-arrow{position:absolute;right:7%;bottom:6%;font-size:20px;color:hsl(var(--ally-orange));}
 .format-nav{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:14px;}
 .format-arrow{width:40px;height:40px;border-radius:50%;border:1px solid hsl(var(--border));background:hsl(var(--card));display:inline-flex;align-items:center;justify-content:center;color:hsl(var(--ally-navy));cursor:pointer;transition:background-color .15s,color .15s,border-color .15s;}
 .format-arrow:hover{background:hsl(var(--ally-navy));border-color:hsl(var(--ally-navy));color:#fff;}
@@ -1076,6 +1093,14 @@ html.no-js .stat-live{display:none;}
 .vsl-video{width:100%;aspect-ratio:16/9;display:block;border-radius:var(--radius-lg);border:1px solid hsl(var(--border));background:hsl(var(--ally-navy));box-shadow:0 12px 32px hsl(var(--ally-navy)/.12);}
 .vsl-video:focus-visible{outline:2px solid hsl(var(--ring));outline-offset:4px;}
 .vsl-caption{display:block;text-align:center;margin-top:10px;color:hsl(var(--muted-foreground));}
+
+/* Final-CTA branded card (§09): portrait 4:5, capped at 400px wide, centered under
+   the buttons; clicking opens the quote flow. Same border/radius/shadow family as
+   the carousel slides. */
+.cta-card-link{display:inline-block;max-width:100%;margin-top:36px;border-radius:var(--radius-lg);transition:transform .18s ease,box-shadow .18s ease;}
+.cta-card-link:hover,.cta-card-link:focus-visible{transform:translateY(-3px);box-shadow:0 14px 36px hsl(var(--ally-navy)/.16);}
+.cta-card-link:focus-visible{outline:2px solid hsl(var(--ring));outline-offset:4px;}
+.cta-card{display:block;width:100%;max-width:400px;height:auto;border-radius:var(--radius-lg);border:1px solid hsl(var(--border));box-shadow:0 6px 24px hsl(var(--ally-navy)/.08);}
 
 /* How it works: mono step/time labels, no amber — amber marks the action on this
    page, and this section is the explanation, not the action.
@@ -1163,9 +1188,10 @@ html.no-js .stat-live{display:none;}
    --card-photo-scale is set per-product (Home.jsx) to equalize apparent product
    size — contain alone still left the stick pack, whose source frame is mostly
    empty space around a thin subject, looking a third the size of the others. */
-.card-front-photo{position:relative;aspect-ratio:4/3;width:100%;overflow:hidden;flex-shrink:0;background:hsl(var(--muted));padding:14%;box-sizing:border-box;}
-.card-front-photo img{width:100%;height:100%;object-fit:contain;display:block;filter:saturate(.68) contrast(1.05) brightness(1.02);transform:scale(var(--card-photo-scale,1));}
-.card-front-photo::after{content:'';position:absolute;inset:0;background:hsl(var(--ally-navy));mix-blend-mode:soft-light;opacity:.24;pointer-events:none;}
+/* Kinds-only rework: .card-front-photo and .card-varieties-btn are gone with the
+   photos and the popup (see ProductCard.jsx). The front is type-only; its body
+   already flexes to the shared card height, with .product-spec's margin-top:auto
+   pinning spec + flip affordance to the bottom edge. */
 .card-front .product-body{flex:1;}
 .flip-affordance{display:block;margin-top:10px;color:hsl(var(--ally-orange)/.85);text-align:right;}
 
@@ -1177,9 +1203,18 @@ html.no-js .stat-live{display:none;}
 }
 .card-back-body{padding:28px 24px;display:flex;flex-direction:column;gap:14px;height:100%;}
 .card-back-body h3{color:#fff;font-family:var(--font-slab);font-weight:500;font-size:17px;margin:0;}
-.card-back-text{font-size:13.5px;line-height:1.6;color:hsl(0 0% 100% / .8);margin:0;flex-grow:1;}
-.card-varieties-btn{background:transparent;color:#fff;border:1.5px solid hsl(0 0% 100% / .35);width:100%;justify-content:center;min-height:44px;}
-.card-varieties-btn:hover{background:hsl(0 0% 100% / .1);border-color:#fff;}
+.card-back-intro{font-size:12px;line-height:1.55;color:hsl(0 0% 100% / .65);margin:0;}
+/* The kinds list — the back face's whole job now ("only the kinds"). Name + spec
+   chip on one line, note under; hairline separators, no imagery (there are no
+   per-kind photo sources to publish — the popup's photo/diagram visuals went with
+   the popup). */
+.card-kinds{list-style:none;margin:0;padding:0;flex-grow:1;display:flex;flex-direction:column;}
+.card-kind{padding:9px 0;border-top:1px solid hsl(0 0% 100% / .14);display:flex;flex-direction:column;gap:2px;}
+.card-kind:first-child{border-top:none;padding-top:0;}
+.card-kind-topline{display:flex;align-items:baseline;justify-content:space-between;gap:10px;}
+.card-kind-name{font-family:var(--font-slab);font-weight:500;font-size:14px;color:#fff;}
+.card-kind-spec{color:hsl(var(--ally-orange)/.9);font-size:9px;letter-spacing:0.06em;text-align:right;}
+.card-kind-note{font-size:11px;line-height:1.45;color:hsl(0 0% 100% / .68);}
 .card-back-btn{align-self:flex-start;font-family:var(--font-mono);font-size:11px;letter-spacing:0.04em;text-transform:uppercase;color:hsl(0 0% 100% / .55);background:none;border:none;padding:0;cursor:pointer;}
 .card-back-btn:hover{color:#fff;}
 
