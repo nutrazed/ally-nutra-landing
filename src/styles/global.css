@@ -1203,21 +1203,26 @@ html.no-js .stat-live{display:none;}
   transform:rotateY(180deg);
   justify-content:center;
 }
-.card-back-body{padding:28px 24px;display:flex;flex-direction:column;gap:14px;height:100%;}
+.card-back-body{padding:26px 24px 24px;display:flex;flex-direction:column;gap:14px;height:100%;}
 .card-back-body h3{color:#fff;font-family:var(--font-slab);font-weight:500;font-size:17px;margin:0;}
 .card-back-intro{font-size:12px;line-height:1.55;color:hsl(0 0% 100% / .65);margin:0;}
 /* The kinds list — the back face's whole job now ("only the kinds"). Name + spec
    chip on one line, note under; hairline separators, no imagery (there are no
    per-kind photo sources to publish — the popup's photo/diagram visuals went with
-   the popup). */
+   the popup). Chips never wrap mid-text (nowrap): a name+chip pair too wide for
+   the card wraps as a unit onto its own line instead, keeping the right edge
+   clean — the one sentence-length "spec" (capsule sizes, still confirming with
+   production) drops to its own line that way rather than ragged-splitting. */
 .card-kinds{list-style:none;margin:0;padding:0;flex-grow:1;display:flex;flex-direction:column;}
-.card-kind{padding:9px 0;border-top:1px solid hsl(0 0% 100% / .14);display:flex;flex-direction:column;gap:2px;}
+.card-kind{padding:10px 0;border-top:1px solid hsl(0 0% 100% / .14);display:flex;flex-direction:column;gap:3px;}
 .card-kind:first-child{border-top:none;padding-top:0;}
-.card-kind-topline{display:flex;align-items:baseline;justify-content:space-between;gap:10px;}
-.card-kind-name{font-family:var(--font-slab);font-weight:500;font-size:14px;color:#fff;}
-.card-kind-spec{color:hsl(var(--ally-orange)/.9);font-size:9px;letter-spacing:0.06em;text-align:right;}
+.card-kind-topline{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;row-gap:2px;}
+.card-kind-name{font-family:var(--font-slab);font-weight:500;font-size:14px;color:#fff;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.card-kind-spec{color:hsl(var(--ally-orange)/.9);font-size:9px;letter-spacing:0.06em;text-align:right;white-space:nowrap;flex-shrink:0;}
 .card-kind-note{font-size:11px;line-height:1.45;color:hsl(0 0% 100% / .68);}
-.card-back-btn{align-self:flex-start;font-family:var(--font-mono);font-size:11px;letter-spacing:0.04em;text-transform:uppercase;color:hsl(0 0% 100% / .55);background:none;border:none;padding:0;cursor:pointer;}
+/* Back button: full-width footer row — hairline separator above, real padding,
+   brighter text — so it reads as the card's exit, not stray fine print. */
+.card-back-btn{align-self:stretch;box-sizing:border-box;margin-top:4px;padding:12px 0 0;border:none;border-top:1px solid hsl(0 0% 100% / .18);background:none;font-family:var(--font-mono);font-size:11.5px;letter-spacing:0.06em;text-transform:uppercase;color:hsl(0 0% 100% / .75);cursor:pointer;text-align:left;}
 .card-back-btn:hover{color:#fff;}
 
 /* Reduced motion: no rotation at all — crossfade the faces instead. */
