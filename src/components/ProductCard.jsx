@@ -1,13 +1,13 @@
 import { useEffect, useId, useRef, useState } from 'react';
+import { hideAndTint } from '../lib/imgFallback.js';
 
-// Kinds-only rework (client request): the front no longer carries a photo — the
-// client has no per-format photo sources they're happy to publish here — and the
-// varieties popup is gone with it. Flipping now answers the question the affordance
-// asks: the back face lists the kinds of this format (capsule shells, sachet/stick
-// materials, pouch sizes/closures), sourced from productVarieties.js, whose every
-// entry traces to the Phase 0 audit (see that file's header). The explanation
-// paragraph the back used to lead with is dropped — "only the kinds" — and the
-// popup-only fields (varietiesLabel, explanation) went with it.
+// Fronts keep their four format images (client clarification: the removal request
+// was about the per-kind imagery in the popup, not the card fronts). The varieties
+// popup stays gone — flipping shows only the kinds of this format (capsule shells,
+// sachet/stick materials, pouch sizes/closures) as text from productVarieties.js,
+// whose every entry traces to the Phase 0 audit (see that file's header). The
+// back's old explanation paragraph stays dropped, and the popup-only fields
+// (varietiesLabel, explanation) stay out of PRODUCTS.
 //
 // Flip interaction is unchanged from before: click/tap to flip — never hover
 // (hover doesn't exist on touch, and causes accidental flips on desktop). Multiple
@@ -65,6 +65,17 @@ export default function ProductCard({ product, varieties, cardHeight }) {
           onClick={toggleFlip}
           inert={flipped}
         >
+          <div className="card-front-photo">
+            <img
+              src={product.img}
+              width="900"
+              height="675"
+              alt={product.alt}
+              loading="lazy"
+              onError={hideAndTint}
+              style={product.imageScale ? { '--card-photo-scale': product.imageScale } : undefined}
+            />
+          </div>
           <div className="product-body">
             <span className="product-format">{product.format}</span>
             <h3>{product.title}</h3>

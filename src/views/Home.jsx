@@ -10,12 +10,16 @@ import heroMachineWebm from '../assets/videos/hero-machine.webm';
 import heroMachineMp4 from '../assets/videos/hero-machine.mp4';
 import heroMachinePoster from '../assets/videos/hero-machine-poster.jpg';
 
-// "What we make" cards carry no photos (kinds-only rework, client request): the
-// client has no per-format photo sources they want published on these cards, so
-// the front is type-only and the back lists the kinds (productVarieties.js) —
-// see ProductCard.jsx. The four former card-front images (products/product-*.png,
-// plus the three variety popup photos) stay in the repo, credited and marked
-// unused in IMAGE-CREDITS.md, available if a future round sources replacements.
+// "What we make" card-front images: the four Ally Nutra-owned renders, restored per
+// client clarification (the removal request targeted the per-kind popup imagery, not
+// these fronts). img/alt/imageScale are back below; the popup-only fields
+// (varietiesLabel, explanation) stay out. The three variety popup photos
+// (products/variety-*.jpg) remain unused with the popup — credited in
+// IMAGE-CREDITS.md, available for reuse.
+import productCapsules from '../assets/images/products/product-capsules.png';
+import productSachets from '../assets/images/products/product-sachets.png';
+import productStickPacks from '../assets/images/products/product-stick-packs.jpg';
+import productPouches from '../assets/images/products/product-pouches.png';
 
 // Format showcase slides (§5, replaces the five-photo facility strip). Four
 // client-supplied branded format cards — one per confirmed format — sourced from
@@ -215,31 +219,44 @@ function HeroMech() {
   );
 }
 
-// desc/spec text is UNCHANGED from the pre-rework cards — only the img/alt fields
-// (kinds-only rework) and the popup-only fields (varietiesLabel, explanation) are
-// gone. desc/spec claims are as audited before: known-unconfirmed sachet/stick-pack
-// material claims ("nitrogen flushed", "High-barrier film options") were already
-// deliberately left as-is by the earlier pass; that debt is unchanged here.
+// desc/spec text is UNCHANGED from the pre-rework cards — img/alt/imageScale are
+// back on the fronts (client clarification), and only the popup-only fields
+// (varietiesLabel, explanation) are gone. desc/spec claims are as audited before:
+// known-unconfirmed sachet/stick-pack material claims ("nitrogen flushed",
+// "High-barrier film options") were already deliberately left as-is by the earlier
+// pass; that debt is unchanged here.
 const PRODUCTS = [
   {
+    img: productCapsules,
+    alt: 'A red-and-white two-piece capsule, Ally Nutra brand render',
+    imageScale: 1,
     format: 'Format 01 · Capsules',
     title: 'Capsules',
     desc: 'Two-piece, liquid-fill, vegan HPMC or bovine gelatin.',
     spec: 'SIZE 000–3 · MOQ FROM 2,500',
   },
   {
+    img: productSachets,
+    alt: 'A blank silver foil sachet packet, Ally Nutra brand render',
+    imageScale: 1.35,
     format: 'Format 02 · Sachets',
     title: 'Sachets',
     desc: 'Single-serve, foil-lined, nitrogen flushed, custom print.',
     spec: '3g–30g FILL · MOQ FROM 5,000',
   },
   {
+    img: productStickPacks,
+    alt: 'A blank white stick pack tube, Ally Nutra brand render',
+    imageScale: 1,
     format: 'Format 03 · Stick packs',
     title: 'Stick packs',
     desc: 'Narrow, portable, easy-tear. High-barrier film options.',
     spec: '2g–15g FILL · MOQ FROM 10,000',
   },
   {
+    img: productPouches,
+    alt: 'Blank teal stand-up pouches with a resealable zipper top',
+    imageScale: 1.05,
     format: 'Format 04 · Pouches',
     title: 'Pouches',
     desc: 'Resealable stand-up, matte, gloss, or kraft finish.',

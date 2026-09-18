@@ -7,11 +7,9 @@ import { VARIETIES_BY_FORMAT } from '../data/productVarieties.js';
 // inside an off-screen probe at the grid's real width, so scrollHeight reflects true
 // content height; the shared height is the max found across all faces of all cards.
 // Re-measured on resize, since text reflows at narrower widths (see §6).
-//
-// Since the kinds-only rework the back face is the taller one by far (4-6 kind rows
-// vs the photo-less front's few lines), but the probe still measures both — the
-// front's flip-affordance line can wrap at narrow widths, and the measurement is
-// cheap and exact either way.
+// The front carries a full aspect-ratio photo plus its own text — historically the
+// taller face; the kinds-list back can outgrow it at narrow widths — so measuring
+// both faces stays necessary.
 export default function ProductCardsGrid({ products }) {
   const [cardHeight, setCardHeight] = useState(null);
   const frontProbeRefs = useRef([]);
@@ -45,6 +43,9 @@ export default function ProductCardsGrid({ products }) {
             return (
               <div className="card-height-probe-item" key={p.title}>
                 <div className="card-front-probe" ref={(el) => (frontProbeRefs.current[i] = el)}>
+                  <div className="card-front-photo">
+                    <img src={p.img} width="900" height="675" alt="" loading="eager" />
+                  </div>
                   <div className="product-body">
                     <span className="product-format">{p.format}</span>
                     <h3>{p.title}</h3>

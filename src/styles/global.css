@@ -1188,10 +1188,12 @@ html.no-js .stat-live{display:none;}
    --card-photo-scale is set per-product (Home.jsx) to equalize apparent product
    size — contain alone still left the stick pack, whose source frame is mostly
    empty space around a thin subject, looking a third the size of the others. */
-/* Kinds-only rework: .card-front-photo and .card-varieties-btn are gone with the
-   photos and the popup (see ProductCard.jsx). The front is type-only; its body
-   already flexes to the shared card height, with .product-spec's margin-top:auto
-   pinning spec + flip affordance to the bottom edge. */
+/* Card-front photos: restored per client clarification (the removal request was
+   about the popup's per-kind imagery, not these). .card-varieties-btn stays gone
+   with the popup — see ProductCard.jsx. */
+.card-front-photo{position:relative;aspect-ratio:4/3;width:100%;overflow:hidden;flex-shrink:0;background:hsl(var(--muted));padding:14%;box-sizing:border-box;}
+.card-front-photo img{width:100%;height:100%;object-fit:contain;display:block;filter:saturate(.68) contrast(1.05) brightness(1.02);transform:scale(var(--card-photo-scale,1));}
+.card-front-photo::after{content:'';position:absolute;inset:0;background:hsl(var(--ally-navy));mix-blend-mode:soft-light;opacity:.24;pointer-events:none;}
 .card-front .product-body{flex:1;}
 .flip-affordance{display:block;margin-top:10px;color:hsl(var(--ally-orange)/.85);text-align:right;}
 
